@@ -2,9 +2,12 @@ package com.example.ateg.flooringmaster;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.provider.MediaStore;
+import android.widget.Toast;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -22,7 +25,7 @@ public class MainActivity extends Activity {
         this.addressDao = new AddressDaoRemoteImpl(this, new HttpUtilities(this));
     }
 
-    public void ATask(){
+    public void aTask(){
         new AsyncTask<String, Void, List<Address>>() {
             @Override
             protected void onPreExecute() {
@@ -40,7 +43,12 @@ public class MainActivity extends Activity {
             }
 
             @Override
-            protected void onPostExecute(List<Address> res) {
+            protected void onPostExecute(List<Address> result) {
+
+                for(Address address : result) {
+                    DisplayAddress(address);
+                }
+
 //                videos = new ArrayList<MediaStore.Video>();
 //
 //                try {
@@ -71,5 +79,34 @@ public class MainActivity extends Activity {
             }
 
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR); // we target SDK > API 11
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //progressDialog = ProgressDialog.show(this, "Please Wait", "Progress...", true);
+        //CountDownTimer timer = new CountDownTimer(3000,1000) {
+//            @Override
+//            public void onTick(long millisUntilFinished) {
+//
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//                progressDialog.dismiss();
+//                doDatabaseThings();
+//
+//            }
+//        }.start();
+
+        aTask();
+    }
+
+
+    public void DisplayAddress(Address cursor){
+        Toast.makeText(this, "id: " + cursor.getId() + "\n"
+                + "Name: " + cursor.getLastName() + ", " + cursor.getFirstName() + "\n"
+                + "Company: " + cursor.getCompany(), Toast.LENGTH_LONG).show();
     }
 }
