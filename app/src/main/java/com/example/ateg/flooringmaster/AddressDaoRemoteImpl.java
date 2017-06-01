@@ -1,5 +1,7 @@
 package com.example.ateg.flooringmaster;
 
+import android.content.Context;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,9 +16,11 @@ import java.util.Set;
  */
 
 public class AddressDaoRemoteImpl implements AddressDao {
+    private final Context context;
     HttpUtilities httpUtilities = null;
 
-    public AddressDaoRemoteImpl(HttpUtilities httpUtilities){
+    public AddressDaoRemoteImpl(Context context, HttpUtilities httpUtilities){
+        this.context = context;
         this.httpUtilities = httpUtilities;
     }
 

@@ -1,5 +1,7 @@
 package com.example.ateg.flooringmaster;
 
+import android.content.Context;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,8 +18,14 @@ import java.net.URL;
 
 public class HttpUtilities {
 
+    private final Context context;
+
     //public static final String dataSourceRoot = "https://mighty-eyrie-28532.herokuapp.com";
     public static final String dataSourceRoot = "http://127.0.0.1:8084";
+
+    public HttpUtilities(Context context){
+        this.context = context;
+    }
 
     public JSONObject requestJSONObject(String urlSpec) throws IOException, JSONException {
         URL url = new URL(urlSpec);
