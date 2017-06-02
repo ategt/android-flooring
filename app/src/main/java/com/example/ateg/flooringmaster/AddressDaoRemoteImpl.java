@@ -181,6 +181,7 @@ public class AddressDaoRemoteImpl implements AddressDao {
             // manage exceptions
         }
 
+        Log.d(TAG, Integer.toString(addresses.size()));
         return addresses;
     }
 
