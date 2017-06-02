@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Flooring Master</string>
+    <string name="address_list">Addresses</string>
+
+    <string name="empty">No Addresses Found</string>
+    <string name="empty_list">Press the Plus Sign To Add An Address.</string>
+
 </resources>
