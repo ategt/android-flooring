@@ -29,6 +29,7 @@ public class MainActivity extends Activity {
         new AsyncTask<String, Void, List<Address>>() {
             @Override
             protected void onPreExecute() {
+                super.onPreExecute();
 //                mDialog = ProgressDialog.show(MainActivity.this,
 //                        "Load in progress", "Wait ...", true, true);
 
@@ -44,6 +45,8 @@ public class MainActivity extends Activity {
 
             @Override
             protected void onPostExecute(List<Address> result) {
+
+                super.onPostExecute(result);
 
                 for(Address address : result) {
                     DisplayAddress(address);

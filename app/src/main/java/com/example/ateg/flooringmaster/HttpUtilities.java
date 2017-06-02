@@ -1,6 +1,7 @@
 package com.example.ateg.flooringmaster;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,9 +20,11 @@ import java.net.URL;
 public class HttpUtilities {
 
     private final Context context;
+    public final String TAG = "HttpUtilities";
 
     //public static final String dataSourceRoot = "https://mighty-eyrie-28532.herokuapp.com";
-    public static final String dataSourceRoot = "http://127.0.0.1:8084";
+    //public static final String dataSourceRoot = "http://127.0.0.1:8080";
+    public static final String dataSourceRoot = "http://192.168.128.251:8080";
 
     public HttpUtilities(Context context){
         this.context = context;
@@ -61,8 +64,10 @@ public class HttpUtilities {
         return getBytes(httpURLConnection);
     }
 
-    private byte[] getBytes(HttpURLConnection httpURLConnection) throws IOException {
+    private byte[] getBytes(HttpURLConnection httpURLConnection) {
         try {
+            Log.d(TAG, httpURLConnection.getURL().toString());
+
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             InputStream inputStream = httpURLConnection.getInputStream();
 
@@ -78,9 +83,15 @@ public class HttpUtilities {
             }
             outputStream.close();
             return outputStream.toByteArray();
+        } catch (IOException e) {
+            //e.printStackTrace();
+            Log.e(TAG, e.getMessage());
+            Log.e(TAG, "IO Problem");
         } finally {
             httpURLConnection.disconnect();
         }
+
+        return null;
     }
 
     public String getUrl(String urlSpec) throws IOException {

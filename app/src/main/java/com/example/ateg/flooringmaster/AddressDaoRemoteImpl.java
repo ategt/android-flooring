@@ -1,6 +1,7 @@
 package com.example.ateg.flooringmaster;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,6 +19,7 @@ import java.util.Set;
 public class AddressDaoRemoteImpl implements AddressDao {
     private final Context context;
     HttpUtilities httpUtilities = null;
+    public final String TAG = "AddressDaoRemoteImpl";
 
     public AddressDaoRemoteImpl(Context context, HttpUtilities httpUtilities){
         this.context = context;
@@ -107,7 +109,8 @@ public class AddressDaoRemoteImpl implements AddressDao {
         try {
             addressString = httpUtilities.requestJSON(HttpUtilities.dataSourceRoot + "/address/");
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            Log.e(TAG, "IO problem.");
         }
 //
 //        try {
@@ -134,12 +137,13 @@ public class AddressDaoRemoteImpl implements AddressDao {
         //String addressString = httpUtilities.requestJSON("https://mighty-eyrie-28532.herokuapp.com/address/" + 1);
 
         try {
-            JSONObject json = new JSONObject(addressString);
-            JSONObject dataObject = json.getJSONObject("data");
-            JSONArray items = dataObject.getJSONArray("items");
+            //JSONObject json = new JSONObject(addressString);
+            JSONArray jsonArray = new JSONArray(addressString);
+            //JSONObject dataObject = json.getJSONObject("data");
+            //JSONArray items = dataObject.getJSONArray("items");
 
-            for (int i = 0; i < items.length(); i++) {
-                JSONObject addressObject = items.getJSONObject(i);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject addressObject = jsonArray.getJSONObject(i);
                 Address address = new Address();
 
                 address.setId(addressObject.getInt("id"));
