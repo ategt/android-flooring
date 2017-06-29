@@ -2,6 +2,7 @@ package com.example.ateg.flooringmaster;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -35,7 +36,13 @@ public class AddressListActivity extends ListActivity {
         super.onCreate(savedInstanceState);
                 setTitle(R.string.address_list);
 
-        this.addressDao = new AddressDaoRemoteImpl(this, new HttpUtilities(this));
+        Uri submittedUri = Uri.parse(getString(R.string.starting_root_url));
+        Class aclass = submittedUri.getClass();
+        String className = aclass.getName();
+        String conName = aclass.getCanonicalName();
+        //aclass.get
+
+        this.addressDao = new AddressDaoRemoteImpl(this, new HttpUtilities(this, submittedUri));
 
         new FetchAddressesTask().execute(0);
 

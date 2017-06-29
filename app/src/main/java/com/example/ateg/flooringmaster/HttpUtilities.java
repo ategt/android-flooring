@@ -1,6 +1,7 @@
 package com.example.ateg.flooringmaster;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -24,10 +25,20 @@ public class HttpUtilities {
 
     //public static final String dataSourceRoot = "https://mighty-eyrie-28532.herokuapp.com";
     //public static final String dataSourceRoot = "http://127.0.0.1:8080";
-    public static final String dataSourceRoot = "http://192.168.128.251:8080";
+    //public static final String dataSourceRoot = "http://192.168.128.251:8080";
+    private Uri dataSourceRoot;
 
-    public HttpUtilities(Context context){
+    public HttpUtilities(Context context, Uri dataSourceRoot ){
         this.context = context;
+        this.setDataSourceRoot(dataSourceRoot);
+    }
+
+    public Uri getDataSourceRoot() {
+        return dataSourceRoot;
+    }
+
+    public void setDataSourceRoot(Uri dataSourceRoot) {
+        this.dataSourceRoot = dataSourceRoot;
     }
 
     public JSONObject requestJSONObject(String urlSpec) throws IOException, JSONException {

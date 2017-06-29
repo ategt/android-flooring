@@ -3,6 +3,7 @@ package com.example.ateg.flooringmaster;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -22,7 +23,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.addressDao = new AddressDaoRemoteImpl(this, new HttpUtilities(this));
+        this.addressDao = new AddressDaoRemoteImpl(this, new HttpUtilities(this, Uri.parse(getString(R.string.starting_root_url))));
     }
 
     public void aTask(){

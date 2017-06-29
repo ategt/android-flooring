@@ -1,7 +1,11 @@
 package com.example.ateg.flooringmaster;
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,35 +44,20 @@ public class AddressDaoRemoteImpl implements AddressDao {
     public Address get(Integer id) {
         String addressString = null;
         try {
-            addressString = httpUtilities.requestJSON(HttpUtilities.dataSourceRoot + "/address/");
+            //addressString = httpUtilities.requestJSON(httpUtilities.getDataSourceRoot().buildUpon().appendPath("address") + "/address/");
+            addressString = httpUtilities.requestJSON(httpUtilities.getDataSourceRoot()
+                    .buildUpon()
+                    .appendPath("address")
+                    .build()
+                    .toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        try {
-            JSONObject json = new JSONObject(addressString);
-            JSONObject dataObject = json.getJSONObject("data");
-            JSONArray items = dataObject.getJSONArray("items");
+            Gson gson = new GsonBuilder().create();
+            Address address = gson.fromJson(addressString, Address.class);
 
-//            for (int i = 0; i < items.length(); i++) {
-//                JSONObject videoObject = items.getJSONObject(i);
-//                Video video = new Video(videoObject.getString("title"),
-//                        videoObject.getString("description"),
-//                        videoObject.getJSONObject("player")
-//                                .getString("default"),
-//                        videoObject.getJSONObject("thumbnail")
-//                                .getString("sqDefault"));
-//                videos.add(video);
-//            }
-
-        } catch (JSONException e) {
-            // manage exceptions
-        }
-
-
-
-
-        return null;
+            return address;
     }
 
     @Override
@@ -107,40 +96,32 @@ public class AddressDaoRemoteImpl implements AddressDao {
 
         String addressString = null;
         try {
-            addressString = httpUtilities.requestJSON(HttpUtilities.dataSourceRoot + "/address/");
+            String path = httpUtilities.getDataSourceRoot().getPath();
+            Uri uri = httpUtilities.getDataSourceRoot();
+
+            String host = uri.getHost();
+            String path2 = uri.getPath();
+            int port = uri.getPort();
+            String auth = uri.getAuthority();
+            String eAuth = uri.getEncodedAuthority();
+            String frag = uri.getEncodedFragment();
+            String ePath = uri.getEncodedPath();
+            String eQuery = uri.getEncodedQuery();
+            String fragment = uri.getFragment();
+            String query = uri.getQuery();
+            String scheme = uri.getScheme();
+            String userInfo = uri.getUserInfo();
+            String uriString = uri.toString();
+
+            //HttpUtilities.getDataSourceRoot().get
+
+            addressString = httpUtilities.requestJSON(httpUtilities.getDataSourceRoot().toString() + "/address/");
         } catch (IOException e) {
-            //e.printStackTrace();
-            Log.e(TAG, "IO problem.");
+            Log.e(TAG, "IO problem.", e);
         }
-//
-//        try {
-//            JSONObject json = new JSONObject(addressString);
-//            JSONObject dataObject = json.getJSONObject("data");
-//            JSONArray items = dataObject.getJSONArray("items");
-//
-////            for (int i = 0; i < items.length(); i++) {
-////                JSONObject videoObject = items.getJSONObject(i);
-////                Video video = new Video(videoObject.getString("title"),
-////                        videoObject.getString("description"),
-////                        videoObject.getJSONObject("player")
-////                                .getString("default"),
-////                        videoObject.getJSONObject("thumbnail")
-////                                .getString("sqDefault"));
-////                videos.add(video);
-////            }
-//
-//        } catch (JSONException e) {
-//            // manage exceptions
-//        }
-
-
-        //String addressString = httpUtilities.requestJSON("https://mighty-eyrie-28532.herokuapp.com/address/" + 1);
 
         try {
-            //JSONObject json = new JSONObject(addressString);
             JSONArray jsonArray = new JSONArray(addressString);
-            //JSONObject dataObject = json.getJSONObject("data");
-            //JSONArray items = dataObject.getJSONArray("items");
 
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject addressObject = jsonArray.getJSONObject(i);
@@ -158,30 +139,13 @@ public class AddressDaoRemoteImpl implements AddressDao {
                 address.setZip(addressObject.getString("zip"));
 
                 addresses.add(address);
-
-//                Video video = new Video(videoObject.getString("title"),
-//                        videoObject.getString("description"),
-//                        videoObject.getJSONObject("player")
-//                                .getString("default"),
-//                        videoObject.getJSONObject("thumbnail")
-//                                .getString("sqDefault"));
-//                videos.add(video);
-
-
-//                Video video = new Video(videoObject.getString("title"),
-//                        videoObject.getString("description"),
-//                        videoObject.getJSONObject("player")
-//                                .getString("default"),
-//                        videoObject.getJSONObject("thumbnail")
-//                                .getString("sqDefault"));
-//                videos.add(video);
             }
 
         } catch (JSONException e) {
-            // manage exceptions
+            Log.e(TAG, "JSON problems.", e);
         }
 
-        Log.d(TAG, Integer.toString(addresses.size()));
+        Log.d(TAG, "Addresses Recieved: " + Integer.toString(addresses.size()));
         return addresses;
     }
 
