@@ -45,12 +45,12 @@ public class AddressDaoRemoteImpl implements AddressDao {
     public Address get(Integer id) {
         String addressString = null;
         try {
-            addressString = httpUtilities.requestJSON(httpUtilities.getDataSourceRoot() + "/address/" + id);
-//            addressString = httpUtilities.requestJSON(httpUtilities.getDataSourceRoot()
-//                    .buildUpon()
-//                    .appendPath("address")
-//                    .build()
-//                    .toString());
+            addressString = httpUtilities.requestJSON(httpUtilities.getDataSourceRoot()
+                    .buildUpon()
+                    .appendPath("address")
+                    .appendPath(id.toString())
+                    .build()
+                    .toString());
         } catch (IOException e) {
             e.printStackTrace();
         }

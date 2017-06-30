@@ -61,6 +61,8 @@ public class AddressDaoRemoteImplTest {
 
     }
 
+
+
     /**
      * Test of create method, of class AddressDaoPostgresImpl.
      */
@@ -542,5 +544,4 @@ public class AddressDaoRemoteImplTest {
         Address address = addressBuilder(city, company, firstName, lastName, state, streetName, streetNumber, zip);
         return address;
     }
-
 }
