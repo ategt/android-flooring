@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -25,7 +26,7 @@ public class AddressDaoRemoteImpl implements AddressDao {
     HttpUtilities httpUtilities = null;
     public final String TAG = "AddressDaoRemoteImpl";
 
-    public AddressDaoRemoteImpl(Context context, HttpUtilities httpUtilities){
+    public AddressDaoRemoteImpl(Context context, HttpUtilities httpUtilities) {
         this.context = context;
         this.httpUtilities = httpUtilities;
     }
@@ -44,7 +45,7 @@ public class AddressDaoRemoteImpl implements AddressDao {
     public Address get(Integer id) {
         String addressString = null;
         try {
-            addressString = httpUtilities.requestJSON(httpUtilities.getDataSourceRoot() + "/address/");
+            addressString = httpUtilities.requestJSON(httpUtilities.getDataSourceRoot() + "/address/" + id);
 //            addressString = httpUtilities.requestJSON(httpUtilities.getDataSourceRoot()
 //                    .buildUpon()
 //                    .appendPath("address")
@@ -54,10 +55,10 @@ public class AddressDaoRemoteImpl implements AddressDao {
             e.printStackTrace();
         }
 
-            Gson gson = new GsonBuilder().create();
-            Address address = gson.fromJson(addressString, Address.class);
+        Gson gson = new GsonBuilder().create();
+        Address address = gson.fromJson(addressString, Address.class);
 
-            return address;
+        return address;
     }
 
     @Override
@@ -92,7 +93,7 @@ public class AddressDaoRemoteImpl implements AddressDao {
 
     @Override
     public List<Address> list() {
-        ArrayList<Address> addresses = new ArrayList<Address>();
+        //ArrayList<Address> addresses = new ArrayList<Address>();
 
         String addressString = null;
         try {
@@ -120,33 +121,11 @@ public class AddressDaoRemoteImpl implements AddressDao {
             Log.e(TAG, "IO problem.", e);
         }
 
-        try {
-            JSONArray jsonArray = new JSONArray(addressString);
+        Gson gson = new GsonBuilder().create();
+        Address[] addresses = gson.fromJson(addressString, Address[].class);
 
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject addressObject = jsonArray.getJSONObject(i);
-                Address address = new Address();
-
-                address.setId(addressObject.getInt("id"));
-
-                address.setFirstName(addressObject.getString("firstName"));
-                address.setLastName(addressObject.getString("lastName"));
-                address.setCompany(addressObject.getString("company"));
-                address.setCity(addressObject.getString("city"));
-                address.setState(addressObject.getString("state"));
-                address.setStreetNumber(addressObject.getString("streetNumber"));
-                address.setStreetName(addressObject.getString("streetName"));
-                address.setZip(addressObject.getString("zip"));
-
-                addresses.add(address);
-            }
-
-        } catch (JSONException e) {
-            Log.e(TAG, "JSON problems.", e);
-        }
-
-        Log.d(TAG, "Addresses Recieved: " + Integer.toString(addresses.size()));
-        return addresses;
+        Log.d(TAG, "Addresses Recieved: " + Integer.toString(addresses.length));
+        return Arrays.asList(addresses);
     }
 
     @Override

@@ -95,9 +95,7 @@ public class HttpUtilities {
             outputStream.close();
             return outputStream.toByteArray();
         } catch (IOException e) {
-            //e.printStackTrace();
-            Log.e(TAG, e.getMessage());
-            Log.e(TAG, "IO Problem");
+            Log.e(TAG, "IO Problem", e);
         } finally {
             httpURLConnection.disconnect();
         }
