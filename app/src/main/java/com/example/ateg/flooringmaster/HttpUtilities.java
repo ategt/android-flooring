@@ -7,18 +7,26 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
+import android.util.Pair;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by ATeg on 6/1/2017.
@@ -148,7 +156,7 @@ public class HttpUtilities {
 
             HttpURLConnection httpURLConnection = getHttpURLConnection(url);
 
-            sendData(addressJSONString, httpURLConnection, "POST");
+            sendData(addressJSONString, httpURLConnection, requestMethods);
 
             int responseCode = httpURLConnection.getResponseCode();
             Log.i(TAG, "POST Response Code :: " + responseCode);
@@ -162,6 +170,36 @@ public class HttpUtilities {
         return null;
     }
 
+    public String search(String searchInput) throws IOException {
+
+//        List<Pair<String, String>> params = new ArrayList();
+//        params.add(new Pair<String, String>("searchBy", ""));
+//        params.add(new Pair<String, String>("searchText", ""));
+
+
+        Map<String, String> params = new HashMap();
+
+
+        URL url = new URL("khgjfhg");
+        HttpURLConnection httpURLConnection = getHttpURLConnection(url);
+
+        httpURLConnection.setRequestMethod("POST");
+        httpURLConnection.setDoOutput(true);
+        httpURLConnection.setDoInput(true);
+
+        DataOutputStream out = new DataOutputStream(httpURLConnection.getOutputStream());
+        String content1 = "";
+
+        Set getkey = params.keySet();
+
+        Iterator iterator = getkey.iterator();
+        String
+
+        new UrlEncodedFormEntity();
+
+        return null;
+    }
+
     private HttpURLConnection getHttpURLConnection(URL url) throws IOException {
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.addRequestProperty("Content-Type", "application/json");
@@ -170,6 +208,9 @@ public class HttpUtilities {
     }
 
     private void sendData(String addressJSONString, HttpURLConnection httpURLConnection, @javax.annotation.Nonnull String requestMethod) throws IOException {
+        if (addressJSONString == null)
+            return;
+
         // For POST only - BEGIN
         httpURLConnection.setRequestMethod(requestMethod);
         httpURLConnection.setDoOutput(true);
