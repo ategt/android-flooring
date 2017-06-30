@@ -93,30 +93,14 @@ public class AddressDaoRemoteImpl implements AddressDao {
 
     @Override
     public List<Address> list() {
-        //ArrayList<Address> addresses = new ArrayList<Address>();
-
         String addressString = null;
         try {
-            String path = httpUtilities.getDataSourceRoot().getPath();
-            Uri uri = httpUtilities.getDataSourceRoot();
+            Uri uri = httpUtilities.getDataSourceRoot()
+                    .buildUpon()
+                    .appendPath("address")
+                    .build();
 
-            String host = uri.getHost();
-            String path2 = uri.getPath();
-            int port = uri.getPort();
-            String auth = uri.getAuthority();
-            String eAuth = uri.getEncodedAuthority();
-            String frag = uri.getEncodedFragment();
-            String ePath = uri.getEncodedPath();
-            String eQuery = uri.getEncodedQuery();
-            String fragment = uri.getFragment();
-            String query = uri.getQuery();
-            String scheme = uri.getScheme();
-            String userInfo = uri.getUserInfo();
-            String uriString = uri.toString();
-
-            //HttpUtilities.getDataSourceRoot().get
-
-            addressString = httpUtilities.requestJSON(httpUtilities.getDataSourceRoot().toString() + "/address/");
+            addressString = httpUtilities.requestJSON(uri.toString());
         } catch (IOException e) {
             Log.e(TAG, "IO problem.", e);
         }
