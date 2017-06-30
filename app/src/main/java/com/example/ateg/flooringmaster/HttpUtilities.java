@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -132,32 +133,32 @@ public class HttpUtilities {
 
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.addRequestProperty("Content", "application/json");
+            //httpURLConnection.addRequestProperty("Content-Type", "application/json;charset=UTF-8");
+            httpURLConnection.addRequestProperty("Content-Type", "application/json");
+            httpURLConnection.addRequestProperty("Accept", "application/json");
 
-            httpURLConnection.setDoOutput(true);
-            httpURLConnection.setRequestMethod("POST");
+            sendData(addressJSONString, httpURLConnection);
 
-            InputStream inputStream = httpURLConnection.getInputStream();
+            int responseCode = httpURLConnection.getResponseCode();
+            Log.i(TAG, "POST Response Code :: " + responseCode);
 
-            if (httpURLConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                return null;
-            }
-
-            int bytesRead = 0;
-            byte[] buffer = new byte[1024];
-
-            while ((bytesRead = inputStream.read(buffer)) > 0) {
-                outputStream.write(buffer, 0, bytesRead);
-            }
-            outputStream.close();
-            return outputStream.toByteArray();
-
-
+            return new String(getBytes(httpURLConnection));
         } catch (MalformedURLException e) {
             Log.e(TAG, "Bad URL", e);
         } catch (IOException e) {
             Log.e(TAG, "IO Problem", e);
         }
+        return null;
+    }
 
-
+    private void sendData(String addressJSONString, HttpURLConnection httpURLConnection) throws IOException {
+        // For POST only - BEGIN
+        httpURLConnection.setRequestMethod("POST");
+        httpURLConnection.setDoOutput(true);
+        OutputStream os = httpURLConnection.getOutputStream();
+        os.write(addressJSONString.getBytes());
+        os.flush();
+        os.close();
+        // For POST only - END
     }
 }

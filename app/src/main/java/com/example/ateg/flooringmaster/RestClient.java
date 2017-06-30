@@ -2,10 +2,13 @@ package com.example.ateg.flooringmaster;
 
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
+import java.util.Map;
 
 import static java.net.Proxy.Type.HTTP;
 
@@ -15,215 +18,37 @@ import static java.net.Proxy.Type.HTTP;
 
 public class RestClient
 {
-    private ArrayList<NameValuePair> params;
-    private ArrayList<NameValuePair> headers;
 
-    private String url;
+//    public static String makeRequest(String path, Map params)
+//            throws Exception {
+//
+//        DefaultHttpClient httpclient = new DefaultHttpClient();
+//        HttpPost httpost = new HttpPost(path);
+//        Iterator iter = params.entrySet().iterator();
+//
+//        JSONObject holder = new JSONObject();
+//
+//        while(iter.hasNext()) {
+//            Map.Entry pairs = (Map.Entry)iter.next();
+//            String key = (String)pairs.getKey();
+//            Map m = (Map)pairs.getValue();
+//
+//            JSONObject data = new JSONObject();
+//            Iterator iter2 = m.entrySet().iterator();
+//            while(iter2.hasNext()) {
+//                Map.Entry pairs2 = (Map.Entry)iter2.next();
+//                data.put((String)pairs2.getKey(), (String)pairs2.getValue());
+//            }
+//            holder.put(key, data);
+//        }
+//
+//        StringEntity se = new StringEntity(holder.toString());
+//        httpost.setEntity(se);
+//        httpost.setHeader("Accept", "application/json");
+//        httpost.setHeader("Content-type", "application/json");
+//
+//        ResponseHandler responseHandler = new BasicResponseHandler();
+//        response = httpclient.execute(httpost, responseHandler);
+//    }
 
-    private int responseCode;
-    private String message;
-
-    private String response;
-
-    public String getResponse()
-    {
-        return response;
-    }
-
-    public String getErrorMessage()
-    {
-        return message;
-    }
-
-    public int getResponseCode()
-    {
-        return responseCode;
-    }
-
-    public RestClient(String url) {
-        this.url = url;
-        params = new ArrayList<NameValuePair>();
-        headers = new ArrayList<NameValuePair>();
-    }
-
-    public void AddParam(String name, String value)
-    {
-        params.add(new BasicNameValuePair(name, value));
-    }
-
-    public void AddHeader(String name, String value)
-    {
-        headers.add(new BasicNameValuePair(name, value));
-    }
-
-    public void Execute(RequestMethod method) throws Exception
-    {
-        switch (method)
-        {
-            case GET:
-            {
-                // add parameters
-                String combinedParams = "";
-                if (!params.isEmpty())
-                {
-                    combinedParams += "";
-                    for (NameValuePair p : params)
-                    {
-                        String paramString = p.getName() + "" + URLEncoder.encode(p.getValue(),"UTF-8");
-                        if (combinedParams.length() > 1)
-                        {
-                            combinedParams += "&" + paramString;
-                        }
-                        else
-                        {
-                            combinedParams += paramString;
-                        }
-                    }
-                }
-
-                HttpGet request = new HttpGet(url + combinedParams);
-
-                // add headers
-                for (NameValuePair h : headers)
-                {
-                    request.addHeader(h.getName(), h.getValue());
-                }
-
-                executeRequest(request, url);
-                break;
-            }
-            case POST:
-            {
-                HttpPost request = new HttpPost(url);
-
-                // add headers
-                for (NameValuePair h : headers)
-                {
-                    request.addHeader(h.getName(), h.getValue());
-                }
-
-                if (!params.isEmpty())
-                {
-                    request.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
-                }
-
-                executeRequest(request, url);
-                break;
-            }
-        }
-    }
-
-    private void executeRequest(HttpUriRequest request, String url) throws Exception
-    {
-
-        HttpParams httpParameters = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(httpParameters,15000);
-        HttpConnectionParams.setSoTimeout(httpParameters, 15000);
-        HttpClient client = new DefaultHttpClient(httpParameters);
-
-        HttpResponse httpResponse;
-
-
-
-
-
-        httpResponse = client.execute(request);
-        responseCode = httpResponse.getStatusLine().getStatusCode();
-        message = httpResponse.getStatusLine().getReasonPhrase();
-
-        HttpEntity entity = httpResponse.getEntity();
-
-        if (entity != null)
-        {
-
-            InputStream instream = entity.getContent();
-            response = convertStreamToString(instream);
-
-            // Closing the input stream will trigger connection release
-            instream.close();
-        }
-
-
-    }
-
-    private static String convertStreamToString(InputStream is)
-    {
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-
-        String line = null;
-        try
-        {
-            while ((line = reader.readLine()) != null)
-            {
-                sb.append(line + "\n");
-            }
-        }
-        catch (IOException e)
-        {
-
-            e.printStackTrace();
-        }
-        finally
-        {
-            try
-            {
-                is.close();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-        return sb.toString();
-    }
-    public InputStream getInputStream(){
-        HttpParams httpParameters = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(httpParameters,15000);
-        HttpConnectionParams.setSoTimeout(httpParameters, 15000);
-        HttpClient client = new DefaultHttpClient(httpParameters);
-
-        HttpResponse httpResponse;
-
-        try
-        {
-
-            HttpPost request = new HttpPost(url);
-
-            httpResponse = client.execute(request);
-            responseCode = httpResponse.getStatusLine().getStatusCode();
-            message = httpResponse.getStatusLine().getReasonPhrase();
-
-            HttpEntity entity = httpResponse.getEntity();
-
-            if (entity != null)
-            {
-
-                InputStream instream = entity.getContent();
-                return instream;
-             /*   response = convertStreamToString(instream);
-
-                // Closing the input stream will trigger connection release
-                instream.close();*/
-            }
-
-        }
-        catch (ClientProtocolException e)
-        {
-            client.getConnectionManager().shutdown();
-            e.printStackTrace();
-        }
-        catch (IOException e)
-        {
-            client.getConnectionManager().shutdown();
-            e.printStackTrace();
-        }
-        return null;
-    }
-    public enum RequestMethod
-    {
-        GET,
-        POST
-    }
 }

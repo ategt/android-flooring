@@ -57,6 +57,47 @@ public class AddressRemoteDaoTest {
         Assert.assertTrue(addresses.size() > 10);
     }
 
+    @Test
+    public void getTest() {
+        List<Address> addresses = addressDao.list();
+
+        Random random = new Random();
+        int randomAddressId = random.nextInt(addresses.size());
+
+        Address randomAddress = addresses.get(randomAddressId);
+        Assert.assertNotNull(randomAddress);
+
+        Address specificAddress = addressDao.get(randomAddress.getId());
+
+        Assert.assertNotNull(specificAddress);
+        Assert.assertEquals(specificAddress, randomAddress);
+    }
+
+    @Test
+    public void createTest() {
+
+        Address address = addressGenerator();
+        Assert.assertNotNull(address);
+        Assert.assertNull(address.getId());
+
+        Address addressReturned = addressDao.create(address);
+
+        Assert.assertNotNull(addressReturned);
+        Integer returnedAddressId = addressReturned.getId();
+
+        Assert.assertTrue(returnedAddressId > 0);
+
+        address.setId(returnedAddressId);
+
+        Assert.assertEquals(addressReturned, address);
+
+        int addressId = addressReturned.getId();
+        Address storedAddress = addressDao.get(addressId);
+
+        assertNotNull(storedAddress);
+        Assert.assertEquals(storedAddress, addressReturned);
+    }
+
     /**
      * Test of create method, of class AddressDaoPostgresImpl.
      */

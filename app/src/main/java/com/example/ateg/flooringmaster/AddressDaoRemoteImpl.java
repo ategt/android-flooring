@@ -42,10 +42,10 @@ public class AddressDaoRemoteImpl implements AddressDao {
         Gson gson = new GsonBuilder().create();
         String addressJSONString = gson.toJson(address);
 
-        httpUtilities.sendJSON(uri, addressJSONString);
+        String returnedString = httpUtilities.sendJSON(uri, addressJSONString);
+        Address returnedAddress = gson.fromJson(returnedString, Address.class);
 
-
-        return null;
+        return returnedAddress;
     }
 
     @Override
