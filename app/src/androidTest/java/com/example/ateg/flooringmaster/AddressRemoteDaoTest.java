@@ -426,16 +426,17 @@ public class AddressRemoteDaoTest {
                     randomStrings[6],
                     randomStrings[7]);
 
-            int resultId = addressDao.create(address).getId();
+            address = addressDao.create(address);
+            int resultId = address.getId();
 
             int position = new Random().nextInt(randomStrings.length);
             String searchString = randomStrings[position];
 
             Address result = addressDao.get(searchString);
 
-            if (address.equals(result)) {
-                System.out.println("Thing");
-            }
+//            if (address.equals(result)) {
+//                System.out.println("Thing");
+//            }
 
             assertEquals(result, address);
             addressDao.delete(resultId);
@@ -459,7 +460,8 @@ public class AddressRemoteDaoTest {
                     randomStrings[6],
                     randomStrings[7]);
 
-            int resultId = addressDao.create(address).getId();
+            address = addressDao.create(address);
+            int resultId = address.getId();
 
             int position = new Random().nextInt(randomStrings.length);
             String searchString = randomStrings[position];

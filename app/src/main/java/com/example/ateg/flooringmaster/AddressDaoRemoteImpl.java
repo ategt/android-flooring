@@ -84,7 +84,26 @@ public class AddressDaoRemoteImpl implements AddressDao {
 
     @Override
     public Address get(String input) {
-        return null;
+
+        String addressString = null;
+        try {
+            Uri uri = httpUtilities.getDataSourceRoot()
+                    .buildUpon()
+                    .appendPath("address")
+                    .appendPath(input)
+                    .appendPath("search")
+                    .build();
+
+            addressString = httpUtilities.requestJSON(uri);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Gson gson = new GsonBuilder().create();
+        Address address = gson.fromJson(addressString, Address.class);
+
+        return address;
     }
 
     @Override
