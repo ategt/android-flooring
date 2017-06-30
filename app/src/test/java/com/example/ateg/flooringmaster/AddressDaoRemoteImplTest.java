@@ -53,79 +53,6 @@ public class AddressDaoRemoteImplTest {
     }
 
     @Test
-    public void create() throws Exception {
-
-    }
-
-    @Test
-    public void update() throws Exception {
-
-    }
-
-    @Test
-    public void get() {
-
-        //AddressDao addressDao = new AddressDaoRemoteImpl(null, new HttpUtilities(null, Uri.EMPTY));
-
-        Address testAddress = new Address();
-        //testAddress.set
-
-
-        addressDao.size();
-
-        Address address = addressDao.get(1);
-
-        assertNull(address);
-
-        List<Address> addressList = addressDao.list();
-
-        Random random = new Random();
-
-        //addressList.get(random.nextInt(add))
-
-        Assert.assertEquals((long) address.getId(), 3L);
-        Assert.assertEquals(address.getCity(), 3L);
-        Assert.assertEquals(address.getCompany(), 3L);
-        Assert.assertEquals(address.getFirstName(), 3L);
-        Assert.assertEquals(address.getLastName(), 3L);
-        Assert.assertEquals(address.getState(), 3L);
-        Assert.assertEquals(address.getStreetName(), 3L);
-        Assert.assertEquals(address.getStreetNumber(), 3L);
-        Assert.assertEquals(address.getZip(), 3L);
-
-    }
-
-    @Test
-    public void get1() throws Exception {
-
-    }
-
-    @Test
-    public void getByCompany() throws Exception {
-
-    }
-
-    @Test
-    public void delete() throws Exception {
-
-    }
-
-    @Test
-    public void size() throws Exception {
-
-    }
-
-    @Test
-    public void getAddressesSortedByParameter() throws Exception {
-
-    }
-
-    @Test
-    public void getCompletionGuesses() throws Exception {
-
-    }
-
-    @Test
     public void list() throws Exception {
 
         List<Address> addresses = addressDao.list();
@@ -133,42 +60,6 @@ public class AddressDaoRemoteImplTest {
         Assert.assertTrue(addresses.size() > 10);
 
     }
-
-    @Test
-    public void list1() throws Exception {
-
-    }
-
-    @Test
-    public void searchByFirstName() throws Exception {
-
-    }
-
-    @Test
-    public void searchByLastName() throws Exception {
-
-    }
-
-    @Test
-    public void searchByCity() throws Exception {
-
-    }
-
-    @Test
-    public void searchByCompany() throws Exception {
-
-    }
-
-    @Test
-    public void searchByState() throws Exception {
-
-    }
-
-    @Test
-    public void searchByZip() throws Exception {
-
-    }
-
 
     /**
      * Test of create method, of class AddressDaoPostgresImpl.
@@ -574,6 +465,7 @@ public class AddressDaoRemoteImplTest {
         List<Address> addresses = addressDao.list();
         List<Address> addressesFromDb = addressDao.getAddressesSortedByParameter("last_name");
 
+        //noinspection Since15
         addresses.sort(new Comparator<Address>() {
             @Override
             public int compare(Address address1, Address address2) {
