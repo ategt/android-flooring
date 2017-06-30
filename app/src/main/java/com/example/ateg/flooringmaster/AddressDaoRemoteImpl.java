@@ -42,7 +42,7 @@ public class AddressDaoRemoteImpl implements AddressDao {
         Gson gson = new GsonBuilder().create();
         String addressJSONString = gson.toJson(address);
 
-        String returnedString = httpUtilities.sendJSON(uri, addressJSONString);
+        String returnedString = httpUtilities.sendJSON(uri, addressJSONString, "POST");
         Address returnedAddress = gson.fromJson(returnedString, Address.class);
 
         return returnedAddress;
@@ -50,7 +50,16 @@ public class AddressDaoRemoteImpl implements AddressDao {
 
     @Override
     public void update(Address address) {
+        Uri uri = httpUtilities.getDataSourceRoot()
+                .buildUpon()
+                .appendPath("address")
+                .appendPath(address.getId().toString())
+                .build();
 
+        Gson gson = new GsonBuilder().create();
+        String addressJSONString = gson.toJson(address);
+
+        httpUtilities.sendJSON(uri, addressJSONString, "PUT");
     }
 
     @Override
@@ -84,8 +93,25 @@ public class AddressDaoRemoteImpl implements AddressDao {
     }
 
     @Override
-    public void delete(Integer id) {
+    public Address delete(Integer id) {
+        String addressString = null;
+        try {
+            Uri uri = httpUtilities.getDataSourceRoot()
+                    .buildUpon()
+                    .appendPath("address")
+                    .appendPath(id.toString())
+                    .build();
 
+            addressString = httpUtilities.requestJSON(uri, "DELETE");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Gson gson = new GsonBuilder().create();
+        Address address = gson.fromJson(addressString, Address.class);
+
+        return address;
     }
 
     @Override

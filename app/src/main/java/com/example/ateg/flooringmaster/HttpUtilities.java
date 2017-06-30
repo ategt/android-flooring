@@ -74,6 +74,21 @@ public class HttpUtilities {
         return jsonString;
     }
 
+    public String requestJSON(Uri urlUri) throws IOException {
+        return requestJSON(urlUri, null);
+    }
+
+    public String requestJSON(Uri urlUri, String requestMethod) throws IOException {
+        URL url = new URL(urlUri.toString());
+        HttpURLConnection httpURLConnection = getHttpURLConnection(url);
+
+        if (requestMethod != null)
+            httpURLConnection.setRequestMethod(requestMethod);
+
+        String jsonString = new String(getBytes(httpURLConnection));
+        return jsonString;
+    }
+
     public byte[] getUrlBytes(String urlSpec) throws IOException {
         URL url = new URL(urlSpec);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -126,18 +141,14 @@ public class HttpUtilities {
         return new String(getUrlBytes(urlSpec));
     }
 
-    public String sendJSON(Uri uri, String addressJSONString) {
+    public String sendJSON(Uri uri, String addressJSONString, String requestMethods) {
         URL url = null;
         try {
             url = new URL(uri.toString());
 
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            httpURLConnection.addRequestProperty("Content", "application/json");
-            //httpURLConnection.addRequestProperty("Content-Type", "application/json;charset=UTF-8");
-            httpURLConnection.addRequestProperty("Content-Type", "application/json");
-            httpURLConnection.addRequestProperty("Accept", "application/json");
+            HttpURLConnection httpURLConnection = getHttpURLConnection(url);
 
-            sendData(addressJSONString, httpURLConnection);
+            sendData(addressJSONString, httpURLConnection, "POST");
 
             int responseCode = httpURLConnection.getResponseCode();
             Log.i(TAG, "POST Response Code :: " + responseCode);
@@ -151,9 +162,16 @@ public class HttpUtilities {
         return null;
     }
 
-    private void sendData(String addressJSONString, HttpURLConnection httpURLConnection) throws IOException {
+    private HttpURLConnection getHttpURLConnection(URL url) throws IOException {
+        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+        httpURLConnection.addRequestProperty("Content-Type", "application/json");
+        httpURLConnection.addRequestProperty("Accept", "application/json");
+        return httpURLConnection;
+    }
+
+    private void sendData(String addressJSONString, HttpURLConnection httpURLConnection, @javax.annotation.Nonnull String requestMethod) throws IOException {
         // For POST only - BEGIN
-        httpURLConnection.setRequestMethod("POST");
+        httpURLConnection.setRequestMethod(requestMethod);
         httpURLConnection.setDoOutput(true);
         OutputStream os = httpURLConnection.getOutputStream();
         os.write(addressJSONString.getBytes());
