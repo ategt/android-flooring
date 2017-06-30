@@ -13,13 +13,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -170,32 +173,67 @@ public class HttpUtilities {
         return null;
     }
 
-    public String search(String searchInput) throws IOException {
+    public String search(Uri uri, String searchBy, String searchText) {
 
 //        List<Pair<String, String>> params = new ArrayList();
 //        params.add(new Pair<String, String>("searchBy", ""));
 //        params.add(new Pair<String, String>("searchText", ""));
 
+        Map<String, String> param = new HashMap();
+        param.put("searchBy", searchBy);
+        param.put("searchText", searchText);
 
-        Map<String, String> params = new HashMap();
+        URL siteUrl;
+        try {
+            siteUrl = new URL(getDataSourceRoot().buildUpon()
+                    .appendPath("address")
+                    .appendPath("search")
+                    .build()
+                    .toString());
+            HttpURLConnection conn = (HttpURLConnection) siteUrl.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
 
+            DataOutputStream out = new DataOutputStream(conn.getOutputStream());
+            String content1 = "";
 
-        URL url = new URL("khgjfhg");
-        HttpURLConnection httpURLConnection = getHttpURLConnection(url);
+            Set getkey = param.keySet();
+            Iterator keyIter = getkey.iterator();
+            String content = "";
+            for (int i = 0; keyIter.hasNext(); i++) {
+                Object key = keyIter.next();
+                if (i != 0) {
+                    content += "&";
+                }
+                content += key + "=" + param.get(key);
+                //System.out.println("Content" + content);
+            }
 
-        httpURLConnection.setRequestMethod("POST");
-        httpURLConnection.setDoOutput(true);
-        httpURLConnection.setDoInput(true);
+            //System.out.println(content);
+            Log.i(TAG, "Content: " + content);
+            out.writeBytes(content.trim());
+            out.flush();
+            out.close();
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    conn.getInputStream()));
+            String line = "";
+            StringBuffer sb = new StringBuffer();
+            while ((line = in.readLine()) != null) {
+                //System.out.println(line);
+                sb.append(line);
+                sb.append("\n");
+            }
+            in.close();
 
-        DataOutputStream out = new DataOutputStream(httpURLConnection.getOutputStream());
-        String content1 = "";
-
-        Set getkey = params.keySet();
-
-        Iterator iterator = getkey.iterator();
-        String
-
-        new UrlEncodedFormEntity();
+            return sb.toString();
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "Bad Url", e);
+        } catch (ProtocolException e) {
+            Log.e(TAG, "Bad Protocol", e);
+        } catch (IOException e) {
+            Log.e(TAG, "IO Issue", e);
+        }
 
         return null;
     }

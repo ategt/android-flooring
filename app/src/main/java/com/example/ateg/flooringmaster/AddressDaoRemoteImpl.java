@@ -190,6 +190,7 @@ public class AddressDaoRemoteImpl implements AddressDao {
                 .appendQueryParameter("searchText",lastName)
                 .build();
 
+        httpUtilities.
         String jsonString = httpUtilities.sendJSON(uri, null, "POST");
 
         Gson gson = new GsonBuilder().create();
