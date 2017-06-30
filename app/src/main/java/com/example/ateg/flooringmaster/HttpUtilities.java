@@ -1,7 +1,11 @@
 package com.example.ateg.flooringmaster;
 
+import android.accounts.NetworkErrorException;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -12,6 +16,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -28,7 +33,7 @@ public class HttpUtilities {
     //public static final String dataSourceRoot = "http://192.168.128.251:8080";
     private Uri dataSourceRoot;
 
-    public HttpUtilities(Context context, Uri dataSourceRoot ){
+    public HttpUtilities(Context context, Uri dataSourceRoot) {
         this.context = context;
         this.setDataSourceRoot(dataSourceRoot);
     }
@@ -76,6 +81,12 @@ public class HttpUtilities {
     }
 
     private byte[] getBytes(HttpURLConnection httpURLConnection) {
+
+        boolean isNetworkActive = checkForActiveNetwork();
+
+        if (!isNetworkActive)
+            return null;
+
         try {
             Log.d(TAG, httpURLConnection.getURL().toString());
 
@@ -103,7 +114,50 @@ public class HttpUtilities {
         return null;
     }
 
+    private boolean checkForActiveNetwork() {
+        ConnectivityManager connectivityManager = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
+    }
+
     public String getUrl(String urlSpec) throws IOException {
         return new String(getUrlBytes(urlSpec));
+    }
+
+    public String sendJSON(Uri uri, String addressJSONString) {
+        URL url = null;
+        try {
+            url = new URL(uri.toString());
+
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.addRequestProperty("Content", "application/json");
+
+            httpURLConnection.setDoOutput(true);
+            httpURLConnection.setRequestMethod("POST");
+
+            InputStream inputStream = httpURLConnection.getInputStream();
+
+            if (httpURLConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                return null;
+            }
+
+            int bytesRead = 0;
+            byte[] buffer = new byte[1024];
+
+            while ((bytesRead = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            outputStream.close();
+            return outputStream.toByteArray();
+
+
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "Bad URL", e);
+        } catch (IOException e) {
+            Log.e(TAG, "IO Problem", e);
+        }
+
+
     }
 }

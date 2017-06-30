@@ -33,6 +33,18 @@ public class AddressDaoRemoteImpl implements AddressDao {
 
     @Override
     public Address create(Address address) {
+        Uri uri = httpUtilities.getDataSourceRoot()
+                .buildUpon()
+                .appendPath("address")
+                .appendPath("")
+                .build();
+
+        Gson gson = new GsonBuilder().create();
+        String addressJSONString = gson.toJson(address);
+
+        httpUtilities.sendJSON(uri, addressJSONString);
+
+
         return null;
     }
 
@@ -78,7 +90,7 @@ public class AddressDaoRemoteImpl implements AddressDao {
 
     @Override
     public int size() {
-        return 0;
+        return list().size();
     }
 
     @Override
@@ -98,6 +110,7 @@ public class AddressDaoRemoteImpl implements AddressDao {
             Uri uri = httpUtilities.getDataSourceRoot()
                     .buildUpon()
                     .appendPath("address")
+                    .appendPath("")
                     .build();
 
             addressString = httpUtilities.requestJSON(uri.toString());
