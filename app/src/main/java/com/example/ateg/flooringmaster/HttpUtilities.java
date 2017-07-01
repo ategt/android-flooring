@@ -188,16 +188,15 @@ public class HttpUtilities {
             param.put("searchText", searchText);
 
         //URL siteUrl;
+        HttpURLConnection conn = null;
         try {
             URL siteUrl = new URL(uri.toString());
-            HttpURLConnection conn = (HttpURLConnection) siteUrl.openConnection();
+            conn = (HttpURLConnection) siteUrl.openConnection();
             conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
             conn.setDoInput(true);
 
-            conn.addRequestProperty("Accept", "application/json");
+            //conn.addRequestProperty("Accept", "application/json");
 
-            DataOutputStream out = new DataOutputStream(conn.getOutputStream());
             String content1 = "";
 
             Set getkey = param.keySet();
@@ -214,11 +213,24 @@ public class HttpUtilities {
 
             //System.out.println(content);
             Log.i(TAG, "Content: " + content);
-            out.writeBytes(content.trim());
-            out.flush();
-            out.close();
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    conn.getInputStream()));
+
+            if (content.isEmpty()){
+                Log.w(TAG, "Content empty. Skipping post.");
+            } else {
+                conn.setDoOutput(true);
+                DataOutputStream out = new DataOutputStream(conn.getOutputStream());
+                out.writeBytes(content.trim());
+                out.flush();
+                out.close();
+            }
+
+            int responseCode = conn.getResponseCode();
+            String message = conn.getResponseMessage();
+
+            InputStream inputStream = conn.getInputStream();
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader in = new BufferedReader(inputStreamReader);
+
             String line = "";
             StringBuffer sb = new StringBuffer();
             while ((line = in.readLine()) != null) {
@@ -235,6 +247,10 @@ public class HttpUtilities {
             Log.e(TAG, "Bad Protocol", e);
         } catch (IOException e) {
             Log.e(TAG, "IO Issue", e);
+        } finally {
+            if (conn != null){
+                conn.disconnect();
+            }
         }
 
         return null;
