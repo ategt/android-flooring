@@ -180,8 +180,12 @@ public class HttpUtilities {
 //        params.add(new Pair<String, String>("searchText", ""));
 
         Map<String, String> param = new HashMap();
-        param.put("searchBy", searchBy);
-        param.put("searchText", searchText);
+
+        if (searchBy != null)
+            param.put("searchBy", searchBy);
+
+        if (searchText != null)
+            param.put("searchText", searchText);
 
         //URL siteUrl;
         try {

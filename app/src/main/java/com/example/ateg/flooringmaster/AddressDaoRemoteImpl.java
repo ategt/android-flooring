@@ -186,11 +186,12 @@ public class AddressDaoRemoteImpl implements AddressDao {
                 .buildUpon()
                 .appendPath("address")
                 .appendPath("search")
-                //.appendQueryParameter("searchBy","searchByLastName")
-                //.appendQueryParameter("searchText",lastName)
+                .appendQueryParameter("searchBy","searchByLastName")
+                .appendQueryParameter("searchText",lastName)
                 .build();
 
-        String searchResult = httpUtilities.search(uri, "searchByLastName", lastName);
+        //String searchResult = httpUtilities.search(uri, "searchByLastName", lastName);
+        String searchResult = httpUtilities.search(uri, null, null);
 
 
         //String jsonString = httpUtilities.sendJSON(uri, null, "POST");
