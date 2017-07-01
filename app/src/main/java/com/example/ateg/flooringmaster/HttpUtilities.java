@@ -192,24 +192,12 @@ public class HttpUtilities {
         try {
             URL siteUrl = new URL(uri.toString());
             conn = (HttpURLConnection) siteUrl.openConnection();
-            conn.setRequestMethod("POST");
+            //conn.setRequestMethod("POST");
             conn.setDoInput(true);
 
             //conn.addRequestProperty("Accept", "application/json");
 
-            String content1 = "";
-
-            Set getkey = param.keySet();
-            Iterator keyIter = getkey.iterator();
-            String content = "";
-            for (int i = 0; keyIter.hasNext(); i++) {
-                Object key = keyIter.next();
-                if (i != 0) {
-                    content += "&";
-                }
-                content += key + "=" + param.get(key);
-                //System.out.println("Content" + content);
-            }
+            String content = buildPostableContent(param);
 
             //System.out.println(content);
             Log.i(TAG, "Content: " + content);
@@ -217,11 +205,13 @@ public class HttpUtilities {
             if (content.isEmpty()){
                 Log.w(TAG, "Content empty. Skipping post.");
             } else {
-                conn.setDoOutput(true);
-                DataOutputStream out = new DataOutputStream(conn.getOutputStream());
-                out.writeBytes(content.trim());
-                out.flush();
-                out.close();
+//                conn.setDoOutput(true);
+//                DataOutputStream out = new DataOutputStream(conn.getOutputStream());
+//                out.writeBytes(content.trim());
+//                out.flush();
+//                out.close();
+
+                sendData(content, conn, "POST");
             }
 
             int responseCode = conn.getResponseCode();
@@ -254,6 +244,23 @@ public class HttpUtilities {
         }
 
         return null;
+    }
+
+    private String buildPostableContent(Map<String, String> param) {
+        String content1 = "";
+
+        Set getkey = param.keySet();
+        Iterator keyIter = getkey.iterator();
+        String content = "";
+        for (int i = 0; keyIter.hasNext(); i++) {
+            Object key = keyIter.next();
+            if (i != 0) {
+                content += "&";
+            }
+            content += key + "=" + param.get(key);
+            //System.out.println("Content" + content);
+        }
+        return content;
     }
 
     private HttpURLConnection getHttpURLConnection(URL url) throws IOException {
