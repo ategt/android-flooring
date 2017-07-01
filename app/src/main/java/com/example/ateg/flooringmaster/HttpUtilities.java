@@ -183,17 +183,15 @@ public class HttpUtilities {
         param.put("searchBy", searchBy);
         param.put("searchText", searchText);
 
-        URL siteUrl;
+        //URL siteUrl;
         try {
-            siteUrl = new URL(getDataSourceRoot().buildUpon()
-                    .appendPath("address")
-                    .appendPath("search")
-                    .build()
-                    .toString());
+            URL siteUrl = new URL(uri.toString());
             HttpURLConnection conn = (HttpURLConnection) siteUrl.openConnection();
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
             conn.setDoInput(true);
+
+            conn.addRequestProperty("Accept", "application/json");
 
             DataOutputStream out = new DataOutputStream(conn.getOutputStream());
             String content1 = "";

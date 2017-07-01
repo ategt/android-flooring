@@ -195,7 +195,7 @@ public class AddressRemoteDaoTest {
 
         Address address = addressGenerator();
         address.setLastName(lastName);
-        addressDao.create(address);
+        address = addressDao.create(address);
 
         List<Address> result = addressDao.searchByLastName(lastName);
         assertTrue(result.contains(address));
