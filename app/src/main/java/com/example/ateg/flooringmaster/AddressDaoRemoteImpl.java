@@ -108,7 +108,7 @@ public class AddressDaoRemoteImpl implements AddressDao {
 
     @Override
     public Address getByCompany(String company) {
-        return null;
+        return get(company);
     }
 
     @Override
