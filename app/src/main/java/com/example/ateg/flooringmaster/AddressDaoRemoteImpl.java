@@ -190,7 +190,7 @@ public class AddressDaoRemoteImpl implements AddressDao {
                 //.appendQueryParameter("searchText",lastName)
                 .build();
 
-        String searchResult = httpUtilities.search(uri, "searchByLastName", lastName);
+        String searchResult = httpUtilities.search(uri, new AddressSearchRequest(lastName, AddressSearchByOptionEnum.LAST_NAME));
         //String searchResult = httpUtilities.search(uri, null, null);
 
         if (searchResult == null)

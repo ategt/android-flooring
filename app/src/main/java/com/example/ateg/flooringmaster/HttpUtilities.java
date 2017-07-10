@@ -9,6 +9,9 @@ import android.os.Environment;
 import android.util.Log;
 import android.util.Pair;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -173,44 +176,27 @@ public class HttpUtilities {
         return null;
     }
 
-    public String search(Uri uri, String searchBy, String searchText) {
+    public String search(Uri uri, AddressSearchRequest addressSearchRequest) {
 
-//        List<Pair<String, String>> params = new ArrayList();
-//        params.add(new Pair<String, String>("searchBy", ""));
-//        params.add(new Pair<String, String>("searchText", ""));
+        Gson gson = new GsonBuilder().create();
 
-        Map<String, String> param = new HashMap();
-
-        if (searchBy != null)
-            param.put("searchBy", searchBy);
-
-        if (searchText != null)
-            param.put("searchText", searchText);
-
-        //URL siteUrl;
         HttpURLConnection conn = null;
         try {
             URL siteUrl = new URL(uri.toString());
             conn = (HttpURLConnection) siteUrl.openConnection();
-            //conn.setRequestMethod("POST");
+            conn.setRequestMethod("POST");
             conn.setDoInput(true);
 
-            //conn.addRequestProperty("Accept", "application/json");
+            conn.addRequestProperty("Accept", "application/json");
+            conn.addRequestProperty("Content-type", "application/json");
 
-            String content = buildPostableContent(param);
+            String content = gson.toJson(addressSearchRequest);
 
-            //System.out.println(content);
             Log.i(TAG, "Content: " + content);
 
             if (content.isEmpty()){
                 Log.w(TAG, "Content empty. Skipping post.");
             } else {
-//                conn.setDoOutput(true);
-//                DataOutputStream out = new DataOutputStream(conn.getOutputStream());
-//                out.writeBytes(content.trim());
-//                out.flush();
-//                out.close();
-
                 sendData(content, conn, "POST");
             }
 
@@ -224,7 +210,6 @@ public class HttpUtilities {
             String line = "";
             StringBuffer sb = new StringBuffer();
             while ((line = in.readLine()) != null) {
-                //System.out.println(line);
                 sb.append(line);
                 sb.append("\n");
             }
