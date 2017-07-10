@@ -156,7 +156,7 @@ public class HttpUtilities {
     }
 
     public String sendJSON(Uri uri, String addressJSONString, String requestMethods) {
-        URL url = null;
+        URL url;
         try {
             url = new URL(uri.toString());
 
@@ -167,7 +167,11 @@ public class HttpUtilities {
             int responseCode = httpURLConnection.getResponseCode();
             Log.i(TAG, "POST Response Code :: " + responseCode);
 
-            return new String(getBytes(httpURLConnection));
+            byte[] bytes = getBytes(httpURLConnection);
+            if (bytes == null) {
+                return null;
+            } else
+                return new String(bytes);
         } catch (MalformedURLException e) {
             Log.e(TAG, "Bad URL", e);
         } catch (IOException e) {
@@ -183,25 +187,20 @@ public class HttpUtilities {
         HttpURLConnection conn = null;
         try {
             URL siteUrl = new URL(uri.toString());
-            conn = (HttpURLConnection) siteUrl.openConnection();
+            conn = getHttpURLConnection(siteUrl);
+
             conn.setRequestMethod("POST");
             conn.setDoInput(true);
-
-            conn.addRequestProperty("Accept", "application/json");
-            conn.addRequestProperty("Content-type", "application/json");
 
             String content = gson.toJson(addressSearchRequest);
 
             Log.i(TAG, "Content: " + content);
 
-            if (content.isEmpty()){
+            if (content.isEmpty()) {
                 Log.w(TAG, "Content empty. Skipping post.");
             } else {
                 sendData(content, conn, "POST");
             }
-
-            int responseCode = conn.getResponseCode();
-            String message = conn.getResponseMessage();
 
             InputStream inputStream = conn.getInputStream();
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -223,29 +222,12 @@ public class HttpUtilities {
         } catch (IOException e) {
             Log.e(TAG, "IO Issue", e);
         } finally {
-            if (conn != null){
+            if (conn != null) {
                 conn.disconnect();
             }
         }
 
         return null;
-    }
-
-    private String buildPostableContent(Map<String, String> param) {
-        String content1 = "";
-
-        Set getkey = param.keySet();
-        Iterator keyIter = getkey.iterator();
-        String content = "";
-        for (int i = 0; keyIter.hasNext(); i++) {
-            Object key = keyIter.next();
-            if (i != 0) {
-                content += "&";
-            }
-            content += key + "=" + param.get(key);
-            //System.out.println("Content" + content);
-        }
-        return content;
     }
 
     private HttpURLConnection getHttpURLConnection(URL url) throws IOException {

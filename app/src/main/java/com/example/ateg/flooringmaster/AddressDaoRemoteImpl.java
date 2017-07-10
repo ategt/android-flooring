@@ -17,6 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import javax.security.auth.callback.UnsupportedCallbackException;
+
 /**
  * Created by ATeg on 6/1/2017.
  */
@@ -25,10 +27,12 @@ public class AddressDaoRemoteImpl implements AddressDao {
     private final Context context;
     HttpUtilities httpUtilities = null;
     public final String TAG = "AddressDaoRemoteImpl";
+    Gson gson;
 
     public AddressDaoRemoteImpl(Context context, HttpUtilities httpUtilities) {
         this.context = context;
         this.httpUtilities = httpUtilities;
+        gson = new GsonBuilder().create();
     }
 
     @Override
@@ -39,7 +43,6 @@ public class AddressDaoRemoteImpl implements AddressDao {
                 .appendPath("")
                 .build();
 
-        Gson gson = new GsonBuilder().create();
         String addressJSONString = gson.toJson(address);
 
         String returnedString = httpUtilities.sendJSON(uri, addressJSONString, "POST");
@@ -53,10 +56,9 @@ public class AddressDaoRemoteImpl implements AddressDao {
         Uri uri = httpUtilities.getDataSourceRoot()
                 .buildUpon()
                 .appendPath("address")
-                .appendPath(address.getId().toString())
+                .appendPath("")
                 .build();
 
-        Gson gson = new GsonBuilder().create();
         String addressJSONString = gson.toJson(address);
 
         httpUtilities.sendJSON(uri, addressJSONString, "PUT");
@@ -76,7 +78,6 @@ public class AddressDaoRemoteImpl implements AddressDao {
             e.printStackTrace();
         }
 
-        Gson gson = new GsonBuilder().create();
         Address address = gson.fromJson(addressString, Address.class);
 
         return address;
@@ -100,7 +101,6 @@ public class AddressDaoRemoteImpl implements AddressDao {
             e.printStackTrace();
         }
 
-        Gson gson = new GsonBuilder().create();
         Address address = gson.fromJson(addressString, Address.class);
 
         return address;
@@ -127,7 +127,6 @@ public class AddressDaoRemoteImpl implements AddressDao {
             e.printStackTrace();
         }
 
-        Gson gson = new GsonBuilder().create();
         Address address = gson.fromJson(addressString, Address.class);
 
         return address;
@@ -163,7 +162,6 @@ public class AddressDaoRemoteImpl implements AddressDao {
             Log.e(TAG, "IO problem.", e);
         }
 
-        Gson gson = new GsonBuilder().create();
         Address[] addresses = gson.fromJson(addressString, Address[].class);
 
         Log.d(TAG, "Addresses Recieved: " + Integer.toString(addresses.length));
@@ -172,50 +170,56 @@ public class AddressDaoRemoteImpl implements AddressDao {
 
     @Override
     public List<Address> list(Integer sortBy) {
-        return null;
+        throw new UnsupportedOperationException();
+        //return null;
     }
 
     @Override
-    public List<Address> searchByFirstName(String firstName) {
-        return null;
+    public List<Address> searchByFirstName(String input) {
+        return searchClient(input, AddressSearchByOptionEnum.FIRST_NAME);
     }
 
     @Override
     public List<Address> searchByLastName(String lastName) {
+        return searchClient(lastName, AddressSearchByOptionEnum.LAST_NAME);
+    }
+
+    private List<Address> searchClient(String lastName, AddressSearchByOptionEnum addressSearchByOptionEnum) {
         Uri uri = httpUtilities.getDataSourceRoot()
                 .buildUpon()
                 .appendPath("address")
                 .appendPath("search")
                 .build();
 
-        String searchResult = httpUtilities.search(uri, new AddressSearchRequest(lastName, AddressSearchByOptionEnum.LAST_NAME));
+        String searchResult = httpUtilities.search(uri, new AddressSearchRequest(lastName, addressSearchByOptionEnum));
 
         if (searchResult == null)
             return null;
 
-        Gson gson = new GsonBuilder().create();
         Address[] addresses = gson.fromJson(searchResult, Address[].class);
 
         return Arrays.asList(addresses);
     }
 
     @Override
-    public List<Address> searchByCity(String city) {
-        return null;
+    public List<Address> searchByCity(String input) {
+        return searchClient(input, AddressSearchByOptionEnum.CITY);
     }
 
     @Override
-    public List<Address> searchByCompany(String company) {
-        return null;
+    public List<Address> searchByCompany(String input) {
+        return searchClient(input, AddressSearchByOptionEnum.COMPANY);
     }
 
     @Override
-    public List<Address> searchByState(String state) {
-        return null;
+    public List<Address> searchByState(String input) {
+        return searchClient(input, AddressSearchByOptionEnum.STATE);
+
     }
 
     @Override
-    public List<Address> searchByZip(String zip) {
-        return null;
+    public List<Address> searchByZip(String input) {
+        return searchClient(input, AddressSearchByOptionEnum.ZIP);
+
     }
 }

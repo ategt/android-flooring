@@ -177,7 +177,7 @@ public class AddressRemoteDaoTest {
         System.out.println("list");
 
         Address address = addressGenerator();
-        addressDao.create(address);
+        address = addressDao.create(address);
 
         List<Address> list = addressDao.list();
 
@@ -235,7 +235,7 @@ public class AddressRemoteDaoTest {
 
         Address address = addressGenerator();
         address.setFirstName(firstName);
-        addressDao.create(address);
+        address = addressDao.create(address);
 
         List<Address> result = addressDao.searchByFirstName(firstName);
         assertTrue(result.contains(address));
@@ -272,7 +272,7 @@ public class AddressRemoteDaoTest {
 
         Address address = addressGenerator();
         address.setCompany(company);
-        addressDao.create(address);
+        address = addressDao.create(address);
 
         List<Address> result = addressDao.searchByCompany(company);
         assertTrue(result.contains(address));
@@ -308,7 +308,7 @@ public class AddressRemoteDaoTest {
 
         Address address = addressGenerator();
         address.setCity(city);
-        addressDao.create(address);
+        address = addressDao.create(address);
 
         List<Address> result = addressDao.searchByCity(city);
         assertTrue(result.contains(address));
@@ -345,7 +345,7 @@ public class AddressRemoteDaoTest {
 
         Address address = addressGenerator();
         address.setState(state);
-        addressDao.create(address);
+        address = addressDao.create(address);
 
         List<Address> result = addressDao.searchByState(state);
         assertTrue(result.contains(address));
@@ -381,7 +381,7 @@ public class AddressRemoteDaoTest {
 
         Address address = addressGenerator();
         address.setZip(zip);
-        addressDao.create(address);
+        address = addressDao.create(address);
 
         List<Address> result = addressDao.searchByZip(zip);
         assertTrue(result.contains(address));
