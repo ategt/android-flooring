@@ -1,12 +1,13 @@
 package com.example.ateg.flooringmaster;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Created by ATeg on 6/1/2017.
  */
 
-public class Address {
+public class Address implements Serializable{
 
     private Integer id;
     private String firstName;

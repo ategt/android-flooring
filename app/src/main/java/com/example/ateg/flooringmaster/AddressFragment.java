@@ -1,11 +1,17 @@
 package com.example.ateg.flooringmaster;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import java.net.URI;
 
@@ -13,14 +19,15 @@ import java.net.URI;
  * Created by ATeg on 7/10/2017.
  */
 
-public class AddressFragment extends Fragment{
+public class AddressFragment extends Fragment {
 
     public static final String EXTRA_ADDRESS_ID = "com.example.ateg.flooringmaster.address_id";
     private static final String TAG = "Address Fragment";
     private static final String ACTION_FOR_INTENT_CALLBACK = "THIS_IS_A_UNIQUE_KEY_WE_USE_TO_COMMUNICATE";
 
     private Address address;
-    ProgressDialog progress;
+    private ProgressDialog progress;
+    private AddressClient addressClient;
 
     public static AddressFragment newInstance(Integer id) {
         Bundle arguments = new Bundle();
@@ -36,26 +43,31 @@ public class AddressFragment extends Fragment{
         super.onCreate(savedInstanceState);
 
         //setHasOptionsMenu(true);
+        Uri baseUri = Uri.parse("http://10.0.2.2:8080");
+        addressClient = new AddressClient(getActivity(),
+                new AddressDaoRemoteImpl(getActivity(), new HttpUtilities(getActivity(), baseUri)),
+                ACTION_FOR_INTENT_CALLBACK);
 
         Integer id = (Integer) getArguments().getSerializable(EXTRA_ADDRESS_ID);
         address = null;
         getContent(id);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().registerReceiver(receiver, new IntentFilter(ACTION_FOR_INTENT_CALLBACK));
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(receiver);
     }
 
     private void getContent(Integer id) {
-        // the request
-        try {
-            HttpGet httpGet = new HttpGet(new URI(TEST_URL));
-            RestTask task = new RestTask(getActivity(), ACTION_FOR_INTENT_CALLBACK);
-            task.execute(httpGet);
-            progress = ProgressDialog.show(getActivity(), "Getting Data ...", "Waiting For Results...", true);
-        }
-        catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        }
-
+        addressClient.get(id);
+        progress = ProgressDialog.show(getActivity(), "Getting Data ...", "Waiting For Results...", true);
     }
 
     @Override
@@ -193,12 +205,12 @@ public class AddressFragment extends Fragment{
     }
 
     private void updateDate() {
-        if (crime == null){
+        if (crime == null) {
             Toast.makeText(getActivity(), "Crime null.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (crime.getDate() == null){
+        if (crime.getDate() == null) {
             Toast.makeText(getActivity(), "Crime Date Null.", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -252,10 +264,19 @@ public class AddressFragment extends Fragment{
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        CrimeLab.get(getActivity()).saveCrimes();
-    }
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // clear the progress indicator
+            if (progress != null) {
+                progress.dismiss();
+            }
+
+            address = (Address) intent.getSerializableExtra(AddressClient.ADDRESS_SERIALIZABLE_EXTRA);
+
+            updateAddress();
+        }
+    };
+
 
 }
