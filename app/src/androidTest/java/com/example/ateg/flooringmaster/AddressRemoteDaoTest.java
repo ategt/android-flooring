@@ -1,8 +1,11 @@
 package com.example.ateg.flooringmaster;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.core.deps.guava.base.Strings;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 
@@ -14,6 +17,7 @@ import org.junit.runner.RunWith;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -514,9 +518,42 @@ public class AddressRemoteDaoTest {
 
         //noinspection Since15
         addresses.sort(new Comparator<Address>() {
+            @SuppressWarnings("Since15")
+            @TargetApi(Build.VERSION_CODES.N)
             @Override
             public int compare(Address address1, Address address2) {
-                return address1.getLastName().toLowerCase().compareTo(address2.getLastName().toLowerCase());
+                int result = Strings.nullToEmpty(address1.getLastName()).toLowerCase().compareTo(Strings.nullToEmpty(address2.getLastName()).toLowerCase());
+
+                if (result == 0) {
+                    result = Strings.nullToEmpty(address1.getFirstName()).toLowerCase().compareTo(Strings.nullToEmpty(address2.getFirstName()).toLowerCase());
+                }
+
+//                if (Objects.isNull(address1.getCompany())
+//                        && !Objects.isNull(address2.getCompany())) {
+//                    return 1;
+//                } else if (!Objects.isNull(address1.getCompany())
+//                        && Objects.isNull(address2.getCompany())) {
+//                    return -1;
+//                }
+                if (result == 0) {
+                    if (Strings.isNullOrEmpty(address1.getCompany())
+                            && !Strings.isNullOrEmpty(address2.getCompany())) {
+                        return 1;
+                    } else if (!Strings.isNullOrEmpty(address1.getCompany())
+                            && Strings.isNullOrEmpty(address2.getCompany())) {
+                        return -1;
+                    }
+                }
+
+                if (result == 0) {
+                    result = Strings.nullToEmpty(address1.getCompany()).toLowerCase().compareTo(Strings.nullToEmpty(address2.getCompany()).toLowerCase());
+                }
+
+                if (result == 0) {
+                    result = Integer.compare(address1.getId(), address2.getId());
+                }
+
+                return result;
             }
         });
 
