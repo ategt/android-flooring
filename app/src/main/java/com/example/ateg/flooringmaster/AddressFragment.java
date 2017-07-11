@@ -1,7 +1,13 @@
 package com.example.ateg.flooringmaster;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+
+import java.net.URI;
 
 /**
  * Created by ATeg on 7/10/2017.
@@ -10,8 +16,11 @@ import android.support.v4.app.Fragment;
 public class AddressFragment extends Fragment{
 
     public static final String EXTRA_ADDRESS_ID = "com.example.ateg.flooringmaster.address_id";
+    private static final String TAG = "Address Fragment";
+    private static final String ACTION_FOR_INTENT_CALLBACK = "THIS_IS_A_UNIQUE_KEY_WE_USE_TO_COMMUNICATE";
 
     private Address address;
+    ProgressDialog progress;
 
     public static AddressFragment newInstance(Integer id) {
         Bundle arguments = new Bundle();
@@ -30,9 +39,24 @@ public class AddressFragment extends Fragment{
 
         Integer id = (Integer) getArguments().getSerializable(EXTRA_ADDRESS_ID);
         address = null;
+        getContent(id);
+
+
     }
 
-    public class
+    private void getContent(Integer id) {
+        // the request
+        try {
+            HttpGet httpGet = new HttpGet(new URI(TEST_URL));
+            RestTask task = new RestTask(getActivity(), ACTION_FOR_INTENT_CALLBACK);
+            task.execute(httpGet);
+            progress = ProgressDialog.show(getActivity(), "Getting Data ...", "Waiting For Results...", true);
+        }
+        catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflator, ViewGroup parent, Bundle savedInstanceState) {

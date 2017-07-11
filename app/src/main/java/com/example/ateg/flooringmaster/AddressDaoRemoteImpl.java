@@ -7,17 +7,10 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-
-import javax.security.auth.callback.UnsupportedCallbackException;
 
 /**
  * Created by ATeg on 6/1/2017.
@@ -139,7 +132,7 @@ public class AddressDaoRemoteImpl implements AddressDao {
 
     @Override
     public List<Address> getAddressesSortedByParameter(String sortBy) {
-        Integer sortByInt = AddressSortBy.parse(sortBy).intValue();
+        Integer sortByInt = AddressSortByEnum.parse(sortBy).intValue();
 
         return list(sortByInt);
     }
@@ -179,7 +172,7 @@ public class AddressDaoRemoteImpl implements AddressDao {
                     .buildUpon()
                     .appendPath("address")
                     .appendPath("")
-                    .appendQueryParameter("sort_by", AddressSortBy.parse(sortBy).value())
+                    .appendQueryParameter("sort_by", AddressSortByEnum.parse(sortBy).value())
                     .build();
 
             addressString = httpUtilities.requestJSON(uri.toString());

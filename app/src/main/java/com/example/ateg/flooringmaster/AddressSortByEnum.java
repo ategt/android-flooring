@@ -4,7 +4,7 @@ package com.example.ateg.flooringmaster;
  * Created by ATeg on 7/10/2017.
  */
 
-public enum AddressSortBy {
+public enum AddressSortByEnum {
     SORT_BY_COMPANY("company", AddressDao.SORT_BY_COMPANY),
     SORT_BY_ID("id", AddressDao.SORT_BY_ID),
     SORT_BY_FIRST_NAME("first_name", AddressDao.SORT_BY_FIRST_NAME),
@@ -13,7 +13,7 @@ public enum AddressSortBy {
     private String sortString;
     private Integer sortByInt;
 
-    private AddressSortBy(String sortString, Integer sortByInt) {
+    private AddressSortByEnum(String sortString, Integer sortByInt) {
         this.sortString = sortString;
         this.sortByInt = sortByInt;
     }
@@ -26,26 +26,26 @@ public enum AddressSortBy {
         return sortByInt;
     }
 
-    public static AddressSortBy parse(Integer input) {
-        for (AddressSortBy addressesSortBy : AddressSortBy.values()) {
+    public static AddressSortByEnum parse(Integer input) {
+        for (AddressSortByEnum addressesSortBy : AddressSortByEnum.values()) {
             if (addressesSortBy.intValue() == input)
                 return addressesSortBy;
         }
-        return AddressSortBy.SORT_BY_ID;
+        return AddressSortByEnum.SORT_BY_ID;
     }
 
-    public static AddressSortBy parse(String input) {
-        for (AddressSortBy addressesSortBy : AddressSortBy.values()) {
+    public static AddressSortByEnum parse(String input) {
+        for (AddressSortByEnum addressesSortBy : AddressSortByEnum.values()) {
             if (addressesSortBy.value() == input)
                 return addressesSortBy;
         }
 
-        for (AddressSortBy addressesSortBy : AddressSortBy.values()) {
+        for (AddressSortByEnum addressesSortBy : AddressSortByEnum.values()) {
             if (addressesSortBy.name() == input)
                 return addressesSortBy;
         }
 
-        for (AddressSortBy addressesSortBy : AddressSortBy.values()) {
+        for (AddressSortByEnum addressesSortBy : AddressSortByEnum.values()) {
             try {
                 if (addressesSortBy.ordinal() == Integer.parseInt(input))
                     return addressesSortBy;
@@ -53,6 +53,6 @@ public enum AddressSortBy {
             }
         }
 
-        return AddressSortBy.SORT_BY_ID;
+        return AddressSortByEnum.SORT_BY_ID;
     }
 }
