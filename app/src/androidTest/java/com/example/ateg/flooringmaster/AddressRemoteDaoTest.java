@@ -522,7 +522,7 @@ public class AddressRemoteDaoTest {
 
         for (int i = 0; i < addresses.size(); i++) {
 
-            assertEquals(addresses.get(i), addressesFromDb.get(i));
+            assertEquals(" First Incongruency at : " + i + " compared: " + addresses.get(i).getId() + " \t Db: " + addressesFromDb.get(i).getId(), addresses.get(i), addressesFromDb.get(i));
 
         }
     }
