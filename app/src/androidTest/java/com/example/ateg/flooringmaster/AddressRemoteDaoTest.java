@@ -488,12 +488,17 @@ public class AddressRemoteDaoTest {
     @Test
     public void getSortedByName() {
         List<Address> addresses = addressDao.list();
-        List<Address> addressesFromDb = addressDao.list();
+        List<Address> addressesFromDb = addressDao.list(AddressDao.SORT_BY_LAST_NAME);
 
         addresses.sort(new Comparator<Address>() {
             @Override
             public int compare(Address address1, Address address2) {
-                return address1.getLastName().toLowerCase().compareTo(address2.getLastName().toLowerCase());
+                int result = address1.getLastName().toLowerCase().compareTo(address2.getLastName().toLowerCase());
+
+                if (result == 0)
+                    result = address1.getFirstName().toLowerCase().compareTo(address2.getFirstName().toLowerCase());
+
+                return result;
             }
         });
 

@@ -139,7 +139,9 @@ public class AddressDaoRemoteImpl implements AddressDao {
 
     @Override
     public List<Address> getAddressesSortedByParameter(String sortBy) {
-        return null;
+        Integer sortByInt = AddressSortBy.parse(sortBy).intValue();
+
+        return list(sortByInt);
     }
 
     @Override
@@ -170,8 +172,25 @@ public class AddressDaoRemoteImpl implements AddressDao {
 
     @Override
     public List<Address> list(Integer sortBy) {
-        throw new UnsupportedOperationException();
-        //return null;
+
+        String addressString = null;
+        try {
+            Uri uri = httpUtilities.getDataSourceRoot()
+                    .buildUpon()
+                    .appendPath("address")
+                    .appendPath("")
+                    .appendQueryParameter("sort_by", AddressSortBy.parse(sortBy).value())
+                    .build();
+
+            addressString = httpUtilities.requestJSON(uri.toString());
+        } catch (IOException e) {
+            Log.e(TAG, "IO problem.", e);
+        }
+
+        Address[] addresses = gson.fromJson(addressString, Address[].class);
+
+        Log.d(TAG, "Addresses Recieved: " + Integer.toString(addresses.length));
+        return Arrays.asList(addresses);
     }
 
     @Override
