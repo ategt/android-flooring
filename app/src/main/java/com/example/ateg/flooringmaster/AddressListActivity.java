@@ -37,10 +37,6 @@ public class AddressListActivity extends ListActivity {
                 setTitle(R.string.address_list);
 
         Uri submittedUri = Uri.parse(getString(R.string.starting_root_url));
-        Class aclass = submittedUri.getClass();
-        String className = aclass.getName();
-        String conName = aclass.getCanonicalName();
-        //aclass.get
 
         this.addressDao = new AddressDaoRemoteImpl(this, new HttpUtilities(this, submittedUri));
 
@@ -65,6 +61,7 @@ public class AddressListActivity extends ListActivity {
         @Override
         protected void onPostExecute(List<Address> _addressItems) {
             addresses.addAll(_addressItems);
+            ((AddressAdapter) getListAdapter()).notifyDataSetChanged();
         }
     }
 

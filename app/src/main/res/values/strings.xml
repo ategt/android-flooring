@@ -6,5 +6,6 @@
     <string name="empty_list">Press the Plus Sign To Add An Address.</string>
 
 
-    <string name="starting_root_url">http://192.168.128.251:8080</string>
+    <!--<string name="starting_root_url">http://192.168.128.251:8080</string>-->
+    <string name="starting_root_url">http://10.0.2.2:8080</string>
 </resources>
