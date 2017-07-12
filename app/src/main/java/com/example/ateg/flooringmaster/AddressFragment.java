@@ -26,6 +26,7 @@ import java.net.URI;
 public class AddressFragment extends Fragment {
 
     public static final String EXTRA_ADDRESS_ID = "com.example.ateg.flooringmaster.address_id";
+    public static final String EXTRA_ADDRESS = "com.example.ateg.flooringmaster.address";
     private static final String TAG = "Address Fragment";
     private static final String ACTION_FOR_INTENT_CALLBACK = "THIS_IS_A_UNIQUE_KEY_WE_USE_TO_COMMUNICATE";
 
@@ -47,7 +48,7 @@ public class AddressFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         //setHasOptionsMenu(true);
-        Uri baseUri = Uri.parse("http://10.0.2.2:8080");
+        Uri baseUri = Uri.parse(getString(R.string.starting_root_url));
         addressClient = new AddressClient(getActivity(),
                 new AddressDaoRemoteImpl(getActivity(), new HttpUtilities(getActivity(), baseUri)),
                 ACTION_FOR_INTENT_CALLBACK);

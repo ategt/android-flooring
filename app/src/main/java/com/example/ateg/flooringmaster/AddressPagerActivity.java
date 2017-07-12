@@ -22,9 +22,6 @@ import java.util.List;
 public class AddressPagerActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
-    private AddressDao addressDao;
-    //private LruCache<Integer, Address> addressLruCache;
-    private AddressClient addressClient;
     private List<Address> addresses;
 
     @Override
@@ -36,33 +33,42 @@ public class AddressPagerActivity extends AppCompatActivity {
         viewPager = new ViewPager(this);
         setContentView(viewPager);
 
-        String baseUriString = getString(R.string.starting_root_url);
-        Uri baseUri = Uri.parse(baseUriString);
-
-        addressClient = new AddressClient(this,
-                new AddressDaoRemoteImpl(this, new HttpUtilities(this, baseUri)),
-                "");
-
-        //addressLruCache = new LruCache<>(20);
-
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
 
         viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public android.support.v4.app.Fragment getItem(int position) {
-                //Address address = addressDao.get(position);
-                //addressLruCache.get())
                 Address address = addresses.get(position);
-
                 return AddressFragment.newInstance(address.getId());
             }
 
             @Override
             public int getCount() {
-                //return addressLruCache.size();
-                //return addressDao.size();
-                //return addressClient.getSize();
                 return addresses.size();
+            }
+        });
+
+        Address address = (Address) getIntent().getSerializableExtra(AddressFragment.EXTRA_ADDRESS);
+
+        viewPager.setCurrentItem(addresses.indexOf(address));
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Address address1 = addresses.get(position);
+                if (address1.getFullName() != null) {
+                    setTitle(address1.getFullName());
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
     }

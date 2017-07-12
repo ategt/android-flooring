@@ -81,7 +81,7 @@ public class AddressListActivity extends ListActivity {
         Address selectedAddress = addressAdapter.getItem(position);
 
         Intent intent = new Intent(this, AddressPagerActivity.class);
-        intent.putExtra(AddressFragment.EXTRA_ADDRESS_ID, selectedAddress.getId());
+        intent.putExtra(AddressFragment.EXTRA_ADDRESS, selectedAddress);
 
         startActivity(intent);
     }
