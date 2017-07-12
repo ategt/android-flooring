@@ -7,7 +7,7 @@ import java.util.Objects;
  * Created by ATeg on 6/1/2017.
  */
 
-public class Address implements Serializable{
+public class Address implements Serializable {
 
     private Integer id;
     private String firstName;
@@ -20,13 +20,13 @@ public class Address implements Serializable{
     private String zip;
 
     @Override
-    public boolean equals(Object object){
-        if (object == null){
+    public boolean equals(Object object) {
+        if (object == null) {
             return false;
         }
 
-        if (object instanceof Address){
-            Address otherAddress = (Address)object;
+        if (object instanceof Address) {
+            Address otherAddress = (Address) object;
 
             return Objects.equals(getCity(), otherAddress.getCity()) &&
                     Objects.equals(getCompany(), otherAddress.getCompany()) &&
@@ -43,7 +43,7 @@ public class Address implements Serializable{
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         if (id == null) return 0;
         return id;
     }
@@ -88,6 +88,10 @@ public class Address implements Serializable{
      */
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getFullName() {
+        return getFirstName() + " " + getLastName();
     }
 
     /**

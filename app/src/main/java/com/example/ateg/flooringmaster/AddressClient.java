@@ -16,6 +16,7 @@ public class AddressClient {
     //private static AddressClient addressClient;
     private AddressDao addressDao;
     private String filterString;
+    private Integer sizeAtLastCheck;
 
     public AddressClient(Context context, AddressDao addressDao, String filterString){
         this.context = context;
@@ -45,6 +46,25 @@ public class AddressClient {
             // broadcast the completion
             context.sendBroadcast(intent);
         }
+    }
+
+    private class AddressSizeTask extends AsyncTask<Void, Void, Integer>{
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            return addressDao.size();
+        }
+
+        @Override
+        protected void onPostExecute(Integer size) {
+            sizeAtLastCheck = size;
+        }
+    }
+
+    public Integer getSize(){
+        new AddressSizeTask().execute();
+
+        return sizeAtLastCheck;
     }
 
 

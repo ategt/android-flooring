@@ -2,6 +2,7 @@ package com.example.ateg.flooringmaster;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -52,9 +54,7 @@ public class AddressListActivity extends ListActivity {
 
         @Override
         protected List<Address> doInBackground(Integer... params) {
-
             List<Address> addressListResult = addressDao.list();
-
             return addressListResult;
         }
 
@@ -72,6 +72,20 @@ public class AddressListActivity extends ListActivity {
 
         return view;
     }
+
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+
+        AddressAdapter addressAdapter = (AddressAdapter) getListAdapter();
+        Address selectedAddress = addressAdapter.getItem(position);
+
+        Intent intent = new Intent(this, AddressPagerActivity.class);
+        intent.putExtra(AddressFragment.EXTRA_ADDRESS_ID, selectedAddress.getId());
+
+        startActivity(intent);
+    }
+
     private class AddressAdapter extends ArrayAdapter<Address> {
         public AddressAdapter(Context context, int resource, List<Address> objects) {
             super(context, resource, objects);
@@ -97,6 +111,5 @@ public class AddressListActivity extends ListActivity {
 
             return convertView;
         }
-
     }
 }

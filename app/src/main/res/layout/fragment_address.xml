@@ -15,56 +15,55 @@
         android:id="@+id/address_firstName_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/crime_title_hint" />
+        android:hint="@string/address_firstName_hint" />
 
     <TextView
         style="?android:listSeparatorTextViewStyle"
         android:id="@+id/address_lastName_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/crime_title_hint" />
+        android:hint="@string/address_lastName_hint" />
 
     <TextView
         style="?android:listSeparatorTextViewStyle"
         android:id="@+id/address_company_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/crime_title_hint" />
+        android:hint="@string/address_company_hint" />
 
     <TextView
         style="?android:listSeparatorTextViewStyle"
         android:id="@+id/address_streetNumber_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/crime_title_hint" />
+        android:hint="@string/address_streetNumber_hint" />
 
     <TextView
         style="?android:listSeparatorTextViewStyle"
         android:id="@+id/address_streetName_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/crime_title_hint" />
+        android:hint="@string/address_streetName_hint" />
 
     <TextView
         style="?android:listSeparatorTextViewStyle"
         android:id="@+id/address_city_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/crime_title_hint" />
+        android:hint="@string/address_city_hint" />
 
     <TextView
         style="?android:listSeparatorTextViewStyle"
         android:id="@+id/address_state_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/crime_title_hint" />
+        android:hint="@string/address_state_hint" />
 
     <TextView
         style="?android:listSeparatorTextViewStyle"
         android:id="@+id/address_zip_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/crime_title_hint" />
-
+        android:hint="@string/address_zip_hint" />
 
 </LinearLayout>
