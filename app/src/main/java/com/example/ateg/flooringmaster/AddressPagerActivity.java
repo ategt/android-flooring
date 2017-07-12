@@ -23,12 +23,13 @@ public class AddressPagerActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private List<Address> addresses;
+    private AddressDao addressDao;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        addresses = new ArrayList<>();
+        addressDao = new AddressLocalDaoImpl(new ArrayList<Address>());
 
         viewPager = new ViewPager(this);
         setContentView(viewPager);
