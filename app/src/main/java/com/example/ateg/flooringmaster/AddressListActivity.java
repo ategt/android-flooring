@@ -14,7 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,7 +23,6 @@ import java.util.List;
 public class AddressListActivity extends ListActivity {
 
     private static final String TAG = "AddressListActivity";
-    private List<Address> addresses = new ArrayList<Address>();
     private AddressDao addressDao;
 
     @Override
@@ -37,6 +35,8 @@ public class AddressListActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
                 setTitle(R.string.address_list);
+
+        List<Address> addresses = AddressDaoLocalImpl.getLocalDao().list();
 
         Uri submittedUri = Uri.parse(getString(R.string.starting_root_url));
 
@@ -60,7 +60,7 @@ public class AddressListActivity extends ListActivity {
 
         @Override
         protected void onPostExecute(List<Address> _addressItems) {
-            addresses.addAll(_addressItems);
+            AddressDaoLocalImpl.getLocalDao(_addressItems);
             ((AddressAdapter) getListAdapter()).notifyDataSetChanged();
         }
     }
@@ -82,6 +82,7 @@ public class AddressListActivity extends ListActivity {
 
         Intent intent = new Intent(this, AddressPagerActivity.class);
         intent.putExtra(AddressFragment.EXTRA_ADDRESS, selectedAddress);
+        intent.putExtra(AddressFragment.EXTRA_ADDRESS_ID, selectedAddress.getId());
 
         startActivity(intent);
     }

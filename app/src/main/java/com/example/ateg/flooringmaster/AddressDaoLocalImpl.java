@@ -8,12 +8,34 @@ import java.util.Set;
  * Created by ATeg on 7/11/2017.
  */
 
-public class AddressLocalDaoImpl implements AddressDao {
+public class AddressDaoLocalImpl implements AddressDao {
 
-    private List<Address> addresses;
+    private static List<Address> addresses;
+    private static AddressDaoLocalImpl addressDaoLocal;
 
-    public AddressLocalDaoImpl(List<Address> addresses){
-        this.addresses = addresses;
+    private AddressDaoLocalImpl(List<Address> addresses){
+        if (this.addresses == null){
+            this.addresses = addresses;
+        } else {
+            this.addresses.addAll(addresses);
+        }
+    }
+
+    public static AddressDaoLocalImpl getLocalDao(){
+        if (addressDaoLocal == null){
+            addressDaoLocal = new AddressDaoLocalImpl(new ArrayList());
+        }
+        return addressDaoLocal;
+    }
+
+    public static AddressDaoLocalImpl getLocalDao(List<Address> addresses){
+        if (addressDaoLocal == null){
+            addressDaoLocal = new AddressDaoLocalImpl(addresses);
+        } else {
+            AddressDaoLocalImpl.addresses.addAll(addresses);
+        }
+
+        return addressDaoLocal;
     }
 
     @Override
