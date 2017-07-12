@@ -23,16 +23,18 @@ import java.net.URI;
  * Created by ATeg on 7/10/2017.
  */
 
-public class AddressFragment extends Fragment {
+public class AddressFragment extends BaseFragment<AddressPresenter> implements AddressView {
 
     public static final String EXTRA_ADDRESS_ID = "com.example.ateg.flooringmaster.address_id";
     public static final String EXTRA_ADDRESS = "com.example.ateg.flooringmaster.address";
     private static final String TAG = "Address Fragment";
     private static final String ACTION_FOR_INTENT_CALLBACK = "THIS_IS_A_UNIQUE_KEY_WE_USE_TO_COMMUNICATE";
 
-    private Address address;
-    private ProgressDialog progress;
-    private AddressClient addressClient;
+    //private Address address;
+    private ProgressDialog mLoadingDialog;
+    //private AddressClient addressClient;
+    private AddressDao addressDao;
+    private Integer id;
 
     public static AddressFragment newInstance(Integer id) {
         Bundle arguments = new Bundle();
@@ -49,12 +51,14 @@ public class AddressFragment extends Fragment {
 
         //setHasOptionsMenu(true);
         Uri baseUri = Uri.parse(getString(R.string.starting_root_url));
+        addressDao = new AddressDaoRemoteImpl(getActivity(), new HttpUtilities(getActivity(), baseUri));
+
         addressClient = new AddressClient(getActivity(),
-                new AddressDaoRemoteImpl(getActivity(), new HttpUtilities(getActivity(), baseUri)),
+                addressDao,
                 ACTION_FOR_INTENT_CALLBACK);
 
         Integer id = (Integer) getArguments().getSerializable(EXTRA_ADDRESS_ID);
-        address = null;
+        //address = null;
         getContent(id);
     }
 
@@ -72,7 +76,7 @@ public class AddressFragment extends Fragment {
 
     private void getContent(Integer id) {
         addressClient.get(id);
-        progress = ProgressDialog.show(getActivity(), "Getting Data ...", "Waiting For Results...", true);
+        mLoadingDialog = ProgressDialog.show(getActivity(), "Getting Data ...", "Waiting For Results...", true);
     }
 
     @Override
@@ -91,12 +95,27 @@ public class AddressFragment extends Fragment {
         return view;
     }
 
+    @Override
+    protected int layout() {
+        return 0;
+    }
+
+    @Override
+    protected void setUi(View v) {
+
+    }
+
+    @Override
+    protected void init() {
+
+    }
+
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             // clear the progress indicator
-            if (progress != null) {
-                progress.dismiss();
+            if (mLoadingDialog != null) {
+                mLoadingDialog.dismiss();
             }
 
             address = (Address) intent.getSerializableExtra(AddressClient.ADDRESS_SERIALIZABLE_EXTRA);
@@ -105,4 +124,38 @@ public class AddressFragment extends Fragment {
             Toast.makeText(context, "Address: " + address.getFullName(), Toast.LENGTH_SHORT).show();
         }
     };
+
+    @Override
+    protected void populate() {
+        mPresenter.loadAddress(id);
+    }
+
+    @Override
+    protected void setListeners() {
+
+    }
+
+    @Override
+    protected AddressPresenter createPresenter() {
+        return new AddressPresenter(this, addressDao);
+    }
+
+    @Override
+    public void showLoading() {
+        mLoadingDialog.show();
+        mLoadingDialog = ProgressDialog.show(getActivity(), "Getting Data ...", "Waiting For Results...", true);
+    }
+
+    @Override
+    public void showError(Throwable e) {
+        mLoadingDialog.dismiss();
+        //showToast(e.getMessage());
+        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void setAddress(Address address) {
+        mLoadingDialog.dismiss();
+        // Populate view with user data
+    }
 }
