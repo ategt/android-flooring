@@ -105,6 +105,4 @@ public class AddressFragment extends Fragment {
             Toast.makeText(context, "Address: " + address.getFullName(), Toast.LENGTH_SHORT).show();
         }
     };
-
-
 }
