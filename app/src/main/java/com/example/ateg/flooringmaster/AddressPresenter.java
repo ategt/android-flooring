@@ -33,7 +33,7 @@ public class AddressPresenter extends BasePresenter<AddressView> {
                 if (address != null){
                     getView().setAddress(address);
                 } else {
-                    getView().showError(new IllegalArgumentException("Invalid user"));
+                    getView().showError(new IllegalArgumentException("Invalid Address"));
                 }
             }
         }.execute(addressId);

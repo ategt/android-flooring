@@ -34,7 +34,6 @@ public class AddressPagerActivity extends AppCompatActivity {
             @Override
             public android.support.v4.app.Fragment getItem(int position) {
                 Address address = addressDao.list().get(position);
-                //Address address = addresses.get(position);
                 return AddressFragment.newInstance(address.getId());
             }
 

@@ -50,7 +50,8 @@ public class AddressFragment extends BaseFragment<AddressPresenter> implements A
 
         //setHasOptionsMenu(true);
         Uri baseUri = Uri.parse(getString(R.string.starting_root_url));
-        addressDao = new AddressDaoRemoteImpl(getActivity(), new HttpUtilities(getActivity(), baseUri));
+        AddressDao addressDao = new AddressDaoRemoteImpl(getActivity(), new HttpUtilities(getActivity(), baseUri));
+        addressDao = new AddressDaoBufferedRemoteImp(addressDao, 20);
 
         id = (Integer) getArguments().getSerializable(EXTRA_ADDRESS_ID);
     }
