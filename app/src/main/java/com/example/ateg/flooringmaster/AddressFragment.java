@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.net.URI;
@@ -108,6 +109,30 @@ public class AddressFragment extends BaseFragment<AddressPresenter> implements A
     public void setAddress(Address address) {
         if (mLoadingDialog != null)
             mLoadingDialog.dismiss();
-        // Populate view with user data
+
+        View view = getView();
+        TextView cityTextView = (TextView) view.findViewById(R.id.address_city_textView);
+        cityTextView.setText(address.getCity());
+
+        TextView companyTextView = (TextView) view.findViewById(R.id.address_company_textView);
+        companyTextView.setText(address.getCompany());
+
+        TextView firstNameTextView = (TextView) view.findViewById(R.id.address_firstName_textView);
+        firstNameTextView.setText(address.getFirstName());
+
+        TextView lastNameTextView = (TextView) view.findViewById(R.id.address_lastName_textView);
+        lastNameTextView.setText(address.getLastName());
+
+        TextView stateTextView = (TextView) view.findViewById(R.id.address_state_textView);
+        stateTextView.setText(address.getState());
+
+        TextView streetNameTextView = (TextView) view.findViewById(R.id.address_streetName_textView);
+        streetNameTextView.setText(address.getStreetName());
+
+        TextView streetNumberTextView = (TextView) view.findViewById(R.id.address_streetNumber_textView);
+        streetNumberTextView.setText(address.getStreetNumber());
+
+        TextView zipTextView = (TextView) view.findViewById(R.id.address_zip_textView);
+        zipTextView.setText(address.getZip());
     }
 }
