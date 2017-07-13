@@ -5,7 +5,7 @@
 
     <TextView
         style="?android:listSeparatorTextViewStyle"
-        android:id="@+id/address_id"
+        android:id="@+id/address_id_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/address_id_label" />

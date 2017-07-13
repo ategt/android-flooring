@@ -111,6 +111,10 @@ public class AddressFragment extends BaseFragment<AddressPresenter> implements A
             mLoadingDialog.dismiss();
 
         View view = getView();
+
+        TextView idTextView = (TextView) view.findViewById(R.id.address_id_textView);
+        idTextView.setText(getString(R.string.address_id_label) + ": " + address.getId());
+
         TextView cityTextView = (TextView) view.findViewById(R.id.address_city_textView);
         cityTextView.setText(address.getCity());
 
