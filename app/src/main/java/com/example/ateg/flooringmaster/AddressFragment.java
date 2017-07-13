@@ -34,6 +34,7 @@ public class AddressFragment extends BaseFragment<AddressPresenter> implements A
     private ProgressDialog mLoadingDialog;
     private AddressDao addressDao;
     private Integer id;
+    private boolean loaded;
 
     public static AddressFragment newInstance(Integer id) {
         Bundle arguments = new Bundle();
@@ -73,7 +74,7 @@ public class AddressFragment extends BaseFragment<AddressPresenter> implements A
 
     @Override
     protected void init() {
-
+        loaded = false;
     }
 
     @Override
@@ -92,8 +93,29 @@ public class AddressFragment extends BaseFragment<AddressPresenter> implements A
     }
 
     @Override
-    public void showLoading() {
-        mLoadingDialog = ProgressDialog.show(getActivity(), "Getting Data ...", "Waiting For Results...", true);
+    public void showLoading(Integer id) {
+        loaded = false;
+
+
+//        int thisId = getId();
+//        View view = getView();
+//        boolean visile = getUserVisibleHint();
+//        //getActivity().
+//        boolean vis2 = this.isVisible();
+//        boolean isadded = this.isAdded();
+
+        //if (isVisible()) {
+        //if (this.id == id) {
+        //mLoadingDialog = ProgressDialog.show(getActivity(), "Getting Data ...", "Waiting For Results...", true);
+        //}
+        //}
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!loaded && isVisible() && !isHidden())
+            mLoadingDialog = ProgressDialog.show(getActivity(), "Getting Data ...", "Waiting For Results...", true);
     }
 
     @Override
@@ -106,6 +128,8 @@ public class AddressFragment extends BaseFragment<AddressPresenter> implements A
 
     @Override
     public void setAddress(Address address) {
+        loaded = true;
+
         if (mLoadingDialog != null)
             mLoadingDialog.dismiss();
 

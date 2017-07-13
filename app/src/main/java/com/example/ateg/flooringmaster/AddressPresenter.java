@@ -17,7 +17,7 @@ public class AddressPresenter extends BasePresenter<AddressView> {
 
     public void loadAddress(int addressId) {
 
-        getView().showLoading();
+        getView().showLoading(addressId);
 
         new AsyncTask<Integer, Void, Address>(){
 

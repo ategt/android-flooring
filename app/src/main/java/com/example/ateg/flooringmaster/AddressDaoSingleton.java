@@ -12,7 +12,7 @@ public class AddressDaoSingleton {
 
     private AddressDaoSingleton(Context context) {
         Uri baseUri = Uri.parse(context.getString(R.string.starting_root_url));
-        AddressDao tempAddressDao = new AddressDaoRemoteImpl(new HttpUtilities(context, baseUri));
+        AddressDao tempAddressDao = new AddressDaoRemoteImpl(context, new HttpUtilities(context, baseUri));
         addressDao = new AddressDaoBufferedRemoteImp(tempAddressDao, 20);
     }
 

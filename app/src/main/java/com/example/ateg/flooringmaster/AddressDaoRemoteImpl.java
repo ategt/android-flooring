@@ -22,7 +22,7 @@ public class AddressDaoRemoteImpl implements AddressDao {
     public final String TAG = "AddressDaoRemoteImpl";
     Gson gson;
 
-    public AddressDaoRemoteImpl(HttpUtilities httpUtilities) {
+    public AddressDaoRemoteImpl(Context context, HttpUtilities httpUtilities) {
         this.httpUtilities = httpUtilities;
         gson = new GsonBuilder().create();
     }
