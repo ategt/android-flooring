@@ -18,7 +18,7 @@ public class AddressDaoBufferedRemoteImp implements AddressDao {
         if (addressDao == null || addressDao.getClass().isInstance(AddressDaoBufferedRemoteImp.class))
             throw new UnsupportedOperationException("The input to AddressDaoBufferedRemoteImpl is unsupported.");
         this.addressDao = addressDao;
-        lruCache = new LruCache<>(maxSize);
+        lruCache = new LruCache(maxSize);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class AddressDaoBufferedRemoteImp implements AddressDao {
             lruCache.remove(address.getId());
             lruCache.put(address.getId(), address);
         }
-        
+
         addressDao.update(address);
     }
 

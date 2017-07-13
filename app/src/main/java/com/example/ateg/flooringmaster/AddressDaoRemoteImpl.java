@@ -17,13 +17,12 @@ import java.util.Set;
  */
 
 public class AddressDaoRemoteImpl implements AddressDao {
-    private final Context context;
+
     HttpUtilities httpUtilities = null;
     public final String TAG = "AddressDaoRemoteImpl";
     Gson gson;
 
-    public AddressDaoRemoteImpl(Context context, HttpUtilities httpUtilities) {
-        this.context = context;
+    public AddressDaoRemoteImpl(HttpUtilities httpUtilities) {
         this.httpUtilities = httpUtilities;
         gson = new GsonBuilder().create();
     }

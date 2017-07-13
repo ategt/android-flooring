@@ -40,7 +40,7 @@ public class AddressListActivity extends ListActivity {
 
         Uri submittedUri = Uri.parse(getString(R.string.starting_root_url));
 
-        this.addressDao = new AddressDaoRemoteImpl(this, new HttpUtilities(this, submittedUri));
+        this.addressDao = new AddressDaoRemoteImpl(new HttpUtilities(this, submittedUri));
 
         new FetchAddressesTask().execute(0);
 

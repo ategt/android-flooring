@@ -49,9 +49,7 @@ public class AddressFragment extends BaseFragment<AddressPresenter> implements A
         super.onCreate(savedInstanceState);
 
         //setHasOptionsMenu(true);
-        Uri baseUri = Uri.parse(getString(R.string.starting_root_url));
-        AddressDao addressDao = new AddressDaoRemoteImpl(getActivity(), new HttpUtilities(getActivity(), baseUri));
-        addressDao = new AddressDaoBufferedRemoteImp(addressDao, 20);
+        addressDao = AddressDaoSingleton.getAddressDao(getActivity());
 
         id = (Integer) getArguments().getSerializable(EXTRA_ADDRESS_ID);
     }
