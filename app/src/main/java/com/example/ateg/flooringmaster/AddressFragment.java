@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,28 +95,11 @@ public class AddressFragment extends BaseFragment<AddressPresenter> implements A
 
     @Override
     public void showLoading(Integer id) {
-        loaded = false;
-
-
-//        int thisId = getId();
-//        View view = getView();
-//        boolean visile = getUserVisibleHint();
-//        //getActivity().
-//        boolean vis2 = this.isVisible();
-//        boolean isadded = this.isAdded();
-
-        //if (isVisible()) {
-        //if (this.id == id) {
-        //mLoadingDialog = ProgressDialog.show(getActivity(), "Getting Data ...", "Waiting For Results...", true);
-        //}
-        //}
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (!loaded && isVisible() && !isHidden())
-            mLoadingDialog = ProgressDialog.show(getActivity(), "Getting Data ...", "Waiting For Results...", true);
     }
 
     @Override
@@ -128,7 +112,8 @@ public class AddressFragment extends BaseFragment<AddressPresenter> implements A
 
     @Override
     public void setAddress(Address address) {
-        loaded = true;
+        AppCompatImageView loadingAnimationLayout = (AppCompatImageView) getView().findViewById(R.id.fragment_loading_animation);
+        loadingAnimationLayout.setVisibility(View.INVISIBLE);
 
         if (mLoadingDialog != null)
             mLoadingDialog.dismiss();
