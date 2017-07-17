@@ -73,7 +73,7 @@ public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPrese
 
     @Override
     protected int layout() {
-        return R.layout.list_empty;
+        return R.layout.list_addresses;
     }
 
     @Override
