@@ -136,7 +136,11 @@ public class AddressBufferedClient implements AddressDao {
 
     @Override
     public List<Address> list(ResultProperties resultProperties) {
-        return addressDao.list(resultProperties);
+        List<Address> addressList = addressDao.list(resultProperties);
+        for (Address address : addressList){
+            lruCache.put(address.getId(), address);
+        }
+        return addressList;
     }
 
     @Override

@@ -33,7 +33,7 @@ public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPrese
         getActivity().setTitle(R.string.address_list);
 
         AddressMVPListFragment.AddressAdapter addressAdapter
-                = new AddressMVPListFragment.AddressAdapter(getActivity(), 0, new ArrayList());
+                = new AddressMVPListFragment.AddressAdapter(getActivity(), 0, AddressDataListSingleton.getAddressDao(getActivity()));
         setListAdapter(addressAdapter);
     }
 
@@ -66,7 +66,7 @@ public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPrese
         AddressAdapter listAdapter = (AddressAdapter) getListAdapter();
         if (listAdapter == null) {
         } else {
-            listAdapter.addAll(addressList);
+            AddressDataListSingleton.getAddressDao(getActivity()).addAll(addressList);
             listAdapter.notifyDataSetChanged();
         }
     }

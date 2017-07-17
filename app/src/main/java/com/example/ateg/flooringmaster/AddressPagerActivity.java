@@ -22,7 +22,7 @@ public class AddressPagerActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        addressDao = AddressDaoLocalImpl.getLocalDao();
+        addressDao = AddressDaoSingleton.getAddressDao(this);
 
         viewPager = new ViewPager(this);
         viewPager.setId(R.id.viewPager);
@@ -39,11 +39,12 @@ public class AddressPagerActivity extends AppCompatActivity {
 
             @Override
             public int getCount() {
-                return addressDao.list().size();
+                return addressDao.size();
             }
         });
 
         Address address = (Address) getIntent().getSerializableExtra(AddressFragment.EXTRA_ADDRESS);
+        //getIntent().getSerializableExtra()
 
         int itemPosition = addressDao.list().indexOf(address);
         viewPager.setCurrentItem(itemPosition);
