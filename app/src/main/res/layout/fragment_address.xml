@@ -1,69 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        style="?android:listSeparatorTextViewStyle"
-        android:id="@+id/address_id_textView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/address_id_label" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <TextView
-        style="?android:listSeparatorTextViewStyle"
-        android:id="@+id/address_firstName_textView"
+        <TextView
+            android:id="@+id/address_id_textView"
+            style="?android:listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/address_id_label" />
+
+        <TextView
+            android:id="@+id/address_firstName_textView"
+            style="?android:listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/address_firstName_hint" />
+
+        <TextView
+            android:id="@+id/address_lastName_textView"
+            style="?android:listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/address_lastName_hint" />
+
+        <TextView
+            android:id="@+id/address_company_textView"
+            style="?android:listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/address_company_hint" />
+
+        <TextView
+            android:id="@+id/address_streetNumber_textView"
+            style="?android:listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/address_streetNumber_hint" />
+
+        <TextView
+            android:id="@+id/address_streetName_textView"
+            style="?android:listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/address_streetName_hint" />
+
+        <TextView
+            android:id="@+id/address_city_textView"
+            style="?android:listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/address_city_hint" />
+
+        <TextView
+            android:id="@+id/address_state_textView"
+            style="?android:listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/address_state_hint" />
+
+        <TextView
+            android:id="@+id/address_zip_textView"
+            style="?android:listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/address_zip_hint" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/fragment_loading_animation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/address_firstName_hint" />
+        android:layout_height="match_parent"
+        android:src="@drawable/ui_anim_basic_16x16"
+        android:visibility="visible" />
 
-    <TextView
-        style="?android:listSeparatorTextViewStyle"
-        android:id="@+id/address_lastName_textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/address_lastName_hint" />
-
-    <TextView
-        style="?android:listSeparatorTextViewStyle"
-        android:id="@+id/address_company_textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/address_company_hint" />
-
-    <TextView
-        style="?android:listSeparatorTextViewStyle"
-        android:id="@+id/address_streetNumber_textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/address_streetNumber_hint" />
-
-    <TextView
-        style="?android:listSeparatorTextViewStyle"
-        android:id="@+id/address_streetName_textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/address_streetName_hint" />
-
-    <TextView
-        style="?android:listSeparatorTextViewStyle"
-        android:id="@+id/address_city_textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/address_city_hint" />
-
-    <TextView
-        style="?android:listSeparatorTextViewStyle"
-        android:id="@+id/address_state_textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/address_state_hint" />
-
-    <TextView
-        style="?android:listSeparatorTextViewStyle"
-        android:id="@+id/address_zip_textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/address_zip_hint" />
-
-</LinearLayout>
+</RelativeLayout>
