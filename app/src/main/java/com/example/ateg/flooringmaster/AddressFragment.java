@@ -75,7 +75,6 @@ public class AddressFragment extends BaseFragment<AddressPresenter> implements A
 
     @Override
     protected void init() {
-        loaded = false;
     }
 
     @Override
