@@ -8,7 +8,7 @@ import java.util.Set;
  * Created by ATeg on 7/11/2017.
  */
 
-public class AddressDaoLocalImpl implements AddressDao {
+public abstract class AddressDaoLocalImpl implements AddressDao {
 
     private static List<Address> addresses;
     private static AddressDaoLocalImpl addressDaoLocal;
@@ -23,14 +23,24 @@ public class AddressDaoLocalImpl implements AddressDao {
 
     public static AddressDaoLocalImpl getLocalDao(){
         if (addressDaoLocal == null){
-            addressDaoLocal = new AddressDaoLocalImpl(new ArrayList());
+            addressDaoLocal = new AddressDaoLocalImpl(new ArrayList()) {
+                @Override
+                public List<Address> list(ResultProperties resultProperties) {
+                    return null;
+                }
+            };
         }
         return addressDaoLocal;
     }
 
     public static AddressDaoLocalImpl getLocalDao(List<Address> addresses){
         if (addressDaoLocal == null){
-            addressDaoLocal = new AddressDaoLocalImpl(addresses);
+            addressDaoLocal = new AddressDaoLocalImpl(addresses) {
+                @Override
+                public List<Address> list(ResultProperties resultProperties) {
+                    return null;
+                }
+            };
         } else {
             AddressDaoLocalImpl.addresses.addAll(addresses);
         }

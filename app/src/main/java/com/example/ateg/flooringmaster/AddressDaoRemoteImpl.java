@@ -163,7 +163,7 @@ public class AddressDaoRemoteImpl implements AddressDao {
     }
 
     @Override
-    public List<Address> list(Integer sortBy) {
+    public List<Address> list(ResultProperties resultProperties) {
 
         String addressString = null;
         try {
@@ -171,7 +171,9 @@ public class AddressDaoRemoteImpl implements AddressDao {
                     .buildUpon()
                     .appendPath("address")
                     .appendPath("")
-                    .appendQueryParameter("sort_by", AddressSortByEnum.parse(sortBy).value())
+                    .appendQueryParameter("page", resultProperties.getPageNumber().toString())
+                    .appendQueryParameter("results", resultProperties.getResultsPerPage().toString())
+                    .appendQueryParameter("sort_by", resultProperties.getSortByEnum().value())
                     .build();
 
             addressString = httpUtilities.requestJSON(uri.toString());
@@ -183,6 +185,11 @@ public class AddressDaoRemoteImpl implements AddressDao {
 
         Log.d(TAG, "Addresses Recieved: " + Integer.toString(addresses.length));
         return Arrays.asList(addresses);
+    }
+
+    @Override
+    public List<Address> list(Integer sortBy) {
+        return list(new ResultProperties(AddressSortByEnum.parse(sortBy), null, null));
     }
 
     @Override

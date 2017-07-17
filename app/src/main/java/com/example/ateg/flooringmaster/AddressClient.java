@@ -1,6 +1,7 @@
 package com.example.ateg.flooringmaster;
 
 import android.content.Context;
+import android.database.CursorJoiner;
 import android.net.Uri;
 import android.util.Log;
 
@@ -165,6 +166,30 @@ public class AddressClient implements AddressDao {
                     .buildUpon()
                     .appendPath("address")
                     .appendPath("")
+                    .build();
+
+            addressString = httpUtilities.requestJSON(uri.toString());
+        } catch (IOException e) {
+            Log.e(TAG, "IO problem.", e);
+        }
+
+        Address[] addresses = gson.fromJson(addressString, Address[].class);
+
+        Log.d(TAG, "Addresses Recieved: " + Integer.toString(addresses.length));
+        return Arrays.asList(addresses);
+    }
+
+    @Override
+    public List<Address> list(ResultProperties resultProperties) {
+        String addressString = null;
+        try {
+            Uri uri = httpUtilities.getDataSourceRoot()
+                    .buildUpon()
+                    .appendPath("address")
+                    .appendPath("")
+                    .appendQueryParameter("page", resultProperties.getPageNumber().toString())
+                    .appendQueryParameter("results", resultProperties.getResultsPerPage().toString())
+                    .appendQueryParameter("sort_by", resultProperties.getSortByEnum().value())
                     .build();
 
             addressString = httpUtilities.requestJSON(uri.toString());

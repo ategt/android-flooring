@@ -1,7 +1,12 @@
 package com.example.ateg.flooringmaster;
 
+import android.app.Application;
+import android.os.AsyncTask;
 import android.util.LruCache;
+import android.util.Pair;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -13,6 +18,7 @@ public class AddressBufferedClient implements AddressDao {
 
     private AddressDao addressDao;
     private LruCache<Integer, Address> lruCache;
+    private Pair<Long, Integer> sizePair;
 
     public AddressBufferedClient(AddressDao addressDao, int maxSize) {
         if (addressDao == null || addressDao.getClass().isInstance(AddressBufferedClient.class))
@@ -28,6 +34,7 @@ public class AddressBufferedClient implements AddressDao {
         if (returnedAddress != null)
             lruCache.put(returnedAddress.getId(), returnedAddress);
 
+        updateSize();
         return returnedAddress;
     }
 
@@ -54,6 +61,7 @@ public class AddressBufferedClient implements AddressDao {
             return null;
 
         lruCache.put(address.getId(), address);
+        updateSize();
         return address;
     }
 
@@ -74,12 +82,35 @@ public class AddressBufferedClient implements AddressDao {
         if (returnedAddress != null)
             lruCache.remove(returnedAddress.getId());
 
+        updateSize();
         return returnedAddress;
+    }
+
+    private void updateSize() {
+        if (sizePair == null || sizePair.second == null || sizePair.second + 60000 < System.currentTimeMillis()) {
+
+            new AsyncTask<Void, Void, Integer>() {
+                @Override
+                protected Integer doInBackground(Void... params) {
+                    return addressDao.size();
+                }
+
+                @Override
+                protected void onPostExecute(Integer integer) {
+                    sizePair = new Pair(System.currentTimeMillis(), integer);
+                }
+            }.execute();
+        }
     }
 
     @Override
     public int size() {
-        return addressDao.size();
+        updateSize();
+
+        if (sizePair == null)
+            return -1;
+        else
+            return sizePair.second;
     }
 
     @Override
@@ -100,6 +131,11 @@ public class AddressBufferedClient implements AddressDao {
     @Override
     public List<Address> list(Integer sortBy) {
         return addressDao.list(sortBy);
+    }
+
+    @Override
+    public List<Address> list(ResultProperties resultProperties) {
+        return addressDao.list(resultProperties);
     }
 
     @Override
