@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +33,6 @@ public class AddressFragment extends BaseFragment<AddressPresenter> implements A
     private static final String TAG = "Address Fragment";
     private static final String ACTION_FOR_INTENT_CALLBACK = "THIS_IS_A_UNIQUE_KEY_WE_USE_TO_COMMUNICATE";
 
-    private ProgressDialog mLoadingDialog;
     private AddressDao addressDao;
     private Integer id;
     private boolean loaded;
@@ -104,47 +104,44 @@ public class AddressFragment extends BaseFragment<AddressPresenter> implements A
 
     @Override
     public void showError(Throwable e) {
-        if (mLoadingDialog != null)
-            mLoadingDialog.dismiss();
-
         Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void setAddress(Address address) {
-        AppCompatImageView loadingAnimationLayout = (AppCompatImageView) getView().findViewById(R.id.fragment_loading_animation);
-        loadingAnimationLayout.setVisibility(View.INVISIBLE);
-
-        if (mLoadingDialog != null)
-            mLoadingDialog.dismiss();
 
         View view = getView();
 
-        TextView idTextView = (TextView) view.findViewById(R.id.address_id_textView);
-        idTextView.setText(getString(R.string.address_id_label) + ": " + address.getId());
+        if (view != null) {
+            RelativeLayout loadingAnimationLayout = (RelativeLayout) view.findViewById(R.id.loadingPanel);
+            loadingAnimationLayout.setVisibility(View.GONE);
 
-        TextView cityTextView = (TextView) view.findViewById(R.id.address_city_textView);
-        cityTextView.setText(address.getCity());
+            TextView idTextView = (TextView) view.findViewById(R.id.address_id_textView);
+            idTextView.setText(getString(R.string.address_id_label) + ": " + address.getId());
 
-        TextView companyTextView = (TextView) view.findViewById(R.id.address_company_textView);
-        companyTextView.setText(address.getCompany());
+            TextView cityTextView = (TextView) view.findViewById(R.id.address_city_textView);
+            cityTextView.setText(address.getCity());
 
-        TextView firstNameTextView = (TextView) view.findViewById(R.id.address_firstName_textView);
-        firstNameTextView.setText(address.getFirstName());
+            TextView companyTextView = (TextView) view.findViewById(R.id.address_company_textView);
+            companyTextView.setText(address.getCompany());
 
-        TextView lastNameTextView = (TextView) view.findViewById(R.id.address_lastName_textView);
-        lastNameTextView.setText(address.getLastName());
+            TextView firstNameTextView = (TextView) view.findViewById(R.id.address_firstName_textView);
+            firstNameTextView.setText(address.getFirstName());
 
-        TextView stateTextView = (TextView) view.findViewById(R.id.address_state_textView);
-        stateTextView.setText(address.getState());
+            TextView lastNameTextView = (TextView) view.findViewById(R.id.address_lastName_textView);
+            lastNameTextView.setText(address.getLastName());
 
-        TextView streetNameTextView = (TextView) view.findViewById(R.id.address_streetName_textView);
-        streetNameTextView.setText(address.getStreetName());
+            TextView stateTextView = (TextView) view.findViewById(R.id.address_state_textView);
+            stateTextView.setText(address.getState());
 
-        TextView streetNumberTextView = (TextView) view.findViewById(R.id.address_streetNumber_textView);
-        streetNumberTextView.setText(address.getStreetNumber());
+            TextView streetNameTextView = (TextView) view.findViewById(R.id.address_streetName_textView);
+            streetNameTextView.setText(address.getStreetName());
 
-        TextView zipTextView = (TextView) view.findViewById(R.id.address_zip_textView);
-        zipTextView.setText(address.getZip());
+            TextView streetNumberTextView = (TextView) view.findViewById(R.id.address_streetNumber_textView);
+            streetNumberTextView.setText(address.getStreetNumber());
+
+            TextView zipTextView = (TextView) view.findViewById(R.id.address_zip_textView);
+            zipTextView.setText(address.getZip());
+        }
     }
 }
