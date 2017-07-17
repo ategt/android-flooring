@@ -7,7 +7,6 @@ import android.os.Build;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.core.deps.guava.base.Strings;
 import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
 
 import junit.framework.Assert;
 
@@ -17,7 +16,6 @@ import org.junit.runner.RunWith;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -33,7 +31,7 @@ import static org.junit.Assert.assertTrue;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class AddressRemoteDaoTest {
+public class AddressClientTest {
 
     AddressDao addressDao;
     Context appContext;
@@ -42,7 +40,7 @@ public class AddressRemoteDaoTest {
     public void setUp() throws Exception {
         appContext = InstrumentationRegistry.getTargetContext();
         Uri testUri = Uri.parse(appContext.getString(R.string.starting_root_url));
-        addressDao = new AddressDaoRemoteImpl(appContext, new HttpUtilities(appContext, testUri));
+        addressDao = new AddressClient(appContext, new HttpUtilities(appContext, testUri));
     }
 
     @Test
@@ -52,6 +50,7 @@ public class AddressRemoteDaoTest {
 
         assertEquals("com.example.ateg.flooringmaster", appContext.getPackageName());
     }
+
 
     @Test
     public void listTest() {

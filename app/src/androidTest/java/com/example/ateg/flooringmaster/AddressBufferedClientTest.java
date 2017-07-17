@@ -7,7 +7,6 @@ import android.os.Build;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.core.deps.guava.base.Strings;
 import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
 
 import junit.framework.Assert;
 
@@ -17,7 +16,6 @@ import org.junit.runner.RunWith;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -33,7 +31,7 @@ import static org.junit.Assert.assertTrue;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class AddressRemoteDaoTest {
+public class AddressBufferedClientTest {
 
     AddressDao addressDao;
     Context appContext;
@@ -43,6 +41,8 @@ public class AddressRemoteDaoTest {
         appContext = InstrumentationRegistry.getTargetContext();
         Uri testUri = Uri.parse(appContext.getString(R.string.starting_root_url));
         addressDao = new AddressDaoRemoteImpl(appContext, new HttpUtilities(appContext, testUri));
+
+        addressDao = new AddressBufferedClient(addressDao, 20);
     }
 
     @Test
@@ -52,6 +52,7 @@ public class AddressRemoteDaoTest {
 
         assertEquals("com.example.ateg.flooringmaster", appContext.getPackageName());
     }
+
 
     @Test
     public void listTest() {
@@ -120,7 +121,7 @@ public class AddressRemoteDaoTest {
         Address address = addressBuilder(city, company, firstName, lastName, state, streetName, streetNumber, zip);
 
         int beforeCreation = addressDao.size();
-        Address result = addressDao.create(address);
+        Address result = addressCloner(addressDao.create(address));
         int afterCreation = addressDao.size();
 
         assertEquals(beforeCreation + 1, afterCreation);
@@ -156,6 +157,22 @@ public class AddressRemoteDaoTest {
 
         Address alsoDeleted2 = addressDao.get(company);
         assertNull(alsoDeleted2);
+    }
+
+    private Address addressCloner(Address address) {
+        Address address1 = addressBuilder(
+                address.getCity(),
+                address.getCompany(),
+                address.getFirstName(),
+                address.getLastName(),
+                address.getState(),
+                address.getStreetName(),
+                address.getStreetNumber(),
+                address.getZip()
+        );
+        if (address.getId() != null)
+            address1.setId(address.getId());
+        return address1;
     }
 
     private Address addressBuilder(String city, String company, String firstName, String lastName, String state, String streetName, String streetNumber, String zip) {
