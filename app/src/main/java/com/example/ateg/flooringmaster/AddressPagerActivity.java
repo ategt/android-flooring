@@ -33,7 +33,7 @@ public class AddressPagerActivity extends AppCompatActivity {
         viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public android.support.v4.app.Fragment getItem(int position) {
-                Address address = addressDao.list().get(position);
+                Address address = AddressDataListSingleton.getAddressDao(getApplicationContext()).get(position);
                 return AddressFragment.newInstance(address.getId());
             }
 
@@ -46,7 +46,7 @@ public class AddressPagerActivity extends AppCompatActivity {
         Address address = (Address) getIntent().getSerializableExtra(AddressFragment.EXTRA_ADDRESS);
         //getIntent().getSerializableExtra()
 
-        int itemPosition = addressDao.list().indexOf(address);
+        int itemPosition = AddressDataListSingleton.getAddressDao(getApplicationContext()).indexOf(address);
         viewPager.setCurrentItem(itemPosition);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -57,7 +57,7 @@ public class AddressPagerActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                Address address1 = addressDao.list().get(position);
+                Address address1 = AddressDataListSingleton.getAddressDao(getBaseContext()).get(position);
                 if (address1.getFullName() != null) {
                     setTitle(address1.getFullName());
                 }

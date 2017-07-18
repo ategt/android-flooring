@@ -26,6 +26,7 @@ public interface AddressDao {
 
     public List<Address> getAddressesSortedByParameter(String sortBy);
     public Set<String> getCompletionGuesses(String input, int limit);
+    @Deprecated
     public List<Address> list();
     public List<Address> list(Integer sortBy);
     public List<Address> list(ResultProperties resultProperties);
