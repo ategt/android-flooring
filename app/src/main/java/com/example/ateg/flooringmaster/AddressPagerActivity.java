@@ -44,7 +44,6 @@ public class AddressPagerActivity extends AppCompatActivity {
         });
 
         Address address = (Address) getIntent().getSerializableExtra(AddressFragment.EXTRA_ADDRESS);
-        //getIntent().getSerializableExtra()
 
         int itemPosition = AddressDataListSingleton.getAddressDao(getApplicationContext()).indexOf(address);
         viewPager.setCurrentItem(itemPosition);
