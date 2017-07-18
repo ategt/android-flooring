@@ -25,7 +25,7 @@ public class AddressBufferedClient implements AddressDao {
             throw new UnsupportedOperationException("The input to AddressDaoBufferedRemoteImpl is unsupported.");
         this.addressDao = addressDao;
         lruCache = new LruCache(maxSize);
-        updateSize();
+        updateSize(false);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class AddressBufferedClient implements AddressDao {
         if (returnedAddress != null)
             lruCache.put(returnedAddress.getId(), returnedAddress);
 
-        updateSize();
+        updateSize(true);
         return returnedAddress;
     }
 
@@ -62,7 +62,7 @@ public class AddressBufferedClient implements AddressDao {
             return null;
 
         lruCache.put(address.getId(), address);
-        updateSize();
+        updateSize(false);
         return address;
     }
 
@@ -83,12 +83,12 @@ public class AddressBufferedClient implements AddressDao {
         if (returnedAddress != null)
             lruCache.remove(returnedAddress.getId());
 
-        updateSize();
+        updateSize(true);
         return returnedAddress;
     }
 
-    private void updateSize() {
-        if (sizePair == null || sizePair.second == null || sizePair.second + 60000 < System.currentTimeMillis()) {
+    private void updateSize(boolean forceUpdate) {
+        if (forceUpdate || sizePair == null || sizePair.second == null || sizePair.first + 60000 < System.currentTimeMillis()) {
 
             new AsyncTask<Void, Void, Integer>() {
                 @Override
@@ -106,7 +106,7 @@ public class AddressBufferedClient implements AddressDao {
 
     @Override
     public int size() {
-        updateSize();
+        updateSize(false);
 
         if (sizePair == null)
             return 0;

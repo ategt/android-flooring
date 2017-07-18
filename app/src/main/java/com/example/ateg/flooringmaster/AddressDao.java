@@ -28,6 +28,7 @@ public interface AddressDao {
     public Set<String> getCompletionGuesses(String input, int limit);
     @Deprecated
     public List<Address> list();
+    @Deprecated
     public List<Address> list(Integer sortBy);
     public List<Address> list(ResultProperties resultProperties);
     public List<Address> searchByFirstName(String firstName);
