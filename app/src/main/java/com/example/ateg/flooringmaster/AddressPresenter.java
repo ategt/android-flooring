@@ -15,7 +15,9 @@ public class AddressPresenter extends BasePresenter<AddressView> {
         this.addressDao = addressDao;
     }
 
-    public void loadAddress(int addressId) {
+    public void loadAddress(Integer addressId) {
+
+        if (addressId == null) return;
 
         getView().showLoading(addressId);
 

@@ -20,7 +20,7 @@
         </activity>
         <activity android:name=".AddressPagerActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".AddressListActivity" />
+                android:value=".AddressListMVPActivity" />
         </activity>
     </application>
 

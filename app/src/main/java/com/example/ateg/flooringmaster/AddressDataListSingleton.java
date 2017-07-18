@@ -2,6 +2,7 @@ package com.example.ateg.flooringmaster;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +15,26 @@ public class AddressDataListSingleton {
     private static List<Address> addressList;
 
     public static List<Address> getAddressDao(Context context) {
+        return respondWithAddressList();
+    }
+
+    public static List<Address> getAddressDao() {
+        return respondWithAddressList();
+    }
+
+    @NonNull
+    private static List<Address> respondWithAddressList() {
         if (addressList == null)
             addressList = new ArrayList();
         return addressList;
+    }
+
+    public static Address getOrNull(Integer position){
+
+        if (position < respondWithAddressList().size()) {
+            return respondWithAddressList().get(position);
+        } else {
+            return null;
+        }
     }
 }

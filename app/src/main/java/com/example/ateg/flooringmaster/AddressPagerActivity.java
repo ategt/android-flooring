@@ -33,8 +33,13 @@ public class AddressPagerActivity extends AppCompatActivity {
         viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public android.support.v4.app.Fragment getItem(int position) {
-                Address address = AddressDataListSingleton.getAddressDao(getApplicationContext()).get(position);
-                return AddressFragment.newInstance(address.getId());
+                Address address = AddressDataListSingleton.getOrNull(position);
+
+                Integer addressId = null;
+                if (address != null)
+                    addressId = address.getId();
+
+                return AddressFragment.newInstance(addressId);
             }
 
             @Override
@@ -56,7 +61,8 @@ public class AddressPagerActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                Address address1 = AddressDataListSingleton.getAddressDao(getBaseContext()).get(position);
+                Address address1 = AddressDataListSingleton.getOrNull(position);
+
                 if (address1.getFullName() != null) {
                     setTitle(address1.getFullName());
                 }

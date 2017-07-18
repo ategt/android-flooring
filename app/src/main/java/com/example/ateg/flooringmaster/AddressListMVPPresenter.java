@@ -10,7 +10,8 @@ import java.util.List;
 
 public class AddressListMVPPresenter extends ListBasePresenter<AddressListView> {
 
-    AddressDao addressDao;
+    private AddressDao addressDao;
+    private ResultProperties resultProperties;
 
     public AddressListMVPPresenter(AddressListView viewInstance, AddressDao addressDao) {
         super(viewInstance);
@@ -27,8 +28,17 @@ public class AddressListMVPPresenter extends ListBasePresenter<AddressListView> 
         loadAddresses(new ResultProperties(AddressSortByEnum.SORT_BY_LAST_NAME, page,resultsPerPage));
     }
 
-    public void loadAddresses(ResultProperties resultProperties) {
+    public void loadNextPage(){
+        int pageNum = resultProperties.getPageNumber() + 1;
+        ResultProperties incrementedResultProperties = new ResultProperties(resultProperties.getSortByEnum(),
+                pageNum,
+                resultProperties.getResultsPerPage());
 
+        loadAddresses(incrementedResultProperties);
+    }
+
+    public void loadAddresses(ResultProperties resultProperties) {
+        this.resultProperties = resultProperties;
         //getView().showLoading(addressId);
 
         new AsyncTask<ResultProperties, Void, List<Address>>() {

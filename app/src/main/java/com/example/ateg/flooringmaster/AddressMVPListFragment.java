@@ -28,16 +28,6 @@ public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPrese
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getActivity().setTitle(R.string.address_list);
-
-        AddressMVPListFragment.AddressAdapter addressAdapter
-                = new AddressMVPListFragment.AddressAdapter(getActivity(), 0, AddressDataListSingleton.getAddressDao(getActivity()));
-        setListAdapter(addressAdapter);
-    }
-
-    @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
@@ -83,7 +73,11 @@ public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPrese
 
     @Override
     protected void init() {
+        getActivity().setTitle(R.string.address_list);
 
+        AddressMVPListFragment.AddressAdapter addressAdapter
+                = new AddressMVPListFragment.AddressAdapter(getActivity(), 0, AddressDataListSingleton.getAddressDao(getActivity()));
+        setListAdapter(addressAdapter);
     }
 
     @Override
@@ -93,7 +87,12 @@ public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPrese
 
     @Override
     protected void setListeners() {
-
+        new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                Log.i(TAG, "Scroll state changed");
+            }
+        };
     }
 
     @Override
@@ -115,6 +114,13 @@ public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPrese
             }
 
             Address address = getItem(position);
+
+            int positionInList = AddressDataListSingleton.getAddressDao(getActivity()).indexOf(address);
+            int listSize = AddressDataListSingleton.getAddressDao(getActivity()).size();
+
+            if (positionInList + 20 > listSize){
+                mPresenter.loadNextPage();
+            }
 
             TextView nameTextView =
                     (TextView) convertView.findViewById(R.id.address_list_item_nameTextView);
