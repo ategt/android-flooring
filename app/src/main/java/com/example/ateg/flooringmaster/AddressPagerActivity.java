@@ -63,9 +63,10 @@ public class AddressPagerActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 Address address1 = AddressDataListSingleton.getOrNull(position);
 
-                if (address1.getFullName() != null) {
-                    setTitle(address1.getFullName());
-                }
+                if (address1 != null)
+                    if (address1.getFullName() != null) {
+                        setTitle(address1.getFullName());
+                    }
             }
 
             @Override
