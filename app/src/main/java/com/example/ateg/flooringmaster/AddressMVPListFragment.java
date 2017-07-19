@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.support.design.widget.FloatingActionButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -91,6 +92,15 @@ public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPrese
                 Log.i(TAG, "Scroll state changed");
             }
         };
+
+        FloatingActionButton createAddressButton = (FloatingActionButton) getView().findViewById(R.id.create_addresss_action_button);
+        createAddressButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),AddressCreateActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

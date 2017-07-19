@@ -15,68 +15,44 @@
             android:layout_height="wrap_content"
             android:text="@string/address_id_label" />
 
-        <EditText
-            android:id="@+id/address_edit_firstName_editTextView"
+        <TextView
+            android:id="@+id/address_show_fullName_textView"
             style="?android:listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/address_firstName_hint" />
+            android:hint="@string/address_show_fullName_text"
+            android:text="@string/address_show_fullName_text" />
 
-        <EditText
-            android:id="@+id/address_edit_lastName_editTextView"
+        <TextView
+            android:id="@+id/address_show_company_textView"
             style="?android:listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/address_lastName_hint" />
+            android:hint="@string/address_show_company_text"
+            android:text="@string/address_show_company_text" />
 
-        <EditText
-            android:id="@+id/address_edit_company_editTextView"
+        <TextView
+            android:id="@+id/address_show_streetAddress_textView"
             style="?android:listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/address_company_hint" />
+            android:hint="@string/address_show_streetAddress_text"
+            android:text="@string/address_show_streetAddress_text" />
 
-        <EditText
-            android:id="@+id/address_edit_streetNumber_editTextView"
+        <TextView
+            android:id="@+id/address_show_cityStateAndZip_textView"
             style="?android:listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/address_streetNumber_hint" />
-
-        <EditText
-            android:id="@+id/address_edit_streetName_editTextView"
-            style="?android:listSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/address_streetName_hint" />
-
-        <EditText
-            android:id="@+id/address_edit_city_editTextView"
-            style="?android:listSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/address_city_hint" />
-
-        <EditText
-            android:id="@+id/address_edit_state_editTextView"
-            style="?android:listSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/address_state_hint" />
-
-        <EditText
-            android:id="@+id/address_edit_zip_editTextView"
-            style="?android:listSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/address_zip_hint" />
+            android:hint="@string/address_show_cityStateAndZip_text"
+            android:text="@string/address_show_cityStateAndZip_text" />
 
         <Button
-            android:id="@+id/submit_button"
+            android:id="@+id/edit_address_button"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="@string/submit_button"
-            android:layout_margin="@dimen/submit_margin"/>
+            android:text="@string/edit_address_button"
+            android:layout_margin="@dimen/edit_margin"/>
 
     </LinearLayout>
 
@@ -90,7 +66,7 @@
         android:paddingTop="40dp"
         android:paddingRight="40dp">
 
-    <ProgressBar
+        <ProgressBar
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:indeterminate="true"
