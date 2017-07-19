@@ -5,9 +5,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by ATeg on 7/10/2017.
  */
@@ -39,7 +36,7 @@ public class AddressPagerActivity extends AppCompatActivity {
                 if (address != null)
                     addressId = address.getId();
 
-                return AddressFragment.newInstance(addressId);
+                return AddressSupportFragment.newInstance(addressId);
             }
 
             @Override
@@ -48,7 +45,7 @@ public class AddressPagerActivity extends AppCompatActivity {
             }
         });
 
-        Address address = (Address) getIntent().getSerializableExtra(AddressFragment.EXTRA_ADDRESS);
+        Address address = (Address) getIntent().getSerializableExtra(AddressSupportFragment.EXTRA_ADDRESS);
 
         int itemPosition = AddressDataListSingleton.getAddressDao(getApplicationContext()).indexOf(address);
         viewPager.setCurrentItem(itemPosition);

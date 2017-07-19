@@ -2,7 +2,7 @@ package com.example.ateg.flooringmaster;
 
 
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +11,7 @@ import android.view.ViewGroup;
  *  Custom Fragment implementation to bind basic elements and force the use of
  *  the MVP pattern logically attaching a presenter to this Fragment.
  */
-public abstract class BaseFragment<T extends BasePresenter> extends Fragment {
+public abstract class BaseSupportFragment<T extends BasePresenter> extends Fragment {
 
     protected T mPresenter;
 

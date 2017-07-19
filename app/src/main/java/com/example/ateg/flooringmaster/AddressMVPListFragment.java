@@ -2,7 +2,6 @@ package com.example.ateg.flooringmaster;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,8 +33,8 @@ public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPrese
         Address selectedAddress = addressAdapter.getItem(position);
 
         Intent intent = new Intent(getActivity(), AddressPagerActivity.class);
-        intent.putExtra(AddressFragment.EXTRA_ADDRESS, selectedAddress);
-        intent.putExtra(AddressFragment.EXTRA_ADDRESS_ID, selectedAddress.getId());
+        intent.putExtra(AddressSupportFragment.EXTRA_ADDRESS, selectedAddress);
+        intent.putExtra(AddressSupportFragment.EXTRA_ADDRESS_ID, selectedAddress.getId());
 
         startActivity(intent);
     }
