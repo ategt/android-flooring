@@ -37,4 +37,8 @@ public class AddressDataListSingleton {
             return null;
         }
     }
+
+    public static int size(){
+        return respondWithAddressList().size();
+    }
 }

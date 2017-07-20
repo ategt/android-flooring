@@ -60,7 +60,6 @@ public class AddressShowFragment extends BaseFragment<AddressShowPresenter> impl
                 Toast.makeText(getActivity(), "Feature not implemented Yet.", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     @Override
