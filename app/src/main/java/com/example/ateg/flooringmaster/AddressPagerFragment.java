@@ -1,6 +1,7 @@
 package com.example.ateg.flooringmaster;
 
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v13.app.FragmentStatePagerAdapter;
@@ -10,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.Serializable;
+
 import static com.example.ateg.flooringmaster.R.id.viewPager;
 
 /**
@@ -18,66 +21,66 @@ import static com.example.ateg.flooringmaster.R.id.viewPager;
 
 public class AddressPagerFragment extends BaseFragment<AddressPagerPresenter> implements AddressPagerView {
 
-    //private ViewPager viewPager;
+    private ViewPager viewPager;
     //private List<Address> addresses;
     //private AddressDao addressDao;
 
     @Deprecated
     public void NotAThing(Bundle savedInstanceState) {
-        //super.onCreate(savedInstanceState);
+//        //super.onCreate(savedInstanceState);
+//
+//        addressDao = AddressDaoSingleton.getAddressDao(this);
+//
+//        viewPager = new ViewPager(this);
+//        viewPager.setId(viewPager);
+//        setContentView(viewPager);
+//
+//        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+//
+//        viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
+//            @Override
+//            public android.support.v4.app.Fragment getItem(int position) {
+//                Address address = AddressDataListSingleton.getOrNull(position);
+//
+//                Integer addressId = null;
+//                if (address != null)
+//                    addressId = address.getId();
+//
+//                return AddressFragment.newInstance(addressId);
+//            }
+//
+//            @Override
+//            public int getCount() {
+//                return addressDao.size();
+//            }
+//        });
+//
+        //       Address address = (Address) getIntent().getSerializableExtra(AddressSupportFragment.EXTRA_ADDRESS);
 
-        addressDao = AddressDaoSingleton.getAddressDao(this);
+//        int itemPosition = AddressDataListSingleton.getAddressDao(getApplicationContext()).indexOf(address);
+//        viewPager.setCurrentItem(itemPosition);
 
-        viewPager = new ViewPager(this);
-        viewPager.setId(viewPager);
-        setContentView(viewPager);
-
-        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-
-        viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
-            @Override
-            public android.support.v4.app.Fragment getItem(int position) {
-                Address address = AddressDataListSingleton.getOrNull(position);
-
-                Integer addressId = null;
-                if (address != null)
-                    addressId = address.getId();
-
-                return AddressFragment.newInstance(addressId);
-            }
-
-            @Override
-            public int getCount() {
-                return addressDao.size();
-            }
-        });
-
-        Address address = (Address) getIntent().getSerializableExtra(AddressSupportFragment.EXTRA_ADDRESS);
-
-        int itemPosition = AddressDataListSingleton.getAddressDao(getApplicationContext()).indexOf(address);
-        viewPager.setCurrentItem(itemPosition);
-
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                Address address1 = AddressDataListSingleton.getOrNull(position);
-
-                if (address1 != null)
-                    if (address1.getFullName() != null) {
-                        setTitle(address1.getFullName());
-                    }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+//        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                Address address1 = AddressDataListSingleton.getOrNull(position);
+//
+//                if (address1 != null)
+//                    if (address1.getFullName() != null) {
+//                        setTitle(address1.getFullName());
+//                    }
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//
+//            }
+//        });
     }
 
     @Override
@@ -87,9 +90,7 @@ public class AddressPagerFragment extends BaseFragment<AddressPagerPresenter> im
 
     @Override
     protected void setUi(View v) {
-        ViewPager viewPager = (ViewPager) v.findViewById(R.id.address_pager_fragment_index_viewPager);
-
-        final AddressDao addressDao = AddressDaoSingleton.getAddressDao(null);
+        viewPager = (ViewPager) v.findViewById(R.id.address_pager_fragment_index_viewPager);
 
         viewPager.setAdapter(new FragmentStatePagerAdapter(getFragmentManager()) {
             @Override
@@ -108,11 +109,28 @@ public class AddressPagerFragment extends BaseFragment<AddressPagerPresenter> im
                 return AddressShowFragment.newInstance(addressId);
             }
         });
+
+        Intent intent = getActivity().getIntent();
+
+        Address targetAddress = null;
+        if (intent.hasExtra(AddressShowFragment.ADDRESS_TO_SHOW)) {
+            Serializable serializabled = intent.getSerializableExtra(AddressShowFragment.ADDRESS_TO_SHOW);
+            targetAddress = (Address) serializabled;
+        } else if (intent.hasExtra(AddressShowFragment.ADDRESS_ID_TO_SHOW)) {
+            int id = intent.getIntExtra(AddressShowFragment.ADDRESS_ID_TO_SHOW, 0);
+            AddressClient addressClient = AddressDaoSingleton.getAddressDao(getActivity());
+            targetAddress = addressClient.get(id);
+        }
+
+        if (targetAddress != null) {
+            int itemPosition = AddressDataListSingleton.indexOf(targetAddress);
+            viewPager.setCurrentItem(itemPosition);
+        }
     }
 
     @Override
     protected void init() {
-        addressDao = AddressDaoSingleton.getAddressDao(getActivity());
+        //addressDao = AddressDaoSingleton.getAddressDao(getActivity());
 
         //viewPager = new ViewPager(this);
         //viewPager.setId(R.id.viewPager);
@@ -120,23 +138,23 @@ public class AddressPagerFragment extends BaseFragment<AddressPagerPresenter> im
 
         //android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
 
-        viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
-            @Override
-            public android.support.v4.app.Fragment getItem(int position) {
-                Address address = AddressDataListSingleton.getOrNull(position);
-
-                Integer addressId = null;
-                if (address != null)
-                    addressId = address.getId();
-
-                return AddressFragment.newInstance(addressId);
-            }
-
-            @Override
-            public int getCount() {
-                return addressDao.size();
-            }
-        });
+//        viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
+//            @Override
+//            public android.support.v4.app.Fragment getItem(int position) {
+//                Address address = AddressDataListSingleton.getOrNull(position);
+//
+//                Integer addressId = null;
+//                if (address != null)
+//                    addressId = address.getId();
+//
+//                return AddressFragment.newInstance(addressId);
+//            }
+//
+//            @Override
+//            public int getCount() {
+//                return addressDao.size();
+//            }
+//        });
 
         Address address = (Address) getIntent().getSerializableExtra(AddressSupportFragment.EXTRA_ADDRESS);
 
@@ -174,7 +192,27 @@ public class AddressPagerFragment extends BaseFragment<AddressPagerPresenter> im
 
     @Override
     protected void setListeners() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Address address1 = AddressDataListSingleton.getOrNull(position);
+
+                if (address1 != null)
+                    if (address1.getFullName() != null) {
+                        getActivity().setTitle(address1.getFullName());
+                    }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override

@@ -8,7 +8,7 @@ import java.util.Set;
  */
 
 
-public interface AddressDao {
+public interface AddressDao extends AddressClient {
 
     public static final int SORT_BY_LAST_NAME = 0;
     public static final int SORT_BY_FIRST_NAME = 1;

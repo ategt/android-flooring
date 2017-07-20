@@ -41,4 +41,8 @@ public class AddressDataListSingleton {
     public static int size(){
         return respondWithAddressList().size();
     }
+
+    public static int indexOf(Address address){
+        return respondWithAddressList().indexOf(address);
+    }
 }
