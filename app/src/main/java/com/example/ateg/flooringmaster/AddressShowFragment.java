@@ -26,6 +26,22 @@ public class AddressShowFragment extends BaseFragment<AddressShowPresenter> impl
         Bundle arguments = new Bundle();
         arguments.putSerializable(ADDRESS_ID_TO_SHOW, id);
 
+        // Causes network on main thread
+        //arguments.putSerializable(ADDRESS_TO_SHOW, AddressDaoSingleton.getAddressDao(null).get(id));
+
+        AddressShowFragment addressFragment = new AddressShowFragment();
+        addressFragment.setArguments(arguments);
+        return addressFragment;
+    }
+
+    public static AddressShowFragment newInstance(Address address) {
+        Bundle arguments = new Bundle();
+
+        if (address != null) {
+            arguments.putSerializable(ADDRESS_ID_TO_SHOW, address.getId());
+            arguments.putSerializable(ADDRESS_TO_SHOW, address);
+        }
+
         AddressShowFragment addressFragment = new AddressShowFragment();
         addressFragment.setArguments(arguments);
         return addressFragment;
