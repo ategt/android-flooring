@@ -9,7 +9,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/address_edit_id_textView"
+            android:id="@+id/address_show_id_textView"
             style="?android:listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
             android:text="@string/address_show_cityStateAndZip_text" />
 
         <Button
-            android:id="@+id/edit_address_button"
+            android:id="@+id/address_show_edit_address_button"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:text="@string/edit_address_button"

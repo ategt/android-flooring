@@ -117,6 +117,7 @@ public class AddressCreateFragment extends BaseFragment<AddressCreatePresenter> 
 
         Intent intent = new Intent(getActivity(), AddressShowActivity.class);
         intent.putExtra(AddressShowFragment.ADDRESS_ID_TO_SHOW, address.getId());
+        intent.putExtra(AddressShowFragment.ADDRESS_TO_SHOW, address);
         startActivity(intent);
 
         getActivity().finish();
