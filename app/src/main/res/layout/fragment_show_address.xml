@@ -3,66 +3,74 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:padding="@dimen/address_show_margin">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/address_show_id_textView"
-            style="?android:listSeparatorTextViewStyle"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="@string/address_id_label" />
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/address_show_margin">
 
-        <TextView
-            android:id="@+id/address_show_fullName_textView"
-            style="?android:listSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:hint="@string/address_show_fullName_text"
-            android:text="@string/address_show_fullName_text" />
+            <TextView
+                android:id="@+id/address_show_id_textView"
+                style="?android:listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/address_id_label" />
 
-        <TextView
-            android:id="@+id/address_show_company_textView"
-            style="?android:listSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:gravity="center_horizontal"
-            android:textAlignment="center"
-            android:layout_height="wrap_content"
-            android:hint="@string/address_show_company_text"
-            android:text="@string/address_show_company_text" />
+            <TextView
+                android:id="@+id/address_show_fullName_textView"
+                style="?android:listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:hint="@string/address_show_fullName_text"
+                android:text="@string/address_show_fullName_text"
+                android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/address_show_streetAddress_textView"
-            style="?android:listSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:gravity="center_horizontal"
-            android:layout_height="wrap_content"
-            android:hint="@string/address_show_streetAddress_text"
-            android:text="@string/address_show_streetAddress_text" />
+            <TextView
+                android:id="@+id/address_show_company_textView"
+                style="?android:listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:hint="@string/address_show_company_text"
+                android:text="@string/address_show_company_text"
+                android:textAlignment="center" />
 
-        <TextView
-            android:id="@+id/address_show_cityStateAndZip_textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/address_show_cityStateAndZip_text"
-            android:gravity="center_horizontal"
-            android:text="@string/address_show_cityStateAndZip_text" />
+            <TextView
+                android:id="@+id/address_show_streetAddress_textView"
+                style="?android:listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:hint="@string/address_show_streetAddress_text"
+                android:text="@string/address_show_streetAddress_text" />
 
-        <Button
-            android:id="@+id/address_show_edit_address_button"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="@string/edit_address_button"
-            android:layout_margin="@dimen/edit_margin"/>
+            <TextView
+                android:id="@+id/address_show_cityStateAndZip_textView"
+                style="?android:listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:hint="@string/address_show_cityStateAndZip_text"
+                android:text="@string/address_show_cityStateAndZip_text" />
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/address_show_edit_address_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_margin="@dimen/edit_margin"
+                android:text="@string/edit_address_button" />
+
+        </LinearLayout>
+    </ScrollView>
 
     <RelativeLayout
         android:id="@+id/loadingPanel"
@@ -71,14 +79,13 @@
         android:gravity="center_horizontal"
         android:paddingBottom="40dp"
         android:paddingLeft="40dp"
-        android:paddingTop="40dp"
-        android:paddingRight="40dp">
+        android:paddingRight="40dp"
+        android:paddingTop="40dp">
 
         <ProgressBar
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:indeterminate="true"
-            android:visibility="visible"
-            />
+            android:visibility="visible" />
     </RelativeLayout>
 </RelativeLayout>

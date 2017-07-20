@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -70,10 +71,7 @@ public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPrese
                 = new AddressMVPListFragment.AddressAdapter(getActivity(), 0, AddressDataListSingleton.getAddressDao(getActivity()));
 
         ListView listView = (ListView) getCreatedView().findViewById(R.id.address_index_listView);
-        //..listView.
         listView.setAdapter(addressAdapter);
-        //listView.set
-        //setListAdapter(addressAdapter);
     }
 
     @Override
@@ -87,6 +85,21 @@ public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPrese
         //Log.i(TAG, "Scroll state changed");
 
         View createdView = getCreatedView();
+
+        ListView listView = (ListView) createdView.findViewById(R.id.address_index_listView);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Address address = (Address) parent.getItemAtPosition(position);
+
+                Intent intent = new Intent(getActivity(), AddressShowActivity.class);
+                intent.putExtra(AddressShowFragment.ADDRESS_TO_SHOW, address);
+                intent.putExtra(AddressShowFragment.ADDRESS_ID_TO_SHOW, address.getId());
+
+                startActivity(intent);
+            }
+        });
+
         View createAddressButton = createdView.findViewById(R.id.create_addresss_action_button);
 
         createAddressButton.setOnClickListener(new View.OnClickListener() {
