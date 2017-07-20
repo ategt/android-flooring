@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.support.design.widget.FloatingActionButton;
 import android.widget.TextView;
@@ -25,21 +26,7 @@ public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPrese
     @Override
     public void onResume() {
         super.onResume();
-        ((AddressMVPListFragment.AddressAdapter) getListAdapter()).notifyDataSetChanged();
-    }
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-
-        AddressMVPListFragment.AddressAdapter addressAdapter = (AddressMVPListFragment.AddressAdapter) getListAdapter();
-        Address selectedAddress = addressAdapter.getItem(position);
-
-        Intent intent = new Intent(getActivity(), AddressPagerActivity.class);
-        intent.putExtra(AddressSupportFragment.EXTRA_ADDRESS, selectedAddress);
-        intent.putExtra(AddressSupportFragment.EXTRA_ADDRESS_ID, selectedAddress.getId());
-
-        startActivity(intent);
+        //((AddressMVPListFragment.AddressAdapter) getListAdapter()).notifyDataSetChanged();
     }
 
     @Override
@@ -54,11 +41,16 @@ public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPrese
 
     @Override
     public void appendAddresses(List<Address> addressList) {
-        AddressAdapter listAdapter = (AddressAdapter) getListAdapter();
+        //AddressAdapter listAdapter = (AddressAdapter) getListAdapter();
+        ListView listView = (ListView) getCreatedView().findViewById(R.id.address_index_listView);
+
+        ListAdapter listAdapter = listView.getAdapter();
+
         if (listAdapter == null) {
         } else {
             AddressDataListSingleton.getAddressDao(getActivity()).addAll(addressList);
-            listAdapter.notifyDataSetChanged();
+            //listAdapter.
+            //1istAdapter.notifyDataSetChanged();
         }
     }
 
@@ -77,7 +69,12 @@ public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPrese
 
         AddressMVPListFragment.AddressAdapter addressAdapter
                 = new AddressMVPListFragment.AddressAdapter(getActivity(), 0, AddressDataListSingleton.getAddressDao(getActivity()));
-        setListAdapter(addressAdapter);
+
+        ListView listView = (ListView) getCreatedView().findViewById(R.id.address_index_listView);
+        //..listView.
+        listView.setAdapter(addressAdapter);
+        //listView.set
+        //setListAdapter(addressAdapter);
     }
 
     @Override
