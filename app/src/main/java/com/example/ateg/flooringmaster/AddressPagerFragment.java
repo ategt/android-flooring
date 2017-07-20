@@ -25,64 +25,6 @@ public class AddressPagerFragment extends BaseFragment<AddressPagerPresenter> im
     //private List<Address> addresses;
     //private AddressDao addressDao;
 
-    @Deprecated
-    public void NotAThing(Bundle savedInstanceState) {
-//        //super.onCreate(savedInstanceState);
-//
-//        addressDao = AddressDaoSingleton.getAddressDao(this);
-//
-//        viewPager = new ViewPager(this);
-//        viewPager.setId(viewPager);
-//        setContentView(viewPager);
-//
-//        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-//
-//        viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
-//            @Override
-//            public android.support.v4.app.Fragment getItem(int position) {
-//                Address address = AddressDataListSingleton.getOrNull(position);
-//
-//                Integer addressId = null;
-//                if (address != null)
-//                    addressId = address.getId();
-//
-//                return AddressFragment.newInstance(addressId);
-//            }
-//
-//            @Override
-//            public int getCount() {
-//                return addressDao.size();
-//            }
-//        });
-//
-        //       Address address = (Address) getIntent().getSerializableExtra(AddressSupportFragment.EXTRA_ADDRESS);
-
-//        int itemPosition = AddressDataListSingleton.getAddressDao(getApplicationContext()).indexOf(address);
-//        viewPager.setCurrentItem(itemPosition);
-
-//        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//                Address address1 = AddressDataListSingleton.getOrNull(position);
-//
-//                if (address1 != null)
-//                    if (address1.getFullName() != null) {
-//                        setTitle(address1.getFullName());
-//                    }
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//
-//            }
-//        });
-    }
-
     @Override
     protected int layout() {
         return R.layout.address_pager_fragment;
@@ -130,59 +72,6 @@ public class AddressPagerFragment extends BaseFragment<AddressPagerPresenter> im
 
     @Override
     protected void init() {
-        //addressDao = AddressDaoSingleton.getAddressDao(getActivity());
-
-        //viewPager = new ViewPager(this);
-        //viewPager.setId(R.id.viewPager);
-        //setContentView(viewPager);
-
-        //android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-
-//        viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
-//            @Override
-//            public android.support.v4.app.Fragment getItem(int position) {
-//                Address address = AddressDataListSingleton.getOrNull(position);
-//
-//                Integer addressId = null;
-//                if (address != null)
-//                    addressId = address.getId();
-//
-//                return AddressFragment.newInstance(addressId);
-//            }
-//
-//            @Override
-//            public int getCount() {
-//                return addressDao.size();
-//            }
-//        });
-
-        Address address = (Address) getIntent().getSerializableExtra(AddressSupportFragment.EXTRA_ADDRESS);
-
-        int itemPosition = AddressDataListSingleton.getAddressDao(getApplicationContext()).indexOf(address);
-        viewPager.setCurrentItem(itemPosition);
-
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                Address address1 = AddressDataListSingleton.getOrNull(position);
-
-                if (address1 != null)
-                    if (address1.getFullName() != null) {
-                        setTitle(address1.getFullName());
-                    }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
     }
 
     @Override
@@ -217,7 +106,7 @@ public class AddressPagerFragment extends BaseFragment<AddressPagerPresenter> im
 
     @Override
     protected AddressPagerPresenter createPresenter() {
-        return null;
+        return new AddressPagerPresenter(this);
     }
 
     @Override
