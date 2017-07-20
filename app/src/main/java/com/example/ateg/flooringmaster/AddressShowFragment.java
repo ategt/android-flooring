@@ -2,6 +2,7 @@ package com.example.ateg.flooringmaster;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,15 @@ public class AddressShowFragment extends BaseFragment<AddressShowPresenter> impl
     public static final String TAG = "Address Show Fragment";
 
     private ProgressDialog mLoadingDialog;
+
+    public static AddressShowFragment newInstance(Integer id) {
+        Bundle arguments = new Bundle();
+        arguments.putSerializable(ADDRESS_ID_TO_SHOW, id);
+
+        AddressShowFragment addressFragment = new AddressShowFragment();
+        addressFragment.setArguments(arguments);
+        return addressFragment;
+    }
 
     @Override
     protected int layout() {
