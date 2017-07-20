@@ -41,16 +41,15 @@ public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPrese
 
     @Override
     public void appendAddresses(List<Address> addressList) {
-        //AddressAdapter listAdapter = (AddressAdapter) getListAdapter();
         ListView listView = (ListView) getCreatedView().findViewById(R.id.address_index_listView);
 
         ListAdapter listAdapter = listView.getAdapter();
+        AddressAdapter addressAdapter = (AddressAdapter) listAdapter;
 
         if (listAdapter == null) {
         } else {
             AddressDataListSingleton.getAddressDao(getActivity()).addAll(addressList);
-            //listAdapter.
-            //1istAdapter.notifyDataSetChanged();
+            addressAdapter.notifyDataSetChanged();
         }
     }
 
@@ -79,7 +78,7 @@ public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPrese
 
     @Override
     protected void populate() {
-        mPresenter.loadAddresses(new ResultProperties(AddressSortByEnum.SORT_BY_COMPANY, 0 , 25));
+        mPresenter.loadAddresses(new ResultProperties(AddressSortByEnum.SORT_BY_COMPANY, 0, 25));
     }
 
     @Override
@@ -107,14 +106,14 @@ public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPrese
         //listView.inf
 
         //if (viewButton == null)
-            //activity.getLayoutInflater().inflate(R.id.create_addresss_action_button, view);
+        //activity.getLayoutInflater().inflate(R.id.create_addresss_action_button, view);
 
         //FloatingActionButton createAddressButton = (FloatingActionButton) getActivity().findViewById(R.id.create_addresss_action_button);
         //FloatingActionButton createAddressButton = (FloatingActionButton) getView().findViewById(R.id.create_addresss_action_button);
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),AddressCreateActivity.class);
+                Intent intent = new Intent(getActivity(), AddressCreateActivity.class);
                 startActivity(intent);
             }
         });
@@ -143,7 +142,7 @@ public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPrese
             int positionInList = AddressDataListSingleton.getAddressDao(getActivity()).indexOf(address);
             int listSize = AddressDataListSingleton.getAddressDao(getActivity()).size();
 
-            if (positionInList + 20 > listSize){
+            if (positionInList + 20 > listSize) {
                 mPresenter.loadNextPage();
             }
 
