@@ -14,7 +14,7 @@ import java.util.Set;
  * Created by ATeg on 7/12/2017.
  */
 
-public class AddressBufferedClient implements AddressDao {
+public class AddressBufferedClient implements AddressDao, AddressClient {
 
     private AddressDao addressDao;
     private LruCache<Integer, Address> lruCache;
@@ -141,6 +141,11 @@ public class AddressBufferedClient implements AddressDao {
             lruCache.put(address.getId(), address);
         }
         return addressList;
+    }
+
+    @Override
+    public List<Address> search(AddressSearchRequest addressSearchRequest, ResultProperties resultProperties) {
+        return search(addressSearchRequest, resultProperties);
     }
 
     @Override
