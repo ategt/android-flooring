@@ -40,7 +40,7 @@ public class AddressClientTest {
     public void setUp() throws Exception {
         appContext = InstrumentationRegistry.getTargetContext();
         Uri testUri = Uri.parse(appContext.getString(R.string.starting_root_url));
-        addressDao = new AddressClient(appContext, new HttpUtilities(appContext, testUri));
+        addressDao = new AddressClientImpl(appContext, new HttpUtilities(appContext, testUri));
     }
 
     @Test

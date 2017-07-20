@@ -188,6 +188,11 @@ public class AddressDaoRemoteImpl implements AddressDao {
     }
 
     @Override
+    public List<Address> search(AddressSearchRequest addressSearchRequest, ResultProperties resultProperties) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public List<Address> list(Integer sortBy) {
         return list(new ResultProperties(AddressSortByEnum.parse(sortBy), null, null));
     }
