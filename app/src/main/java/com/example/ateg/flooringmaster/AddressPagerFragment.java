@@ -44,11 +44,13 @@ public class AddressPagerFragment extends BaseFragment<AddressPagerPresenter> im
             public android.app.Fragment getItem(int position) {
                 Address address = AddressDataListSingleton.getOrNull(position);
 
-//                Integer addressId = null;
-//                if (address != null)
-//                    addressId = address.getId();
+                Integer addressId = null;
+                if (address != null)
+                    addressId = address.getId();
 
-                return AddressShowFragment.newInstance(address);
+                AddressShowFragment addressShowFragment = new AddressShowFragment();
+                addressShowFragment.setAddressIdToShow(addressId);
+                return addressShowFragment;
             }
         });
 

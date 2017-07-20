@@ -21,30 +21,10 @@ public class AddressShowFragment extends BaseFragment<AddressShowPresenter> impl
     public static final String TAG = "Address Show Fragment";
 
     private ProgressDialog mLoadingDialog;
+    private Integer id;
 
-    public static AddressShowFragment newInstance(Integer id) {
-        Bundle arguments = new Bundle();
-        arguments.putSerializable(ADDRESS_ID_TO_SHOW, id);
-
-        // Causes network on main thread
-        //arguments.putSerializable(ADDRESS_TO_SHOW, AddressDaoSingleton.getAddressDao(null).get(id));
-
-        AddressShowFragment addressFragment = new AddressShowFragment();
-        addressFragment.setArguments(arguments);
-        return addressFragment;
-    }
-
-    public static AddressShowFragment newInstance(Address address) {
-        Bundle arguments = new Bundle();
-
-        if (address != null) {
-            arguments.putSerializable(ADDRESS_ID_TO_SHOW, address.getId());
-            arguments.putSerializable(ADDRESS_TO_SHOW, address);
-        }
-
-        AddressShowFragment addressFragment = new AddressShowFragment();
-        addressFragment.setArguments(arguments);
-        return addressFragment;
+    public void setAddressIdToShow(Integer id) {
+        this.id = id;
     }
 
     @Override
@@ -66,7 +46,9 @@ public class AddressShowFragment extends BaseFragment<AddressShowPresenter> impl
     protected void populate() {
         Intent intent = getActivity().getIntent();
 
-        if (intent.hasExtra(ADDRESS_TO_SHOW)) {
+        if (id != null) {
+            mPresenter.loadAddress(id);
+        } else if (intent.hasExtra(ADDRESS_TO_SHOW)) {
             Serializable serializable = intent.getSerializableExtra(ADDRESS_TO_SHOW);
             Address address = (Address) serializable;
             mPresenter.loadAddress(address);
