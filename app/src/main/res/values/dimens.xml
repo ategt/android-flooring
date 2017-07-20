@@ -5,4 +5,5 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="submit_margin">16dp</dimen>
     <dimen name="edit_margin">16dp</dimen>
+    <dimen name="address_show_margin">20dp</dimen>
 </resources>
