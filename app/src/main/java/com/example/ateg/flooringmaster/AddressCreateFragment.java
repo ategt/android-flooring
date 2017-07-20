@@ -123,7 +123,7 @@ public class AddressCreateFragment extends BaseFragment<AddressCreatePresenter> 
         intent.putExtra(AddressShowFragment.ADDRESS_TO_SHOW, address);
         startActivity(intent);
 
-        getActivity().finish();
+        //getActivity().finish();
     }
 
     @Override

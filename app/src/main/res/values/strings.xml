@@ -6,6 +6,7 @@
     <string name="empty_list">Press the Plus Sign To Add An Address.</string>
 
     <string name="address_id_label">ID</string>
+    <string name="address_id_prefix">ID: </string>
     <string name="address_firstName_hint">First Name</string>
     <string name="address_lastName_hint">Last Name</string>
     <string name="address_company_hint">Company</string>

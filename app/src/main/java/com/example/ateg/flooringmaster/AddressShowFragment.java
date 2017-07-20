@@ -52,7 +52,7 @@ public class AddressShowFragment extends BaseFragment<AddressShowPresenter> impl
 
     @Override
     protected void setListeners() {
-        View view = getView();
+        View view = getCreatedView();
         Button editButton = (Button) view.findViewById(R.id.address_show_edit_address_button);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,10 +85,13 @@ public class AddressShowFragment extends BaseFragment<AddressShowPresenter> impl
 
     @Override
     public void displayAddress(Address address) {
-        View view = getView();
+        View view = getCreatedView();
+
+        View loadingPanel = view.findViewById(R.id.loadingPanel);
+        loadingPanel.setVisibility(View.GONE);
 
         TextView idTextView = (TextView) view.findViewById(R.id.address_show_id_textView);
-        idTextView.setText(address.getId());
+        idTextView.setText(getString(R.string.address_id_prefix) + address.getId());
 
         TextView fullNameTextView = (TextView) view.findViewById(R.id.address_show_fullName_textView);
         fullNameTextView.setText(address.getFullName());
