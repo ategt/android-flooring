@@ -1,17 +1,14 @@
 package com.example.ateg.flooringmaster;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.support.design.widget.FloatingActionButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -20,14 +17,14 @@ import java.util.List;
  * Created by ATeg on 7/17/2017.
  */
 
-public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPresenter> implements AddressListView {
+public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> implements AddressIndexView {
 
     private static final String TAG = "AddressListMvpActivity";
 
     @Override
     public void onResume() {
         super.onResume();
-        //((AddressMVPListFragment.AddressAdapter) getListAdapter()).notifyDataSetChanged();
+        //((AddressIndexFragment.AddressAdapter) getListAdapter()).notifyDataSetChanged();
     }
 
     @Override
@@ -67,8 +64,8 @@ public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPrese
     protected void init() {
         getActivity().setTitle(R.string.address_list);
 
-        AddressMVPListFragment.AddressAdapter addressAdapter
-                = new AddressMVPListFragment.AddressAdapter(getActivity(), 0, AddressDataListSingleton.getAddressDao(getActivity()));
+        AddressIndexFragment.AddressAdapter addressAdapter
+                = new AddressIndexFragment.AddressAdapter(getActivity(), 0, AddressDataListSingleton.getAddressDao(getActivity()));
 
         ListView listView = (ListView) getCreatedView().findViewById(R.id.address_index_listView);
         listView.setAdapter(addressAdapter);
@@ -112,8 +109,8 @@ public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPrese
     }
 
     @Override
-    protected AddressListMVPPresenter createPresenter() {
-        return new AddressListMVPPresenter(this, AddressDaoSingleton.getAddressDao(getActivity()));
+    protected AddressIndexPresenter createPresenter() {
+        return new AddressIndexPresenter(this, AddressDaoSingleton.getAddressDao(getActivity()));
     }
 
     private class AddressAdapter extends ArrayAdapter<Address> {

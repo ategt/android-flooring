@@ -8,12 +8,12 @@ import java.util.List;
  * Created by ATeg on 7/17/2017.
  */
 
-public class AddressListMVPPresenter extends ListBasePresenter<AddressListView> {
+public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
 
     private AddressDao addressDao;
     private ResultProperties resultProperties;
 
-    public AddressListMVPPresenter(AddressListView viewInstance, AddressDao addressDao) {
+    public AddressIndexPresenter(AddressIndexView viewInstance, AddressDao addressDao) {
         super(viewInstance);
         this.addressDao = addressDao;
     }
@@ -39,7 +39,6 @@ public class AddressListMVPPresenter extends ListBasePresenter<AddressListView> 
 
     public void loadAddresses(ResultProperties resultProperties) {
         this.resultProperties = resultProperties;
-        //getView().showLoading(addressId);
 
         new AsyncTask<ResultProperties, Void, List<Address>>() {
 
