@@ -57,7 +57,6 @@ public class AddressShowFragment extends BaseFragment<AddressShowPresenter> impl
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(getActivity(),
                 Toast.makeText(getActivity(), "Feature not implemented Yet.", Toast.LENGTH_SHORT).show();
             }
         });
