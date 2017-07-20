@@ -36,7 +36,7 @@ public class AddressPagerActivity extends AppCompatActivity {
                 if (address != null)
                     addressId = address.getId();
 
-                return AddressSupportFragment.newInstance(addressId);
+                return AddressFragment.newInstance(addressId);
             }
 
             @Override
