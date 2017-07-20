@@ -89,7 +89,7 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Address address = (Address) parent.getItemAtPosition(position);
 
-                Intent intent = new Intent(getActivity(), AddressShowActivity.class);
+                Intent intent = new Intent(getActivity(), AddressPagerActivity.class);
                 intent.putExtra(AddressShowFragment.ADDRESS_TO_SHOW, address);
                 intent.putExtra(AddressShowFragment.ADDRESS_ID_TO_SHOW, address.getId());
 
