@@ -28,6 +28,9 @@ public class AddressCreateFragment extends BaseFragment<AddressCreatePresenter> 
     protected void setUi(View v) {
         TextView idTextView = (TextView) v.findViewById(R.id.address_edit_id_textView);
         idTextView.setVisibility(View.GONE);
+
+        View loadingPanel = v.findViewById(R.id.loadingPanel);
+        loadingPanel.setVisibility(View.GONE);
     }
 
     @Override
@@ -42,7 +45,7 @@ public class AddressCreateFragment extends BaseFragment<AddressCreatePresenter> 
 
     @Override
     protected void setListeners() {
-        Button button = (Button) getView().findViewById(R.id.submit_button);
+        Button button = (Button) getCreatedView().findViewById(R.id.submit_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

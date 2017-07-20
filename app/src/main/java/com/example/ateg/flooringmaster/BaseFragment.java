@@ -14,16 +14,21 @@ import android.view.ViewGroup;
 public abstract class BaseFragment<T extends BasePresenter> extends Fragment {
 
     protected T mPresenter;
+    private View v;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(layout(), container, false);
+        v = inflater.inflate(layout(), container, false);
         mPresenter = createPresenter();
         setUi(v);
         init();
         populate();
         setListeners();
+        return v;
+    }
+
+    protected View getCreatedView(){
         return v;
     }
 

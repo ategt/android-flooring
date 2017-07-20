@@ -83,12 +83,8 @@ public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPrese
 
     @Override
     protected void setListeners() {
-        new View.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                Log.i(TAG, "Scroll state changed");
-            }
-        };
+        // I had a scroll change listener here.
+        //Log.i(TAG, "Scroll state changed");
 
         Activity activity = getActivity();
         View view = getView();
