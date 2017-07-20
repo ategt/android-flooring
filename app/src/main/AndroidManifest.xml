@@ -26,6 +26,10 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".AddressListMVPActivity" />
         </activity>
+        <activity android:name=".AddressShowActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".AddressListMVPActivity" />
+        </activity>
     </application>
 
 </manifest>

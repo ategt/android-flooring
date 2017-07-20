@@ -11,23 +11,29 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- *  Custom Fragment implementation to bind basic elements and force the use of
- *  the MVP pattern logically attaching a presenter to this Fragment.
+ * Custom Fragment implementation to bind basic elements and force the use of
+ * the MVP pattern logically attaching a presenter to this Fragment.
  */
 public abstract class ListBaseFragment<T extends ListBasePresenter> extends ListFragment {
 
     protected T mPresenter;
+    private View mView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(layout(), container, false);
+        mView = v;
         mPresenter = createPresenter();
         setUi(v);
         init();
         populate();
         setListeners();
         return v;
+    }
+
+    protected View getCreatedView() {
+        return mView;
     }
 
     /**
