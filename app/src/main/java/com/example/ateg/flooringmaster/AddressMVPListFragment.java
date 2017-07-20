@@ -86,27 +86,10 @@ public class AddressMVPListFragment extends ListBaseFragment<AddressListMVPPrese
         // I had a scroll change listener here.
         //Log.i(TAG, "Scroll state changed");
 
-        Activity activity = getActivity();
-        View view = getView();
-
         View createdView = getCreatedView();
+        View createAddressButton = createdView.findViewById(R.id.create_addresss_action_button);
 
-        View viewButton = activity.findViewById(R.id.create_addresss_action_button);
-
-//        ListView listView = getListView();
-
-        View button3 = createdView.findViewById(R.id.create_addresss_action_button);
-
-        //View v3 = listView.getRootView();
-        //ViewParent viewParent = listView.getParent();
-        //listView.inf
-
-        //if (viewButton == null)
-        //activity.getLayoutInflater().inflate(R.id.create_addresss_action_button, view);
-
-        //FloatingActionButton createAddressButton = (FloatingActionButton) getActivity().findViewById(R.id.create_addresss_action_button);
-        //FloatingActionButton createAddressButton = (FloatingActionButton) getView().findViewById(R.id.create_addresss_action_button);
-        button3.setOnClickListener(new View.OnClickListener() {
+        createAddressButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AddressCreateActivity.class);
