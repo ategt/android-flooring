@@ -51,9 +51,10 @@ public class AddressShowFragment extends BaseFragment<AddressShowPresenter> impl
         } else if (intent.hasExtra(ADDRESS_TO_SHOW)) {
             Serializable serializable = intent.getSerializableExtra(ADDRESS_TO_SHOW);
             Address address = (Address) serializable;
+            id = address.getId();
             mPresenter.loadAddress(address);
         } else if (intent.hasExtra(ADDRESS_ID_TO_SHOW)) {
-            int id = intent.getIntExtra(ADDRESS_ID_TO_SHOW, 0);
+            id = intent.getIntExtra(ADDRESS_ID_TO_SHOW, 0);
             mPresenter.loadAddress(id);
         }
     }
@@ -65,7 +66,9 @@ public class AddressShowFragment extends BaseFragment<AddressShowPresenter> impl
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "Feature not implemented Yet.", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), AddressEditActivity.class);
+                intent.putExtra(AddressEditFragment.EXTRA_ADDRESS_ID_TO_SHOW, id);
+                startActivity(intent);
             }
         });
     }
