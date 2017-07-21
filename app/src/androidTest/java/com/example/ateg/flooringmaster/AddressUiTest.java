@@ -37,9 +37,6 @@ public class AddressUiTest {
     @Test
     public void examineEmptyIndexTest() {
 
-        //mainActivityActivityTestRule.
-
-        //Espresso.onView(ViewMatchers.withId(R.layout.list_addresses))
         Espresso.onView(ViewMatchers.withId(R.id.address_list_coordiator_layout))
                 .check(ViewAssertions.matches(
                         ViewMatchers.hasDescendant(ViewMatchers.withId(R.id.create_addresss_action_button))
@@ -48,7 +45,6 @@ public class AddressUiTest {
         Espresso.onView(ViewMatchers.withId(R.id.create_addresss_action_button))
                 .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
-        //Espresso.onView(ViewMatchers.withId(R.layout.list_addresses))
         Espresso.onView(ViewMatchers.withId(R.id.address_list_coordiator_layout))
                 .check(ViewAssertions.matches(
                         ViewMatchers.hasDescendant(
@@ -58,15 +54,9 @@ public class AddressUiTest {
 
     }
 
-//        Espresso.onView(ViewMatchers.withId(R.id.action_button)).perform(click());
-//
-//        Espresso.onView(ViewMatchers.withId(R.id.central_textView)).check(matches(withText(R.string.intent_empty)));
-//
-//    }
-
     @Test
     public void simpleIndex() {
-        Espresso.onView(ViewMatchers.withId(R.layout.list_addresses))
+        Espresso.onView(ViewMatchers.withId(R.id.address_index_listView))
                 .perform(ViewActions.swipeUp())
                 .perform(ViewActions.swipeUp())
                 .perform(ViewActions.swipeUp())
@@ -76,6 +66,6 @@ public class AddressUiTest {
                 .perform(ViewActions.swipeDown())
                 .perform(ViewActions.swipeDown())
                 .check(ViewAssertions.matches(ViewMatchers.withId(R.id.address_index_listView)))
-                .check(ViewAssertions.matches(ViewMatchers.withId(R.id.create_addresss_action_button)));
+                .check(ViewAssertions.matches(ViewMatchers.hasSibling(ViewMatchers.withId(R.id.create_addresss_action_button))));
     }
 }
