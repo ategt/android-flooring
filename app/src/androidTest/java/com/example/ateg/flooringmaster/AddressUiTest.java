@@ -18,6 +18,11 @@ import android.util.Log;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+
+import java.util.ArrayList;
 
 import static android.support.test.espresso.action.ViewActions.click;
 import static org.junit.Assert.*;

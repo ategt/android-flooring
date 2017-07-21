@@ -59,7 +59,7 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
 
         if (listAdapter == null) {
         } else {
-            AddressDataListSingleton.getAddressDao(getActivity()).addAll(addressList);
+            AddressDataListSingleton.appendAll(addressList);
             addressAdapter.notifyDataSetChanged();
         }
     }
@@ -78,7 +78,7 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
         getActivity().setTitle(R.string.address_list);
 
         AddressIndexFragment.AddressAdapter addressAdapter
-                = new AddressIndexFragment.AddressAdapter(getActivity(), 0, AddressDataListSingleton.getAddressDao(getActivity()));
+                = new AddressIndexFragment.AddressAdapter(getActivity(), 0, AddressDataListSingleton.getDataList(getActivity()));
 
         ListView listView = (ListView) getCreatedView().findViewById(R.id.address_index_listView);
         listView.setAdapter(addressAdapter);
@@ -141,8 +141,8 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
 
             Address address = getItem(position);
 
-            int positionInList = AddressDataListSingleton.getAddressDao(getActivity()).indexOf(address);
-            int listSize = AddressDataListSingleton.getAddressDao(getActivity()).size();
+            int positionInList = AddressDataListSingleton.indexOf(address);
+            int listSize = AddressDataListSingleton.size();
 
             if (positionInList + 20 > listSize) {
                 mPresenter.loadNextPage();

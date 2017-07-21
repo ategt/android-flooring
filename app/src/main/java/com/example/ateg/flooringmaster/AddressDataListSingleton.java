@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -14,11 +15,11 @@ import java.util.List;
 public class AddressDataListSingleton {
     private static List<Address> addressList;
 
-    public static List<Address> getAddressDao(Context context) {
+    public static List<Address> getDataList(Context context) {
         return respondWithAddressList();
     }
 
-    public static List<Address> getAddressDao() {
+    public static List<Address> getDataList() {
         return respondWithAddressList();
     }
 
@@ -44,5 +45,9 @@ public class AddressDataListSingleton {
 
     public static int indexOf(Address address){
         return respondWithAddressList().indexOf(address);
+    }
+
+    public static void appendAll(Collection<? extends Address> addressCollection){
+        respondWithAddressList().addAll(addressCollection);
     }
 }
