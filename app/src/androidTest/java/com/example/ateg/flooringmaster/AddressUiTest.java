@@ -1,15 +1,20 @@
 package com.example.ateg.flooringmaster;
 
 import android.support.test.espresso.Espresso;
+import android.support.test.espresso.ViewAssertion;
+import android.support.test.espresso.action.ViewActions;
+import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Rule;
 import org.junit.runner.RunWith;
+
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.util.Log;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +37,24 @@ public class AddressUiTest {
     @Test
     public void examineEmptyIndexTest() {
 
+        //mainActivityActivityTestRule.
 
+        //Espresso.onView(ViewMatchers.withId(R.layout.list_addresses))
+        Espresso.onView(ViewMatchers.withId(R.id.address_list_coordiator_layout))
+                .check(ViewAssertions.matches(
+                        ViewMatchers.hasDescendant(ViewMatchers.withId(R.id.create_addresss_action_button))
+                ));
+
+        Espresso.onView(ViewMatchers.withId(R.id.create_addresss_action_button))
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+
+        //Espresso.onView(ViewMatchers.withId(R.layout.list_addresses))
+        Espresso.onView(ViewMatchers.withId(R.id.address_list_coordiator_layout))
+                .check(ViewAssertions.matches(
+                        ViewMatchers.hasDescendant(
+                                ViewMatchers.withId(R.id.address_index_listView)
+                        )
+                ));
 
     }
 
@@ -43,7 +65,17 @@ public class AddressUiTest {
 //    }
 
     @Test
-    public void simpleIndex(){
-
+    public void simpleIndex() {
+        Espresso.onView(ViewMatchers.withId(R.layout.list_addresses))
+                .perform(ViewActions.swipeUp())
+                .perform(ViewActions.swipeUp())
+                .perform(ViewActions.swipeUp())
+                .perform(ViewActions.swipeUp())
+                .perform(ViewActions.swipeDown())
+                .perform(ViewActions.swipeDown())
+                .perform(ViewActions.swipeDown())
+                .perform(ViewActions.swipeDown())
+                .check(ViewAssertions.matches(ViewMatchers.withId(R.id.address_index_listView)))
+                .check(ViewAssertions.matches(ViewMatchers.withId(R.id.create_addresss_action_button)));
     }
 }

@@ -1,5 +1,6 @@
 package com.example.ateg.flooringmaster;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -20,6 +22,7 @@ import java.util.List;
 public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> implements AddressIndexView {
 
     private static final String TAG = "AddressListMvpActivity";
+    private ProgressDialog mLoadingDialog;
 
     @Override
     public void onResume() {
@@ -30,15 +33,25 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
     @Override
     public void showError(Throwable ex) {
         Log.e(TAG, "Thing wrong.", ex);
+        if (mLoadingDialog != null)
+            mLoadingDialog.dismiss();
+        Toast.makeText(getActivity(), "An Error Occurred.", Toast.LENGTH_SHORT).show();
+        Log.e(TAG, "Error ocurred.", ex);
     }
 
     @Override
     public void showLoading(Integer id) {
-
+        mLoadingDialog = ProgressDialog.show(getActivity(),
+                getString(R.string.submit_progress_title),
+                getString(R.string.submit_progress_body),
+                true);
     }
 
     @Override
     public void appendAddresses(List<Address> addressList) {
+        if (mLoadingDialog != null)
+            mLoadingDialog.dismiss();
+
         ListView listView = (ListView) getCreatedView().findViewById(R.id.address_index_listView);
 
         ListAdapter listAdapter = listView.getAdapter();
