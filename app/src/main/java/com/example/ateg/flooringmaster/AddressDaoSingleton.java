@@ -3,10 +3,16 @@ package com.example.ateg.flooringmaster;
 import android.content.Context;
 import android.net.Uri;
 
+import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.Provides;
+
 /**
  * Created by ATeg on 7/12/2017.
  */
 
+@Module
 public class AddressDaoSingleton {
     private static AddressDao addressDao;
 
@@ -16,6 +22,8 @@ public class AddressDaoSingleton {
         addressDao = new AddressBufferedClient(tempAddressDao, 20);
     }
 
+    @Provides
+    @Singleton
     public static AddressDao getAddressDao(Context context) {
         if (addressDao == null)
             new AddressDaoSingleton(context);
