@@ -1,7 +1,6 @@
 package com.example.ateg.flooringmaster;
 
 import android.support.test.espresso.Espresso;
-import android.support.test.espresso.ViewAssertion;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -9,23 +8,8 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Rule;
-import org.junit.runner.RunWith;
-
-import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-
-import java.util.ArrayList;
-
-import static android.support.test.espresso.action.ViewActions.click;
-import static org.junit.Assert.*;
 
 /**
  * Instrumentation test, which will execute on an Android device.
