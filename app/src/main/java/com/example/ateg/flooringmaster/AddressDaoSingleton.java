@@ -22,11 +22,13 @@ public class AddressDaoSingleton {
         addressDao = new AddressBufferedClient(tempAddressDao, 20);
     }
 
-    @Provides
-    @Singleton
     public static AddressDao getAddressDao(Context context) {
         if (addressDao == null)
             new AddressDaoSingleton(context);
         return addressDao;
+    }
+
+    public static void setAddressDao(AddressDao addressDao){
+        AddressDaoSingleton.addressDao = addressDao;
     }
 }

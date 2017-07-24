@@ -10,10 +10,10 @@ import java.util.List;
 
 public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
 
-    private AddressDao addressDao;
+    private AddressClient addressDao;
     private ResultProperties resultProperties;
 
-    public AddressIndexPresenter(AddressIndexView viewInstance, AddressDao addressDao) {
+    public AddressIndexPresenter(AddressIndexView viewInstance, AddressClient addressDao) {
         super(viewInstance);
         this.addressDao = addressDao;
     }

@@ -18,4 +18,8 @@ public class BasePresenter<T> {
     public void detachView() {
         mViewInstance = null;
     }
+
+    public void attachView(T viewInstance){
+        this.mViewInstance = viewInstance;
+    }
 }

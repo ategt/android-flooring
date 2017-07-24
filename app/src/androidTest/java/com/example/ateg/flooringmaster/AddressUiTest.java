@@ -61,7 +61,6 @@ public class AddressUiTest {
 @Test
     public void simpleIndexEmpty() {
 
-
         Espresso.onView(ViewMatchers.withId(R.id.address_index_listView))
                 .perform(ViewActions.swipeUp())
                 .perform(ViewActions.swipeUp())
