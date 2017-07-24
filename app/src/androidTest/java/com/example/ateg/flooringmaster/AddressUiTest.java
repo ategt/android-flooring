@@ -57,4 +57,21 @@ public class AddressUiTest {
                 .check(ViewAssertions.matches(ViewMatchers.withId(R.id.address_index_listView)))
                 .check(ViewAssertions.matches(ViewMatchers.hasSibling(ViewMatchers.withId(R.id.create_addresss_action_button))));
     }
+
+@Test
+    public void simpleIndexEmpty() {
+
+
+        Espresso.onView(ViewMatchers.withId(R.id.address_index_listView))
+                .perform(ViewActions.swipeUp())
+                .perform(ViewActions.swipeUp())
+                .perform(ViewActions.swipeUp())
+                .perform(ViewActions.swipeUp())
+                .perform(ViewActions.swipeDown())
+                .perform(ViewActions.swipeDown())
+                .perform(ViewActions.swipeDown())
+                .perform(ViewActions.swipeDown())
+                .check(ViewAssertions.matches(ViewMatchers.withId(R.id.address_index_listView)))
+                .check(ViewAssertions.matches(ViewMatchers.hasSibling(ViewMatchers.withId(R.id.create_addresss_action_button))));
+    }
 }
