@@ -15,6 +15,7 @@ import android.support.test.runner.AndroidJUnit4;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,9 +39,16 @@ import static org.mockito.Mockito.when;
 @RunWith(AndroidJUnit4.class)
 public class AddressUiMockTest {
 
+    private List<Address> resultsFromList;
+
+    @Before
+    public void setup(){
+        resultsFromList = new ArrayList<>();
+    }
+
     @Rule
     public ActivityTestRule<AddressIndexActivity> mainActivityActivityTestRule
-            = new ActivityTestRule<AddressIndexActivity>(AddressIndexActivity.class) {
+            = new ActivityTestRule<AddressIndexActivity>(AddressIndexActivity.class, true, false) {
         @Override
         protected void beforeActivityLaunched() {
             super.beforeActivityLaunched();
@@ -49,13 +57,11 @@ public class AddressUiMockTest {
 
             ResultProperties resultProperties = new ResultProperties(AddressSortByEnum.SORT_BY_COMPANY, 0, 25);
 
-
             when(addressDao.list(resultProperties)).then(new Answer<List<Address>>() {
                 @Override
                 public List<Address> answer(InvocationOnMock invocation) throws Throwable {
                     Thread.sleep(500);
-
-                    return new ArrayList<Address>();
+                    return resultsFromList;
                 }
             });
 
@@ -63,8 +69,7 @@ public class AddressUiMockTest {
                 @Override
                 public List<Address> answer(InvocationOnMock invocation) throws Throwable {
                     Thread.sleep(500);
-
-                    return new ArrayList<Address>();
+                    return resultsFromList;
                 }
             });
 
@@ -74,6 +79,8 @@ public class AddressUiMockTest {
 
     @Test
     public void simpleIndexEmpty() throws IOException {
+
+        mainActivityActivityTestRule.launchActivity(new Intent());
 
         Espresso.onView(ViewMatchers.withId(R.id.address_index_listView))
                 .perform(ViewActions.swipeUp())
