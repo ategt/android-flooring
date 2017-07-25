@@ -39,9 +39,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import java.util.Spliterator;
+//import java.util.Spliterator;
 import java.util.UUID;
-import java.util.function.Consumer;
+//import java.util.function.Consumer;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -364,52 +364,52 @@ public class AddressUiMockTest {
         int results = itemCountHolder[0];
 
         //di5.check(ViewAssertions.matches(not(ViewMatchers.isDisplayed())));
-        DataInteraction di7 = di5.usingAdapterViewProtocol(new AdapterViewProtocol() {
-            @Override
-            public Iterable<AdaptedData> getDataInAdapterView(AdapterView<? extends Adapter> adapterView) {
-                ListView listView = (ListView) adapterView;
-                ListAdapter listAdapter = listView.getAdapter();
+//        DataInteraction di7 = di5.usingAdapterViewProtocol(new AdapterViewProtocol() {
+//            @Override
+//            public Iterable<AdaptedData> getDataInAdapterView(AdapterView<? extends Adapter> adapterView) {
+//                ListView listView = (ListView) adapterView;
+//                ListAdapter listAdapter = listView.getAdapter();
+//
+//                int count = listAdapter.getCount();
+//                //AdapterViewProtocol.AdaptedData.Builder adapterDataBuilder = new AdaptedData.Builder();
+//
+//                List<AdaptedData> asdf = new ArrayList<AdaptedData>();
+//
+//                for (int i = 0 ; i < count ; i++) {
+//                    Object obj = listAdapter.getItem(i);
+//                    AdaptedData do2 = new AdaptedData.Builder().withData(obj).build();
+//                    asdf.add(do2);
+//                    //adapterDataBuilder = adapterDataBuilder.withData(obj);
+//                }
+//
+//                return new Iterable<AdaptedData>() {
+//                    @Override
+//                    public Iterator<AdaptedData> iterator() {
+//                        return null;
+//                    }
+//                }asdf.iterator();
+//
+//                //Iterable<AdaptedData> gty = new Iterable<AdaptedData>();
+//                //return null;
+//            }
+//
+//            @Override
+//            public Optional<AdaptedData> getDataRenderedByView(AdapterView<? extends Adapter> adapterView, View descendantView) {
+//                return null;
+//            }
+//
+//            @Override
+//            public void makeDataRenderedWithinAdapterView(AdapterView<? extends Adapter> adapterView, AdaptedData data) {
+//                Object obj = data.getData();
+//            }
+//
+//            @Override
+//            public boolean isDataRenderedWithinAdapterView(AdapterView<? extends Adapter> adapterView, AdaptedData adaptedData) {
+//                return false;
+//            }
+//        });
 
-                int count = listAdapter.getCount();
-                //AdapterViewProtocol.AdaptedData.Builder adapterDataBuilder = new AdaptedData.Builder();
-
-                List<AdaptedData> asdf = new ArrayList<AdaptedData>();
-
-                for (int i = 0 ; i < count ; i++) {
-                    Object obj = listAdapter.getItem(i);
-                    AdaptedData do2 = new AdaptedData.Builder().withData(obj).build();
-                    asdf.add(do2);
-                    //adapterDataBuilder = adapterDataBuilder.withData(obj);
-                }
-
-                return new Iterable<AdaptedData>() {
-                    @Override
-                    public Iterator<AdaptedData> iterator() {
-                        return null;
-                    }
-                }asdf.iterator();
-
-                //Iterable<AdaptedData> gty = new Iterable<AdaptedData>();
-                //return null;
-            }
-
-            @Override
-            public Optional<AdaptedData> getDataRenderedByView(AdapterView<? extends Adapter> adapterView, View descendantView) {
-                return null;
-            }
-
-            @Override
-            public void makeDataRenderedWithinAdapterView(AdapterView<? extends Adapter> adapterView, AdaptedData data) {
-                Object obj = data.getData();
-            }
-
-            @Override
-            public boolean isDataRenderedWithinAdapterView(AdapterView<? extends Adapter> adapterView, AdaptedData adaptedData) {
-                return false;
-            }
-        });
-
-        di7.atPosition(0);
+        //di7.atPosition(0);
         di5.check(ViewAssertions.doesNotExist());
 
         int drtum = itemCountHolder[0];
