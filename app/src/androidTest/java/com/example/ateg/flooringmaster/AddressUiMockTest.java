@@ -17,6 +17,7 @@ import android.support.test.espresso.matcher.CursorMatchers;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
 
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
@@ -25,6 +26,8 @@ import junit.framework.Assert;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+import org.hamcrest.Matchers;
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,6 +46,14 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
 
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withParent;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static com.example.ateg.flooringmaster.AddressIndexActivityTest.childAtPosition;
+import static org.hamcrest.Matchers.allOf;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.Mockito.mock;
@@ -251,6 +262,26 @@ public class AddressUiMockTest {
                 .check(ViewAssertions.matches(ViewMatchers.withId(R.id.address_index_listView)))
                 .check(ViewAssertions.matches(ViewMatchers.hasSibling(ViewMatchers.withId(R.id.create_addresss_action_button))));
 
+        DataInteraction thinger = Espresso.onData(getDataMatcher(secondAddress));
+
+
+        ViewInteraction textView4 = onView(
+                allOf(withId(R.id.address_list_item_nameTextView),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.address_index_listView),
+                                        1),
+                                0),
+                        isDisplayed()));
+        textView4.check(
+                matches(
+                        Matchers.anyOf(
+                                withText(secondAddress.getLastName() + ", " + secondAddress.getFirstName()),
+                                withText(secondAddress.getFirstName() + " " + secondAddress.getLastName()))
+        ));
+
+
+
 //        Espresso.onView(ViewMatchers.withId(R.id.address_index_listView))
 //                .check()
 
@@ -259,6 +290,51 @@ public class AddressUiMockTest {
 
 //        Espresso.onView(ViewMatchers.withId(R.id.address_index_listView))
 //                .
+
+        ViewInteraction relativeLayout = onView(
+                allOf(childAtPosition(
+                        allOf(withId(R.id.address_index_listView),
+                                withParent(withId(R.id.address_list_coordiator_layout))),
+                        0),
+                        isDisplayed()));
+        //relativeLayout.
+
+
+        ViewInteraction textView = onView(
+                allOf(withId(R.id.address_show_fullName_textView),
+                        ViewMatchers.withText(new org.hamcrest.Matcher() {
+                            @Override
+                            public void describeTo(Description description) {
+
+                            }
+
+                            @Override
+                            public boolean matches(Object item) {
+
+                                return true;
+                            }
+
+                            @Override
+                            public void describeMismatch(Object item, Description mismatchDescription) {
+
+                            }
+
+                            @Override
+                            public void _dont_implement_Matcher___instead_extend_BaseMatcher_() {
+
+                            }
+                        }),
+                        childAtPosition(
+                                childAtPosition(
+                                        IsInstanceOf.<View>instanceOf(android.widget.ScrollView.class),
+                                        0),
+                                1),
+                        isDisplayed()));
+        textView.check(
+                ViewAssertions.matches(
+                        ViewMatchers.withText("Bill Billerston")));
+
+
 
         DataInteraction firstRowInteraction = Espresso.onData(CursorMatchers.withRowString(new org.hamcrest.Matcher() {
             @Override
@@ -302,8 +378,8 @@ public class AddressUiMockTest {
             }
         }));
 
-        ViewInteraction firstRowInteractionb = firstRowInteraction.perform(ViewActions.scrollTo());
-        firstRowInteractionb.check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        //ViewInteraction firstRowInteractionb = firstRowInteraction.perform(ViewActions.scrollTo());
+        firstRowInteraction.check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
         DataInteraction thing = Espresso.onData(getDataMatcher(secondAddress));
                 thing.perform(ViewActions.scrollTo());
