@@ -78,36 +78,45 @@ public class LongListActivityTest {
             super.beforeActivityLaunched();
 
             AddressDao addressDao = mock(AddressDao.class);
-            //when(addressDao.list(any(ResultProperties.class))).thenReturn(resultsFromList);
 
-            when(addressDao.list(argThat(new ArgumentMatcher<ResultProperties>() {
-                @Override
-                public boolean matches(ResultProperties argument) {
-                    if (argument == null)
-                        return false;
-                    if (argument instanceof ResultProperties) {
-                        return argument.getPageNumber() == 0;
-                    }
-                    return false;
-                }
-            }))).thenReturn(resultsFromList);
+            when(addressDao.list(argThat(evalResultPropertiesPageNumber()))).thenReturn(resultsFromList);
 
-            when(addressDao.list(argThat(new ArgumentMatcher<ResultProperties>() {
-                @Override
-                public boolean matches(ResultProperties argument) {
-                    if (argument == null)
-                        return false;
-                    if (argument instanceof ResultProperties) {
-                        return argument.getPageNumber() != 0;
-                    }
-                    return false;
-                }
-            }))).thenReturn(new ArrayList<Address>());
+            when(addressDao.list(argThat(evalResultPropertiesPageNumberNotZero()))).thenReturn(new ArrayList<Address>());
             when(addressDao.size()).thenReturn(resultsFromList.size());
 
             AddressDaoSingleton.setAddressDao(addressDao);
         }
     };
+
+    @NonNull
+    private ArgumentMatcher<ResultProperties> evalResultPropertiesPageNumberNotZero() {
+        return new ArgumentMatcher<ResultProperties>() {
+            @Override
+            public boolean matches(ResultProperties argument) {
+                if (argument == null)
+                    return false;
+                if (argument instanceof ResultProperties) {
+                    return argument.getPageNumber() != 0;
+                }
+                return false;
+            }
+        };
+    }
+
+    @NonNull
+    private ArgumentMatcher<ResultProperties> evalResultPropertiesPageNumber() {
+        return new ArgumentMatcher<ResultProperties>() {
+            @Override
+            public boolean matches(ResultProperties argument) {
+                if (argument == null)
+                    return false;
+                if (argument instanceof ResultProperties) {
+                    return argument.getPageNumber() == 0;
+                }
+                return false;
+            }
+        };
+    }
 
     /**
      * Test that the list is long enough for this sample, the last item shouldn't appear.
@@ -140,7 +149,6 @@ public class LongListActivityTest {
 
             @Override
             public void describeTo(Description description) {
-
             }
         }).check(doesNotExist());
     }
@@ -228,18 +236,13 @@ public class LongListActivityTest {
         mainActivityActivityTestRule.launchActivity(new Intent());
 
         // Click on one of the rows.
-        DataInteraction di1 = onRow(lastAddress);
-        DataInteraction di2 = di1.onChildView(withId(R.id.address_list_item_nameTextView));
-        ViewInteraction vi3 = di2.perform(click());
+        onRow(lastAddress).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
 
-        // Check that the activity detected the click on the first column.
-        //onView(ViewMatchers.withId(R.id.address_show_fullName_textView))
         onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
                 ViewMatchers.isDisplayed()))
                 .check(matches(new BaseMatcher<View>() {
                     @Override
                     public boolean matches(Object item) {
-
                         if (item instanceof TextView) {
                             TextView textView = (TextView) item;
                             String viewText = textView.getText().toString();
@@ -247,7 +250,6 @@ public class LongListActivityTest {
                             if (!Strings.isNullOrEmpty(viewText) && viewText.equalsIgnoreCase(lastAddressFullName)) {
                                 return true;
                             }
-
                         }
 
                         return false;
@@ -255,7 +257,6 @@ public class LongListActivityTest {
 
                     @Override
                     public void describeTo(Description description) {
-
                     }
                 }));
     }
@@ -292,17 +293,13 @@ public class LongListActivityTest {
         return onData(new BaseMatcher() {
             @Override
             public void describeTo(Description description) {
-
             }
 
             @Override
             public boolean matches(Object item) {
                 if (item instanceof Address) {
                     Address address = (Address) item;
-                    boolean isSame = Objects.equals(address, addressToFind);
-                    if (isSame) {
-                        return true;
-                    }
+                    return Objects.equals(address, addressToFind);
                 }
 
                 return false;
