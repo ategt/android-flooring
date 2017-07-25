@@ -2,6 +2,9 @@ package com.example.ateg.flooringmaster;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
+import org.hamcrest.core.AllOf;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,6 +40,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.is;
@@ -175,19 +179,50 @@ public class LongListActivityTest {
         onRow(lastAddress).check(matches(isCompletelyDisplayed()));
     }
 
-//    /**
-//     * Clicks on a row and checks that the activity detected the click.
-//     */
-//    @Test
-//    public void row_Click() {
-//        // Click on one of the rows.
-//        onRow(TEXT_ITEM_30).onChildView(withId(R.id.rowContentTextView)).perform(click());
-//
-//        // Check that the activity detected the click on the first column.
-//        onView(ViewMatchers.withId(R.id.selection_row_value))
-//                .check(matches(withText(TEXT_ITEM_30_SELECTED)));
-//    }
-//
+    /**
+     * Clicks on a row and checks that the activity detected the click.
+     */
+    @Test
+    public void row_Click() {
+        List<Address> addresses = createList(3000);
+        int sizeOfList = resultsFromList.size();
+        Address lastAddress = resultsFromList.get(sizeOfList-1);
+
+        final String lastAddressFullName = lastAddress.getFullName();
+
+        mainActivityActivityTestRule.launchActivity(new Intent());
+
+        // Click on one of the rows.
+        onRow(lastAddress).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
+
+        // Check that the activity detected the click on the first column.
+        //onView(ViewMatchers.withId(R.id.address_show_fullName_textView))
+        onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
+                ViewMatchers.isDisplayed()))
+                .check(matches(new BaseMatcher<View>() {
+                    @Override
+                    public boolean matches(Object item) {
+
+                        if (item instanceof TextView){
+                            TextView textView = (TextView) item;
+                            String viewText = textView.getText().toString();
+
+                            if (!Strings.isNullOrEmpty(viewText) && viewText.equalsIgnoreCase(lastAddressFullName)){
+                                return true;
+                            }
+
+                        }
+
+                        return false;
+                    }
+
+                    @Override
+                    public void describeTo(Description description) {
+
+                    }
+                }));
+    }
+
 //    /**
 //     * Checks that a toggle button is checked after clicking on it.
 //     */
