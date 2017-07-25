@@ -5,10 +5,13 @@ import android.os.AsyncTask;
 import android.util.LruCache;
 import android.util.Pair;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by ATeg on 7/12/2017.
@@ -136,11 +139,61 @@ public class AddressBufferedClient implements AddressDao, AddressClient {
 
     @Override
     public List<Address> list(ResultProperties resultProperties) {
-        List<Address> addressList = addressDao.list(resultProperties);
-        for (Address address : addressList){
-            lruCache.put(address.getId(), address);
+
+        List<Address> resultsFromList = new ArrayList<>();
+        final Address firstAddress = new Address();
+
+        firstAddress.setCompany("Company A");
+        firstAddress.setFirstName("Bill");
+        firstAddress.setLastName("Billerston");
+
+        resultsFromList.add(firstAddress);
+
+        final Address secondAddress = new Address();
+
+        secondAddress.setCompany("Levis");
+        secondAddress.setFirstName("Levi");
+        secondAddress.setLastName("Pants");
+
+        resultsFromList.add(secondAddress);
+
+        final Address thirdAddress = new Address();
+
+        thirdAddress.setCompany("Company B");
+        thirdAddress.setFirstName("Bill");
+        thirdAddress.setLastName("Billerston");
+
+        resultsFromList.add(thirdAddress);
+
+        Random random = new Random();
+
+        for (int i = 0; i < 3000; i++) {
+            Address tempAddress = new Address();
+
+            tempAddress.setCompany(UUID.randomUUID().toString().substring(0, random.nextInt(20)));
+            tempAddress.setFirstName(UUID.randomUUID().toString().substring(0, random.nextInt(20)));
+            tempAddress.setLastName(UUID.randomUUID().toString().substring(0, random.nextInt(20)));
+
+            resultsFromList.add(tempAddress);
         }
-        return addressList;
+
+        final Address lastAddress = new Address();
+        String lastCompanyName = "Company Final";
+        lastAddress.setCompany(lastCompanyName);
+        lastAddress.setFirstName("Last");
+        lastAddress.setLastName("Person");
+
+        resultsFromList.add(lastAddress);
+
+return resultsFromList;
+
+
+
+//        List<Address> addressList = addressDao.list(resultProperties);
+//        for (Address address : addressList){
+//            lruCache.put(address.getId(), address);
+//        }
+//        return addressList;
     }
 
     @Override

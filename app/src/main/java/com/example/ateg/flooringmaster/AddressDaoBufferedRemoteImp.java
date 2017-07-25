@@ -9,7 +9,7 @@ import java.util.Set;
  * Created by ATeg on 7/12/2017.
  */
 
-public abstract class AddressDaoBufferedRemoteImp implements AddressDao {
+public abstract class AddressDaoBufferedRemoteImp implements AddressDao, AddressClient {
 
     private AddressDao addressDao;
     private LruCache<Integer, Address> lruCache;
