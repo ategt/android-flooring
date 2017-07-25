@@ -12,10 +12,12 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
 
     private AddressClient addressDao;
     private ResultProperties resultProperties;
+    private boolean loadingNextPage;
 
     public AddressIndexPresenter(AddressIndexView viewInstance, AddressClient addressDao) {
         super(viewInstance);
         this.addressDao = addressDao;
+        this.loadingNextPage = false;
     }
 
     public void loadAddresses(Integer page) {
@@ -25,20 +27,24 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
     public void loadAddresses(Integer page, int resultsPerPage) {
         if (page == null)
             page = 0;
-        loadAddresses(new ResultProperties(AddressSortByEnum.SORT_BY_LAST_NAME, page,resultsPerPage));
+        loadAddresses(new ResultProperties(AddressSortByEnum.SORT_BY_LAST_NAME, page, resultsPerPage));
     }
 
-    public void loadNextPage(){
-        int pageNum = resultProperties.getPageNumber() + 1;
-        ResultProperties incrementedResultProperties = new ResultProperties(resultProperties.getSortByEnum(),
-                pageNum,
-                resultProperties.getResultsPerPage());
+    public void loadNextPage() {
+        if (!loadingNextPage) {
+            int pageNum = resultProperties.getPageNumber() + 1;
+            ResultProperties incrementedResultProperties = new ResultProperties(resultProperties.getSortByEnum(),
+                    pageNum,
+                    resultProperties.getResultsPerPage());
 
-        loadAddresses(incrementedResultProperties);
+            loadAddresses(incrementedResultProperties);
+        }
     }
 
     public void loadAddresses(ResultProperties resultProperties) {
         this.resultProperties = resultProperties;
+        if (loadingNextPage) return;
+        loadingNextPage = true;
 
         new AsyncTask<ResultProperties, Void, List<Address>>() {
 
@@ -49,7 +55,8 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
 
             @Override
             protected void onPostExecute(List<Address> addresses) {
-                if (addresses != null){
+                loadingNextPage = false;
+                if (addresses != null) {
                     getView().appendAddresses(addresses);
                 } else {
                     getView().showError(new IllegalArgumentException("Invalid Address"));

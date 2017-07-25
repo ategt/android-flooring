@@ -9,11 +9,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatcher;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.test.espresso.DataInteraction;
 import android.support.test.espresso.Espresso;
+import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.core.deps.guava.base.Strings;
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -45,6 +47,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -68,7 +71,32 @@ public class LongListActivityTest {
             super.beforeActivityLaunched();
 
             AddressDao addressDao = mock(AddressDao.class);
-            when(addressDao.list(any(ResultProperties.class))).thenReturn(resultsFromList);
+            //when(addressDao.list(any(ResultProperties.class))).thenReturn(resultsFromList);
+
+            when(addressDao.list(argThat(new ArgumentMatcher<ResultProperties>() {
+                @Override
+                public boolean matches(ResultProperties argument) {
+                    if (argument == null)
+                        return false;
+                    if (argument instanceof ResultProperties) {
+                        return argument.getPageNumber() == 0;
+                    }
+                    return false;
+                }
+            }))).thenReturn(resultsFromList);
+
+            when(addressDao.list(argThat(new ArgumentMatcher<ResultProperties>() {
+                @Override
+                public boolean matches(ResultProperties argument) {
+                    if (argument == null)
+                        return false;
+                    if (argument instanceof ResultProperties) {
+                        return argument.getPageNumber() != 0;
+                    }
+                    return false;
+                }
+            }))).thenReturn(new ArrayList<Address>());
+            when(addressDao.size()).thenReturn(resultsFromList.size());
 
             AddressDaoSingleton.setAddressDao(addressDao);
         }
@@ -82,7 +110,7 @@ public class LongListActivityTest {
         List<Address> addresses = createList(3000);
 
         int length = addresses.size();
-        final Address lastAddress = addresses.get(length-1);
+        final Address lastAddress = addresses.get(length - 1);
 
         mainActivityActivityTestRule.launchActivity(new Intent());
 
@@ -172,7 +200,7 @@ public class LongListActivityTest {
     public void list_Scrolls() {
         List<Address> addresses = createList(3000);
         int sizeOfList = resultsFromList.size();
-        Address lastAddress = resultsFromList.get(sizeOfList-1);
+        Address lastAddress = resultsFromList.get(sizeOfList - 1);
 
         mainActivityActivityTestRule.launchActivity(new Intent());
 
@@ -186,14 +214,16 @@ public class LongListActivityTest {
     public void row_Click() {
         List<Address> addresses = createList(3000);
         int sizeOfList = resultsFromList.size();
-        Address lastAddress = resultsFromList.get(sizeOfList-1);
+        Address lastAddress = resultsFromList.get(sizeOfList - 1);
 
         final String lastAddressFullName = lastAddress.getFullName();
 
         mainActivityActivityTestRule.launchActivity(new Intent());
 
         // Click on one of the rows.
-        onRow(lastAddress).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
+        DataInteraction di1 = onRow(lastAddress);
+        DataInteraction di2 = di1.onChildView(withId(R.id.address_list_item_nameTextView));
+        ViewInteraction vi3 = di2.perform(click());
 
         // Check that the activity detected the click on the first column.
         //onView(ViewMatchers.withId(R.id.address_show_fullName_textView))
@@ -203,11 +233,11 @@ public class LongListActivityTest {
                     @Override
                     public boolean matches(Object item) {
 
-                        if (item instanceof TextView){
+                        if (item instanceof TextView) {
                             TextView textView = (TextView) item;
                             String viewText = textView.getText().toString();
 
-                            if (!Strings.isNullOrEmpty(viewText) && viewText.equalsIgnoreCase(lastAddressFullName)){
+                            if (!Strings.isNullOrEmpty(viewText) && viewText.equalsIgnoreCase(lastAddressFullName)) {
                                 return true;
                             }
 
@@ -260,10 +290,10 @@ public class LongListActivityTest {
 
             @Override
             public boolean matches(Object item) {
-                if (item instanceof Address){
+                if (item instanceof Address) {
                     Address address = (Address) item;
                     boolean isSame = Objects.equals(address, addressToFind);
-                    if(isSame){
+                    if (isSame) {
                         return true;
                     }
                 }
