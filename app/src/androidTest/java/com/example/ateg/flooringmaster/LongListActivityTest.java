@@ -49,15 +49,6 @@ import static org.mockito.Mockito.when;
 @LargeTest
 public class LongListActivityTest {
 
-    private static final String TEXT_ITEM_30 = "item: 30";
-
-    private static final String TEXT_ITEM_30_SELECTED = "30";
-
-    private static final String TEXT_ITEM_60 = "item: 60";
-
-    // Match the last item by matching its text.
-    private static final String LAST_ITEM_ID = "item: 99";
-
     private List<Address> resultsFromList;
 
     @Before
@@ -73,22 +64,17 @@ public class LongListActivityTest {
             super.beforeActivityLaunched();
 
             AddressDao addressDao = mock(AddressDao.class);
-
             when(addressDao.list(any(ResultProperties.class))).thenReturn(resultsFromList);
 
             AddressDaoSingleton.setAddressDao(addressDao);
         }
     };
 
-
     /**
      * Test that the list is long enough for this sample, the last item shouldn't appear.
      */
     @Test
     public void lastItem_NotDisplayed() {
-        // Last item should not exist if the list wasn't scrolled down.
-        //onView(withText(LAST_ITEM_ID)).check(doesNotExist());
-
         List<Address> addresses = createList(3000);
 
         int length = addresses.size();
@@ -180,8 +166,6 @@ public class LongListActivityTest {
      */
     @Test
     public void list_Scrolls() {
-        //onRow(LAST_ITEM_ID).check(matches(isCompletelyDisplayed()));
-
         List<Address> addresses = createList(3000);
         int sizeOfList = resultsFromList.size();
         Address lastAddress = resultsFromList.get(sizeOfList-1);
@@ -230,24 +214,6 @@ public class LongListActivityTest {
 //        // Check that the activity didn't detect the click on the first column.
 //        onView(ViewMatchers.withId(R.id.selection_row_value))
 //                .check(matches(withText(TEXT_ITEM_30_SELECTED)));
-//    }
-//
-//    /**
-//     * Uses {@link Espresso#onData(org.hamcrest.Matcher)} to get a reference to a specific row.
-//     * <p>
-//     * Note: A custom matcher can be used to match the content and have more readable code.
-//     * See the Custom Matcher Sample.
-//     * </p>
-//     *
-//     * @param str the content of the field
-//     * @return a {@link DataInteraction} referencing the row
-//     */
-//    private static DataInteraction onRow(String str) {
-//        return onData(hasEntry(equalTo(LongListActivity.ROW_TEXT), is(str)));
-//    }
-
-    //    private static DataInteraction onRow(String str) {
-//        return onData(hasEntry(equalTo(A.ROW_TEXT), is(str)));
 //    }
 
     private static DataInteraction onRow(final Address addressToFind) {
