@@ -1,50 +1,35 @@
 package com.example.ateg.flooringmaster;
 
-import android.app.Activity;
-import android.app.Instrumentation;
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.DataInteraction;
 import android.support.test.espresso.Espresso;
-import android.support.test.espresso.ViewAssertion;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.assertion.ViewAssertions;
-import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.matcher.CursorMatchers;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 
-import com.squareup.okhttp.mockwebserver.MockResponse;
-import com.squareup.okhttp.mockwebserver.MockWebServer;
-
 import junit.framework.Assert;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.core.IsInstanceOf;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
-import org.mockito.internal.hamcrest.HamcrestArgumentMatcher;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import java.util.UUID;
-import java.util.regex.Matcher;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -55,7 +40,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.example.ateg.flooringmaster.AddressIndexActivityTest.childAtPosition;
 import static org.hamcrest.Matchers.allOf;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -276,17 +260,76 @@ public class AddressUiMockTest {
         textView4.check(
                 matches(
                         Matchers.anyOf(
-                                withText(secondAddress.getLastName() + ", " + secondAddress.getFirstName()),
+                                withText(getAddressNameIndexText(secondAddress)),
                                 withText(secondAddress.getFirstName() + " " + secondAddress.getLastName()))
+                ));
+
+        Espresso.onData(getDataMatcher(firstAddress));
+
+        ViewInteraction textViewfirst = onView(
+                allOf(withId(R.id.address_list_item_nameTextView),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.address_index_listView),
+                                        0),
+                                0),
+                        isDisplayed()));
+        textViewfirst.check(
+                matches(
+                        withText(getAddressNameIndexText(firstAddress)))
+        );
+
+        Espresso.onData(getDataMatcher(thirdAddress));
+
+        ViewInteraction textViewthird = onView(
+                allOf(withId(R.id.address_list_item_nameTextView),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.address_index_listView),
+                                        0),
+                                0),
+                        isDisplayed()));
+        textViewthird.check(
+                matches(
+                        withText(getAddressNameIndexText(thirdAddress)))
+        );
+
+        DataInteraction lastInteraction = Espresso.onData(getDataMatcher(lastAddress));
+        DataInteraction lastInteraction2 = lastInteraction.inAdapterView(new BaseMatcher<View>() {
+            @Override
+            public boolean matches(Object item) {
+                return true;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+
+            }
+        });
+
+        lastInteraction2.check(matches(
+                withText(getAddressNameIndexText(lastAddress))
         ));
 
+        ViewInteraction textViewlast = onView(
+                allOf(withId(R.id.address_list_item_nameTextView),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.address_index_listView),
+                                        3004),
+                                0),
+                        isDisplayed()));
+        textViewlast.check(
+                matches(
+                        withText(getAddressNameIndexText(lastAddress)))
+        );
 
 
 //        Espresso.onView(ViewMatchers.withId(R.id.address_index_listView))
 //                .check()
 
         //Espresso.onData(ArgumentMatchers.anyList())
-                //.
+        //.
 
 //        Espresso.onView(ViewMatchers.withId(R.id.address_index_listView))
 //                .
@@ -335,7 +378,6 @@ public class AddressUiMockTest {
                         ViewMatchers.withText("Bill Billerston")));
 
 
-
         DataInteraction firstRowInteraction = Espresso.onData(CursorMatchers.withRowString(new org.hamcrest.Matcher() {
             @Override
             public void describeTo(Description description) {
@@ -382,8 +424,8 @@ public class AddressUiMockTest {
         firstRowInteraction.check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
         DataInteraction thing = Espresso.onData(getDataMatcher(secondAddress));
-                thing.perform(ViewActions.scrollTo());
-                thing.check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        thing.perform(ViewActions.scrollTo());
+        thing.check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
         Espresso.onData(getDataMatcher(firstAddress))
                 .atPosition(1);
@@ -392,12 +434,12 @@ public class AddressUiMockTest {
                 .atPosition(2);
 
         Espresso.onData(getDataMatcher(secondAddress))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+                .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
         Espresso.onData(getDataMatcher(secondAddress))
                 .perform(ViewActions.scrollTo())
                 .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
-            //.check(ViewAssertions.matches(ViewMatchers.withText(org.hamcrest.Matcher<String>.)));
+        //.check(ViewAssertions.matches(ViewMatchers.withText(org.hamcrest.Matcher<String>.)));
 
         Espresso.onData(getDataMatcher(thirdAddress))
                 .atPosition(3004);
@@ -411,6 +453,11 @@ public class AddressUiMockTest {
         Espresso.onData(getDataMatcher(lastAddress)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
         Espresso.onData(getDataMatcher(lastAddress)).check(ViewAssertions.matches(ViewMatchers.isClickable()));
 
+    }
+
+    @NonNull
+    private String getAddressNameIndexText(Address secondAddress) {
+        return secondAddress.getLastName() + ", " + secondAddress.getFirstName();
     }
 
     @NonNull
