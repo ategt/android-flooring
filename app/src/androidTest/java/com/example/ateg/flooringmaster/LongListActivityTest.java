@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.test.espresso.DataInteraction;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -87,6 +89,39 @@ public class LongListActivityTest {
         // Last item should not exist if the list wasn't scrolled down.
         //onView(withText(LAST_ITEM_ID)).check(doesNotExist());
 
+        List<Address> addresses = createList(3000);
+
+        int length = addresses.size();
+        final Address lastAddress = addresses.get(length-1);
+
+        mainActivityActivityTestRule.launchActivity(new Intent());
+
+        onView(new BaseMatcher<View>() {
+            @Override
+            public boolean matches(Object item) {
+
+                if (item instanceof TextView) {
+                    TextView textView = (TextView) item;
+                    String viewText = textView.getText().toString();
+
+                    if (!Strings.isNullOrEmpty(viewText) &&
+                            viewText.toLowerCase().contains(lastAddress.getCompany().toLowerCase())) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+
+            }
+        }).check(doesNotExist());
+    }
+
+    @NonNull
+    private List<Address> createList(int addressesToGenerate) {
         final Address firstAddress = new Address();
 
         firstAddress.setCompany("Company A");
@@ -113,7 +148,7 @@ public class LongListActivityTest {
 
         Random random = new Random();
 
-        for (int i = 0; i < 3000; i++) {
+        for (int i = 0; i < addressesToGenerate; i++) {
             Address tempAddress = new Address();
 
             String uuid = UUID.randomUUID().toString();
@@ -137,40 +172,25 @@ public class LongListActivityTest {
         lastAddress.setLastName("Person");
 
         resultsFromList.add(lastAddress);
+        return resultsFromList;
+    }
+
+    /**
+     * Check that the item is created. onData() takes care of scrolling.
+     */
+    @Test
+    public void list_Scrolls() {
+        //onRow(LAST_ITEM_ID).check(matches(isCompletelyDisplayed()));
+
+        List<Address> addresses = createList(3000);
+        int sizeOfList = resultsFromList.size();
+        Address lastAddress = resultsFromList.get(sizeOfList-1);
 
         mainActivityActivityTestRule.launchActivity(new Intent());
 
-        onView(new BaseMatcher<View>() {
-            @Override
-            public boolean matches(Object item) {
-
-                if (item instanceof TextView){
-                    TextView textView = (TextView) item;
-                    String viewText = textView.getText().toString();
-
-                    if (!Strings.isNullOrEmpty(viewText) && viewText.toLowerCase().contains(lastCompanyName.toLowerCase())){
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-
-            @Override
-            public void describeTo(Description description) {
-
-            }
-        }).check(doesNotExist());
+        onRow(lastAddress).check(matches(isCompletelyDisplayed()));
     }
 
-//    /**
-//     * Check that the item is created. onData() takes care of scrolling.
-//     */
-//    @Test
-//    public void list_Scrolls() {
-//        onRow(LAST_ITEM_ID).check(matches(isCompletelyDisplayed()));
-//    }
-//
 //    /**
 //     * Clicks on a row and checks that the activity detected the click.
 //     */
@@ -226,7 +246,29 @@ public class LongListActivityTest {
 //        return onData(hasEntry(equalTo(LongListActivity.ROW_TEXT), is(str)));
 //    }
 
-//    private static DataInteraction onRow(String str) {
+    //    private static DataInteraction onRow(String str) {
 //        return onData(hasEntry(equalTo(A.ROW_TEXT), is(str)));
 //    }
+
+    private static DataInteraction onRow(final Address addressToFind) {
+        return onData(new BaseMatcher() {
+            @Override
+            public void describeTo(Description description) {
+
+            }
+
+            @Override
+            public boolean matches(Object item) {
+                if (item instanceof Address){
+                    Address address = (Address) item;
+                    boolean isSame = Objects.equals(address, addressToFind);
+                    if(isSame){
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        });
+    }
 }
