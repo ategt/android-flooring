@@ -144,9 +144,7 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
             int positionInList = AddressDataListSingleton.indexOf(address);
             int listSize = AddressDataListSingleton.size();
 
-            if (positionInList + 20 > listSize) {
-                mPresenter.loadNextPage();
-            }
+            mPresenter.considerLoadingNextPage(positionInList, listSize);
 
             TextView nameTextView =
                     (TextView) convertView.findViewById(R.id.address_list_item_nameTextView);

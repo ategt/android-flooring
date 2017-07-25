@@ -5,6 +5,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.core.AllOf;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -61,6 +62,11 @@ public class LongListActivityTest {
     @Before
     public void setup() {
         resultsFromList = new ArrayList<>();
+    }
+
+    @After
+    public void tearDown() {
+        if (resultsFromList != null) resultsFromList.clear();
     }
 
     @Rule

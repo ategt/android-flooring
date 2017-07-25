@@ -14,6 +14,8 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
     private ResultProperties resultProperties;
     private boolean loadingNextPage;
 
+    public final int DEFAULT_ITEMS_TO_LOAD = 50;
+
     public AddressIndexPresenter(AddressIndexView viewInstance, AddressClient addressDao) {
         super(viewInstance);
         this.addressDao = addressDao;
@@ -21,7 +23,7 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
     }
 
     public void loadAddresses(Integer page) {
-        loadAddresses(page, 25);
+        loadAddresses(page, DEFAULT_ITEMS_TO_LOAD);
     }
 
     public void loadAddresses(Integer page, int resultsPerPage) {
@@ -55,7 +57,9 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
 
             @Override
             protected void onPostExecute(List<Address> addresses) {
-                loadingNextPage = false;
+                if (!addresses.isEmpty())
+                    loadingNextPage = false;
+
                 if (addresses != null) {
                     getView().appendAddresses(addresses);
                 } else {
@@ -63,5 +67,18 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
                 }
             }
         }.execute(resultProperties);
+    }
+
+    public boolean considerLoadingNextPage(int positionInList, int listSize) {
+        return considerLoadingNextPage(positionInList, listSize, (DEFAULT_ITEMS_TO_LOAD / 2));
+    }
+
+    public boolean considerLoadingNextPage(int positionInList, int listSize, int itemOffset) {
+        if (positionInList + itemOffset > listSize) {
+            loadNextPage();
+            return true;
+        } else {
+            return false;
+        }
     }
 }
