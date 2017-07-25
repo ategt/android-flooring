@@ -23,6 +23,11 @@ public class AddressDataListSingleton {
         return respondWithAddressList();
     }
 
+    public static void clear(){
+        if (addressList != null)
+            addressList.clear();
+    }
+
     @NonNull
     private static List<Address> respondWithAddressList() {
         if (addressList == null)

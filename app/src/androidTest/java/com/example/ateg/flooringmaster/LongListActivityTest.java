@@ -67,6 +67,7 @@ public class LongListActivityTest {
     @After
     public void tearDown() {
         if (resultsFromList != null) resultsFromList.clear();
+        AddressDataListSingleton.clear();
     }
 
     @Rule
