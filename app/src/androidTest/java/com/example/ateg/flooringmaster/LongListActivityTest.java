@@ -242,25 +242,7 @@ public class LongListActivityTest {
 
         onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
                 ViewMatchers.isDisplayed()))
-                .check(matches(new BaseMatcher<View>() {
-                    @Override
-                    public boolean matches(Object item) {
-                        if (item instanceof TextView) {
-                            TextView textView = (TextView) item;
-                            String viewText = textView.getText().toString();
-
-                            if (!Strings.isNullOrEmpty(viewText) && viewText.equalsIgnoreCase(addressFromFirstPageFullName)) {
-                                return true;
-                            }
-                        }
-
-                        return false;
-                    }
-
-                    @Override
-                    public void describeTo(Description description) {
-                    }
-                }));
+                .check(matches(isShowingInputAddress(addressFromFirstPageFullName)));
     }
 
     /**
@@ -281,25 +263,7 @@ public class LongListActivityTest {
 
         onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
                 ViewMatchers.isDisplayed()))
-                .check(matches(new BaseMatcher<View>() {
-                    @Override
-                    public boolean matches(Object item) {
-                        if (item instanceof TextView) {
-                            TextView textView = (TextView) item;
-                            String viewText = textView.getText().toString();
-
-                            if (!Strings.isNullOrEmpty(viewText) && viewText.equalsIgnoreCase(addressFromSecondPageFullName)) {
-                                return true;
-                            }
-                        }
-
-                        return false;
-                    }
-
-                    @Override
-                    public void describeTo(Description description) {
-                    }
-                }));
+                .check(matches(isShowingInputAddress(addressFromSecondPageFullName)));
     }
 
 
@@ -321,25 +285,30 @@ public class LongListActivityTest {
 
         onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
                 ViewMatchers.isDisplayed()))
-                .check(matches(new BaseMatcher<View>() {
-                    @Override
-                    public boolean matches(Object item) {
-                        if (item instanceof TextView) {
-                            TextView textView = (TextView) item;
-                            String viewText = textView.getText().toString();
+                .check(matches(isShowingInputAddress(lastAddressFromSecondPageFullName)));
+    }
 
-                            if (!Strings.isNullOrEmpty(viewText) && viewText.equalsIgnoreCase(lastAddressFromSecondPageFullName)) {
-                                return true;
-                            }
-                        }
+    @NonNull
+    private BaseMatcher<View> isShowingInputAddress(final String lastAddressFromSecondPageFullName) {
+        return new BaseMatcher<View>() {
+            @Override
+            public boolean matches(Object item) {
+                if (item instanceof TextView) {
+                    TextView textView = (TextView) item;
+                    String viewText = textView.getText().toString();
 
-                        return false;
+                    if (!Strings.isNullOrEmpty(viewText) && viewText.equalsIgnoreCase(lastAddressFromSecondPageFullName)) {
+                        return true;
                     }
+                }
 
-                    @Override
-                    public void describeTo(Description description) {
-                    }
-                }));
+                return false;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+            }
+        };
     }
 
     @NonNull
