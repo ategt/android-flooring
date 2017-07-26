@@ -208,9 +208,22 @@ public class LongListActivityTest {
     public void row_Click_From_First_Page() {
         List<Address> addresses = createList(3000);
         int sizeOfList = resultsFromListPage1.size();
-        Address addressFromFirstPage = resultsFromListPage1.get(new Random().nextInt(sizeOfList - 1));
+        int addressIndex = new Random().nextInt(sizeOfList - 1);
+        Address addressFromFirstPage = resultsFromListPage1.get(addressIndex);
 
         addressesExpected.add(addressFromFirstPage);
+
+        Address previousAddress = AddressDataListSingleton.getOrNull(addressIndex - 1);
+        addressesExpected.add(previousAddress);
+
+        Address previousAddress2 = AddressDataListSingleton.getOrNull(addressIndex - 2);
+        addressesExpected.add(previousAddress2);
+
+        Address nextAddress = AddressDataListSingleton.getOrNull(addressIndex + 1);
+        addressesExpected.add(nextAddress);
+
+        Address nextAddress2 = AddressDataListSingleton.getOrNull(addressIndex + 2);
+        addressesExpected.add(nextAddress2);
 
         final String addressFromFirstPageFullName = addressFromFirstPage.getFullName();
 
@@ -358,7 +371,7 @@ public class LongListActivityTest {
     private Address getAddressById(Integer value) {
         Address foundAddress = null;
         for (Address address : addressesExpected) {
-            if (Integer.compare(address.getId(), value) == 0) {
+            if (address != null && Integer.compare(address.getId(), value) == 0) {
                 foundAddress = address;
                 break;
             }
