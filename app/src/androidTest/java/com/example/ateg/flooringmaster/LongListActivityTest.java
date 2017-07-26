@@ -167,27 +167,7 @@ public class LongListActivityTest {
 
         mainActivityActivityTestRule.launchActivity(new Intent());
 
-        onView(new BaseMatcher<View>() {
-            @Override
-            public boolean matches(Object item) {
-
-                if (item instanceof TextView) {
-                    TextView textView = (TextView) item;
-                    String viewText = textView.getText().toString();
-
-                    if (!Strings.isNullOrEmpty(viewText) &&
-                            viewText.toLowerCase().contains(lastAddress.getCompany().toLowerCase())) {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-
-            @Override
-            public void describeTo(Description description) {
-            }
-        }).check(doesNotExist());
+        onView(findViewBasedOnTextView(lastAddress)).check(doesNotExist());
     }
 
     /**
@@ -203,7 +183,12 @@ public class LongListActivityTest {
 
         scrollToLastRow();
 
-        onView(new BaseMatcher<View>() {
+        onView(findViewBasedOnTextView(firstAddress)).check(doesNotExist());
+    }
+
+    @NonNull
+    private BaseMatcher<View> findViewBasedOnTextView(final Address firstAddress) {
+        return new BaseMatcher<View>() {
             @Override
             public boolean matches(Object item) {
 
@@ -223,7 +208,27 @@ public class LongListActivityTest {
             @Override
             public void describeTo(Description description) {
             }
-        }).check(doesNotExist());
+        };
+    }
+
+    /**
+     * Test that the list is long enough for this sample, the last item shouldn't appear.
+     */
+    @Test
+    public void firstItemDisplayedAndClickable() throws InterruptedException {
+        List<Address> addresses = createList(3000);
+
+        final Address firstAddress = addresses.get(0);
+
+        mainActivityActivityTestRule.launchActivity(new Intent());
+
+        onRow(firstAddress).check(matches(isCompletelyDisplayed()));
+
+        onRow(firstAddress).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
+
+        onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
+                ViewMatchers.isDisplayed()))
+                .check(matches(isShowingInputAddress(firstAddress.getFullName())));
     }
 
     /**
@@ -439,9 +444,7 @@ public class LongListActivityTest {
         String uuid = UUID.randomUUID().toString();
         int length = uuid.length();
         int randInt = random.nextInt(length);
-        Log.i(TAG, uuid + ", Length:" + length + ", RandomInt:" + randInt);
         String company = uuid.substring(0, randInt);
-        Log.i(TAG, i + " : " + company);
 
         tempAddress.setCompany(company);
         tempAddress.setId(i);
