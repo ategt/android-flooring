@@ -26,7 +26,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -35,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
-import java.util.UUID;
 
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
@@ -52,10 +50,9 @@ import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
-public class SmallAddressIndexActivityTest {
+public class EmptyAddressIndexActivityTest {
 
-    private final String TAG = "SmallAddressIndexTest";
-    private final int smallCountAddressItems = 16;
+    private final String TAG = "EmptyAddressIndexTest";
 
     private List<Address> resultsFromList;
 
@@ -81,7 +78,7 @@ public class SmallAddressIndexActivityTest {
 
             when(addressDao.list(argThat(evalResultPropertiesPageNumber(0)))).thenReturn(resultsFromList);
 
-            when(addressDao.list(argThat(evalResultPropertiesPageNumberNotInArray(0, 1, 2))))
+            when(addressDao.list(argThat(evalResultPropertiesPageNumberNotInArray(0))))
                     .thenReturn(new ArrayList<Address>());
 
             when(addressDao.size()).thenReturn(resultsFromList.size());
@@ -139,7 +136,7 @@ public class SmallAddressIndexActivityTest {
      */
     @Test
     public void lastItem_NotDisplayed() {
-        List<Address> addresses = createList(smallCountAddressItems);
+        List<Address> addresses = createList();
 
         int length = addresses.size();
         final Address lastAddress = addresses.get(length - 1);
@@ -154,7 +151,7 @@ public class SmallAddressIndexActivityTest {
      */
     @Test
     public void firstItemNotDisplayedAtBottom() {
-        List<Address> addresses = createList(smallCountAddressItems);
+        List<Address> addresses = createList();
 
         final Address firstAddress = addresses.get(0);
 
@@ -195,7 +192,7 @@ public class SmallAddressIndexActivityTest {
      */
     @Test
     public void firstItemDisplayedAndClickable() throws InterruptedException {
-        List<Address> addresses = createList(smallCountAddressItems);
+        List<Address> addresses = createList();
 
         final Address firstAddress = addresses.get(0);
 
@@ -215,7 +212,7 @@ public class SmallAddressIndexActivityTest {
      */
     @Test
     public void firstItemDisplayedAfterRoundTrip() throws InterruptedException {
-        List<Address> addresses = createList(smallCountAddressItems);
+        List<Address> addresses = createList();
 
         final Address lastAddress = resultsFromList.get(resultsFromList.size() - 1);
         final Address firstAddress = addresses.get(0);
@@ -268,7 +265,7 @@ public class SmallAddressIndexActivityTest {
      */
     @Test
     public void list_Scrolls() {
-        List<Address> addresses = createList(smallCountAddressItems);
+        List<Address> addresses = createList();
         int sizeOfList = resultsFromList.size();
         Address lastAddress = resultsFromList.get(sizeOfList - 1);
 
@@ -281,66 +278,23 @@ public class SmallAddressIndexActivityTest {
      * Clicks on a row and checks that the activity detected the click.
      */
     @Test
-    public void clickOnFirstItem() {
-        List<Address> addresses = createList(smallCountAddressItems);
-        Address firstAddress = resultsFromList.get(0);
-
-        final String firstAddressFullName = firstAddress.getFullName();
-
-        mainActivityActivityTestRule.launchActivity(new Intent());
-
-        scrollToLastRow();
-
-        onRow(firstAddress).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
-
-        onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
-                ViewMatchers.isDisplayed()))
-                .check(matches(isShowingInputAddress(firstAddressFullName)));
-    }
-
-    /**
-     * Clicks on a row and checks that the activity detected the click.
-     */
-    @Test
-    public void clickOnLastItem() {
-        List<Address> addresses = createList(smallCountAddressItems);
-        int sizeOfList = resultsFromList.size();
-        Address lastAddress = resultsFromList.get(sizeOfList - 1);
-
-        final String lastAddressFullName = lastAddress.getFullName();
-
-        mainActivityActivityTestRule.launchActivity(new Intent());
-
-        scrollToLastRow();
-
-        onRow(lastAddress).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
-
-        onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
-                ViewMatchers.isDisplayed()))
-                .check(matches(isShowingInputAddress(lastAddressFullName)));
-    }
-
-    /**
-     * Clicks on a row and checks that the activity detected the click.
-     */
-    @Test
-    public void clickOnRandomItem() {
-        List<Address> addresses = createList(smallCountAddressItems);
+    public void row_Click_From_First_Page() {
+        List<Address> addresses = createList();
         int sizeOfList = resultsFromList.size();
         int addressPageIndex = new Random().nextInt(sizeOfList - 1);
-        Address randomAddress = resultsFromList.get(addressPageIndex);
+        Address addressFromFirstPage = resultsFromList.get(addressPageIndex);
 
-        final String randomAddressFullName = randomAddress.getFullName();
+        final String addressFromFirstPageFullName = addressFromFirstPage.getFullName();
 
         mainActivityActivityTestRule.launchActivity(new Intent());
 
         scrollToLastRow();
 
-        onRow(randomAddress).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
+        onRow(addressFromFirstPage).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
 
         onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
                 ViewMatchers.isDisplayed()))
-                .check(matches(isShowingInputAddress(randomAddressFullName)));
+                .check(matches(isShowingInputAddress(addressFromFirstPageFullName)));
     }
 
     @NonNull
@@ -367,73 +321,22 @@ public class SmallAddressIndexActivityTest {
     }
 
     @NonNull
-    private List<Address> createList(int addressesToGenerate) {
+    private List<Address> createList() {
         final Address firstAddress = new Address();
 
         firstAddress.setCompany("Company A");
         firstAddress.setFirstName("Bill");
         firstAddress.setLastName("Billerston");
-        firstAddress.setId(3856);
+        firstAddress.setId(5);
 
         resultsFromList.add(firstAddress);
 
-        final Address secondAddress = new Address();
-
-        secondAddress.setCompany("Levis");
-        secondAddress.setFirstName("Levi");
-        secondAddress.setLastName("Pants");
-        secondAddress.setId(7800);
-
-        resultsFromList.add(secondAddress);
-
-        final Address thirdAddress = new Address();
-
-        thirdAddress.setCompany("Company B");
-        thirdAddress.setFirstName("Bill");
-        thirdAddress.setLastName("Billerston");
-        thirdAddress.setId(4800);
-
-        resultsFromList.add(thirdAddress);
-
-        Random random = new Random();
-
-        for (int i = 0; i < addressesToGenerate; i++) {
-            Address tempAddress = generateRandomDisplayAddress(random, i);
-
-            resultsFromList.add(tempAddress);
-        }
-
-        final Address lastAddress = new Address();
-        final String lastCompanyName = "Company Final";
-        lastAddress.setCompany(lastCompanyName);
-        lastAddress.setFirstName("Last");
-        lastAddress.setLastName("Person");
-        lastAddress.setId(3577);
-
-        resultsFromList.add(lastAddress);
         return resultsFromList;
-    }
-
-    @NonNull
-    private Address generateRandomDisplayAddress(Random random, int i) {
-        Address tempAddress = new Address();
-
-        String uuid = UUID.randomUUID().toString();
-        int length = uuid.length();
-        int randInt = random.nextInt(length);
-        String company = uuid.substring(0, randInt);
-
-        tempAddress.setCompany(company);
-        tempAddress.setId(i);
-        tempAddress.setFirstName(UUID.randomUUID().toString().substring(0, random.nextInt(20)));
-        tempAddress.setLastName(UUID.randomUUID().toString().substring(0, random.nextInt(20)));
-        return tempAddress;
     }
 
     private Address getAddressById(Integer value) {
         Address foundAddress = null;
         for (Address address : resultsFromList) {
-            Log.w(TAG, "Value: " + value + ", " + (address == null ? " -- " : address.getFullName()));
             if (value != null && address != null && Integer.compare(address.getId(), value) == 0) {
                 foundAddress = address;
                 break;
@@ -442,8 +345,6 @@ public class SmallAddressIndexActivityTest {
 
         if (foundAddress == null) {
             Log.e(TAG, "Integer Not Found: " + value);
-        } else {
-            Log.i(TAG, "Address Found: " + foundAddress.getId() + " - " + foundAddress.getFullName());
         }
 
         return foundAddress;
