@@ -382,6 +382,8 @@ public class LongListActivityTest {
         }
 
         if (foundAddress == null) {
+            Log.e(TAG, "Integer Not Found: " + value);
+
             for (Address address : resultsFromList) {
                 if (address.getId() == value) {
                     foundAddress = address;
