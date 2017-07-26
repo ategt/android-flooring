@@ -431,6 +431,34 @@ public class LongListActivityTest {
 
     private static ViewInteraction scrollToLastRow() {
 
+        final Address[] lastAddress = scrollToFirstRow();
+
+        final Address finalAddress = lastAddress[0];
+
+        return onData(new BaseMatcher() {
+            @Override
+            public void describeTo(Description description) {
+            }
+
+            @Override
+            public boolean matches(Object item) {
+                if (item instanceof Address) {
+                    Address address = (Address) item;
+                    return Objects.equals(address, finalAddress);
+                }
+
+                return false;
+            }
+        }).check(new ViewAssertion() {
+            @Override
+            public void check(View view, NoMatchingViewException noViewFoundException) {
+                int id = view.getId();
+            }
+        });
+    }
+
+    @NonNull
+    private static Address[] scrollToFirstRow() {
         final Address[] lastAddress = new Address[1];
         final boolean[] anAddressIsTrue = new boolean[1];
         anAddressIsTrue[0] = true;
@@ -457,29 +485,7 @@ public class LongListActivityTest {
                 int id = view.getId();
             }
         });
-
-        final Address finalAddress = lastAddress[0];
-
-        return onData(new BaseMatcher() {
-            @Override
-            public void describeTo(Description description) {
-            }
-
-            @Override
-            public boolean matches(Object item) {
-                if (item instanceof Address) {
-                    Address address = (Address) item;
-                    return Objects.equals(address, finalAddress);
-                }
-
-                return false;
-            }
-        }).check(new ViewAssertion() {
-            @Override
-            public void check(View view, NoMatchingViewException noViewFoundException) {
-                int id = view.getId();
-            }
-        });
+        return lastAddress;
     }
 
     private void loadExpectedAddresses(Address addressFromFirstPage) {
