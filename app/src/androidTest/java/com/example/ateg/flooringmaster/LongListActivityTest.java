@@ -241,25 +241,24 @@ public class LongListActivityTest {
         onRow(firstAddress).check(matches(isCompletelyDisplayed()));
 
         scrollToLastRow();
+        scrollToFirstRow();
+
+        onRow(firstAddress).check(matches(isCompletelyDisplayed()));
+
         Thread.sleep(50);
         scrollToLastRow();
         scrollToFirstRow();
 
         onRow(firstAddress).check(matches(isCompletelyDisplayed()));
-        onRow(lastAddress).check(not(doesNotExist()));
-        onRow(lastAddress).check(matches(not(isCompletelyDisplayed())));
 
         Thread.sleep(50);
         scrollToLastRow();
 
         onRow(lastAddress).check(matches(isCompletelyDisplayed()));
-        onRow(firstAddress).check(not(doesNotExist()));
-        onRow(firstAddress).check(matches(not(isCompletelyDisplayed())));
 
         scrollToFirstRow();
 
         onRow(firstAddress).check(matches(isCompletelyDisplayed()));
-        onRow(lastAddress).check(doesNotExist());
 
         loadExpectedAddresses(firstAddress);
 
