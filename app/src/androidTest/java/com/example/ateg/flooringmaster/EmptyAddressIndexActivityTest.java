@@ -42,6 +42,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.doesNotExis
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
@@ -76,60 +77,15 @@ public class EmptyAddressIndexActivityTest {
 
             AddressDao addressDao = mock(AddressDao.class);
 
-            when(addressDao.list(argThat(evalResultPropertiesPageNumber(0)))).thenReturn(resultsFromList);
+            when(addressDao.list(any(ResultProperties.class))).thenReturn(new ArrayList<Address>());
 
-            when(addressDao.list(argThat(evalResultPropertiesPageNumberNotInArray(0))))
-                    .thenReturn(new ArrayList<Address>());
+            when(addressDao.size()).thenReturn(0);
 
-            when(addressDao.size()).thenReturn(resultsFromList.size());
-
-            when(addressDao.get(anyInt())).thenAnswer(new Answer() {
-                @Override
-                public Object answer(InvocationOnMock invocation) throws Throwable {
-                    Object objArg = invocation.getArgument(0);
-                    Integer arg = (int) objArg;
-                    return getAddressById(arg);
-                }
-            });
+            when(addressDao.get(anyInt())).thenReturn(null);
 
             AddressDaoSingleton.setAddressDao(addressDao);
         }
     };
-
-    @NonNull
-    private ArgumentMatcher<ResultProperties> evalResultPropertiesPageNumberNotInArray(final int... pagesExpected) {
-        return new ArgumentMatcher<ResultProperties>() {
-            @Override
-            public boolean matches(ResultProperties argument) {
-                if (argument == null)
-                    return false;
-                if (argument instanceof ResultProperties) {
-                    for (int i : pagesExpected) {
-                        if (argument.getPageNumber() == i) {
-                            return false;
-                        }
-                    }
-                    return argument.getPageNumber() != 0;
-                }
-                return false;
-            }
-        };
-    }
-
-    @NonNull
-    private ArgumentMatcher<ResultProperties> evalResultPropertiesPageNumber(final int pageNumber) {
-        return new ArgumentMatcher<ResultProperties>() {
-            @Override
-            public boolean matches(ResultProperties argument) {
-                if (argument == null)
-                    return false;
-                if (argument instanceof ResultProperties) {
-                    return argument.getPageNumber() == pageNumber;
-                }
-                return false;
-            }
-        };
-    }
 
     /**
      * Test that the list is long enough for this sample, the last item shouldn't appear.
