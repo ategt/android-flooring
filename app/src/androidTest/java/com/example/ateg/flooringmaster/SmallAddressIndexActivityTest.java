@@ -7,9 +7,8 @@ import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.ViewAssertion;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.core.deps.guava.base.Strings;
-import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.test.filters.LargeTest;
+import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
@@ -42,7 +41,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.doesNotExis
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
@@ -50,40 +48,22 @@ import static org.mockito.Mockito.when;
 
 
 @RunWith(AndroidJUnit4.class)
-@LargeTest
-public class LongListActivityTest {
+@SmallTest
+public class SmallAddressIndexActivityTest {
 
-    private final String TAG = "LongListActivityTest";
+    private final String TAG = "SmallAddressIndexTest";
+    private final int smallCountAddressItems = 16;
 
     private List<Address> resultsFromList;
-    private List<Address> resultsFromListPage1;
-    private List<Address> resultsFromListPage2;
-    private List<Address> addressesExpected;
 
     @Before
     public void setup() {
         resultsFromList = new ArrayList<>();
-        addressesExpected = new ArrayList<>();
-
-        Random random = new Random();
-        resultsFromListPage1 = new ArrayList<>();
-
-        for (int i = 0; i < 50; i++) {
-            resultsFromListPage1.add(generateRandomDisplayAddress(random, i + 3500));
-        }
-
-        resultsFromListPage2 = new ArrayList<>();
-        for (int i = 0; i < 50; i++) {
-            resultsFromListPage2.add(generateRandomDisplayAddress(random, i + 4000));
-        }
     }
 
     @After
     public void tearDown() {
         if (resultsFromList != null) resultsFromList.clear();
-        if (resultsFromListPage1 != null) resultsFromListPage1.clear();
-        if (resultsFromListPage2 != null) resultsFromListPage2.clear();
-        if (addressesExpected != null) addressesExpected.clear();
         AddressDataListSingleton.clear();
     }
 
@@ -97,16 +77,12 @@ public class LongListActivityTest {
             AddressDao addressDao = mock(AddressDao.class);
 
             when(addressDao.list(argThat(evalResultPropertiesPageNumber(0)))).thenReturn(resultsFromList);
-            when(addressDao.list(argThat(evalResultPropertiesPageNumber(1)))).thenReturn(resultsFromListPage1);
-            when(addressDao.list(argThat(evalResultPropertiesPageNumber(2)))).thenReturn(resultsFromListPage2);
 
             when(addressDao.list(argThat(evalResultPropertiesPageNumberNotInArray(0, 1, 2))))
                     .thenReturn(new ArrayList<Address>());
 
-            when(addressDao.size()).thenReturn(resultsFromList.size()
-                    + resultsFromListPage1.size() + resultsFromListPage2.size());
+            when(addressDao.size()).thenReturn(resultsFromList.size());
 
-            ArgumentCaptor<Integer> captor = ArgumentCaptor.forClass(Integer.class);
             when(addressDao.get(anyInt())).thenAnswer(new Answer() {
                 @Override
                 public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -160,7 +136,7 @@ public class LongListActivityTest {
      */
     @Test
     public void lastItem_NotDisplayed() {
-        List<Address> addresses = createList(3000);
+        List<Address> addresses = createList(smallCountAddressItems);
 
         int length = addresses.size();
         final Address lastAddress = addresses.get(length - 1);
@@ -175,7 +151,7 @@ public class LongListActivityTest {
      */
     @Test
     public void firstItemNotDisplayedAtBottom() {
-        List<Address> addresses = createList(3000);
+        List<Address> addresses = createList(smallCountAddressItems);
 
         final Address firstAddress = addresses.get(0);
 
@@ -216,7 +192,7 @@ public class LongListActivityTest {
      */
     @Test
     public void firstItemDisplayedAndClickable() throws InterruptedException {
-        List<Address> addresses = createList(3000);
+        List<Address> addresses = createList(smallCountAddressItems);
 
         final Address firstAddress = addresses.get(0);
 
@@ -236,7 +212,7 @@ public class LongListActivityTest {
      */
     @Test
     public void firstItemDisplayedAfterRoundTrip() throws InterruptedException {
-        List<Address> addresses = createList(3000);
+        List<Address> addresses = createList(smallCountAddressItems);
 
         final Address lastAddress = resultsFromListPage2.get(resultsFromListPage2.size() - 1);
         final Address firstAddress = addresses.get(0);
@@ -279,7 +255,7 @@ public class LongListActivityTest {
      */
     @Test
     public void list_Scrolls() {
-        List<Address> addresses = createList(3000);
+        List<Address> addresses = createList(smallCountAddressItems);
         int sizeOfList = resultsFromList.size();
         Address lastAddress = resultsFromList.get(sizeOfList - 1);
 
@@ -293,7 +269,7 @@ public class LongListActivityTest {
      */
     @Test
     public void row_Click_From_First_Page() {
-        List<Address> addresses = createList(3000);
+        List<Address> addresses = createList(smallCountAddressItems);
         int sizeOfList = resultsFromListPage1.size();
         int addressPageIndex = new Random().nextInt(sizeOfList - 1);
         Address addressFromFirstPage = resultsFromListPage1.get(addressPageIndex);
@@ -318,7 +294,7 @@ public class LongListActivityTest {
      */
     @Test
     public void row_Click_From_Second_Page() throws InterruptedException {
-        List<Address> addresses = createList(3000);
+        List<Address> addresses = createList(smallCountAddressItems);
         int sizeOfList = resultsFromListPage2.size();
         Address addressFromSecondPage = resultsFromListPage2.get(new Random().nextInt(sizeOfList - 1));
 
@@ -347,7 +323,7 @@ public class LongListActivityTest {
      */
     @Test
     public void row_Click_Last_Item_From_Last_Page() throws InterruptedException {
-        List<Address> addresses = createList(3000);
+        List<Address> addresses = createList(smallCountAddressItems);
         int sizeOfList = resultsFromListPage2.size();
         Address lastAddressFromSecondPage = resultsFromListPage2.get(sizeOfList - 1);
 
