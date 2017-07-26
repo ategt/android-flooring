@@ -3,7 +3,11 @@ package com.example.ateg.flooringmaster;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.test.espresso.DataInteraction;
+import android.support.test.espresso.NoMatchingViewException;
+import android.support.test.espresso.ViewAssertion;
+import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.core.deps.guava.base.Strings;
+import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
@@ -20,7 +24,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +42,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.doesNotExis
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -47,10 +55,12 @@ public class LongListActivityTest {
     private List<Address> resultsFromList;
     private List<Address> resultsFromListPage1;
     private List<Address> resultsFromListPage2;
+    private List<Address> addressesExpected;
 
     @Before
     public void setup() {
         resultsFromList = new ArrayList<>();
+        addressesExpected = new ArrayList<>();
 
         Random random = new Random();
         resultsFromListPage1 = new ArrayList<>();
@@ -70,6 +80,7 @@ public class LongListActivityTest {
         if (resultsFromList != null) resultsFromList.clear();
         if (resultsFromListPage1 != null) resultsFromListPage1.clear();
         if (resultsFromListPage2 != null) resultsFromListPage2.clear();
+        if (addressesExpected != null) addressesExpected.clear();
         AddressDataListSingleton.clear();
     }
 
@@ -91,6 +102,16 @@ public class LongListActivityTest {
 
             when(addressDao.size()).thenReturn(resultsFromList.size()
                     + resultsFromListPage1.size() + resultsFromListPage2.size());
+
+            ArgumentCaptor<Integer> captor = ArgumentCaptor.forClass(Integer.class);
+            when(addressDao.get(anyInt())).thenAnswer(new Answer() {
+                @Override
+                public Object answer(InvocationOnMock invocation) throws Throwable {
+                    Object objArg = invocation.getArgument(0);
+                    Integer arg = (int) objArg;
+                    return getAddressById(arg);
+                }
+            });
 
             AddressDaoSingleton.setAddressDao(addressDao);
         }
@@ -180,6 +201,98 @@ public class LongListActivityTest {
         onRow(lastAddress).check(matches(isCompletelyDisplayed()));
     }
 
+    /**
+     * Clicks on a row and checks that the activity detected the click.
+     */
+    @Test
+    public void row_Click_From_First_Page() {
+        List<Address> addresses = createList(3000);
+        int sizeOfList = resultsFromListPage1.size();
+        Address addressFromFirstPage = resultsFromListPage1.get(new Random().nextInt(sizeOfList - 1));
+
+        addressesExpected.add(addressFromFirstPage);
+
+        final String addressFromFirstPageFullName = addressFromFirstPage.getFullName();
+
+        mainActivityActivityTestRule.launchActivity(new Intent());
+
+        scrollToLastRow();
+
+        onRow(addressFromFirstPage).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
+
+        onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
+                ViewMatchers.isDisplayed()))
+                .check(matches(isShowingInputAddress(addressFromFirstPageFullName)));
+    }
+
+    /**
+     * Clicks on a row and checks that the activity detected the click.
+     */
+    @Test
+    public void row_Click_From_Second_Page() {
+        List<Address> addresses = createList(3000);
+        int sizeOfList = resultsFromListPage2.size();
+        Address addressFromSecondPage = resultsFromListPage2.get(new Random().nextInt(sizeOfList - 1));
+        addressesExpected.add(addressFromSecondPage);
+
+        final String addressFromSecondPageFullName = addressFromSecondPage.getFullName();
+
+        mainActivityActivityTestRule.launchActivity(new Intent());
+
+        // Click on one of the rows.
+        onRow(addressFromSecondPage).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
+
+        onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
+                ViewMatchers.isDisplayed()))
+                .check(matches(isShowingInputAddress(addressFromSecondPageFullName)));
+    }
+
+
+    /**
+     * Clicks on a row and checks that the activity detected the click.
+     */
+    @Test
+    public void row_Click_Last_Item_From_Last_Page() {
+        List<Address> addresses = createList(3000);
+        int sizeOfList = resultsFromListPage2.size();
+        Address lastAddressFromSecondPage = resultsFromListPage2.get(sizeOfList - 1);
+        addressesExpected.add(lastAddressFromSecondPage);
+
+        final String lastAddressFromSecondPageFullName = lastAddressFromSecondPage.getFullName();
+
+        mainActivityActivityTestRule.launchActivity(new Intent());
+
+        // Click on one of the rows.
+        onRow(lastAddressFromSecondPage).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
+
+        onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
+                ViewMatchers.isDisplayed()))
+                .check(matches(isShowingInputAddress(lastAddressFromSecondPageFullName)));
+    }
+
+    @NonNull
+    private BaseMatcher<View> isShowingInputAddress(final String lastAddressFromSecondPageFullName) {
+        return new BaseMatcher<View>() {
+            @Override
+            public boolean matches(Object item) {
+                if (item instanceof TextView) {
+                    TextView textView = (TextView) item;
+                    String viewText = textView.getText().toString();
+
+                    if (!Strings.isNullOrEmpty(viewText) && viewText.equalsIgnoreCase(lastAddressFromSecondPageFullName)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+            }
+        };
+    }
+
     @NonNull
     private List<Address> createList(int addressesToGenerate) {
         final Address firstAddress = new Address();
@@ -224,93 +337,6 @@ public class LongListActivityTest {
         return resultsFromList;
     }
 
-    /**
-     * Clicks on a row and checks that the activity detected the click.
-     */
-    @Test
-    public void row_Click_From_First_Page() {
-        List<Address> addresses = createList(3000);
-        int sizeOfList = resultsFromListPage1.size();
-        Address addressFromFirstPage = resultsFromListPage1.get(new Random().nextInt(sizeOfList - 1));
-
-        final String addressFromFirstPageFullName = addressFromFirstPage.getFullName();
-
-        mainActivityActivityTestRule.launchActivity(new Intent());
-
-        // Click on one of the rows.
-        onRow(addressFromFirstPage).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
-
-        onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
-                ViewMatchers.isDisplayed()))
-                .check(matches(isShowingInputAddress(addressFromFirstPageFullName)));
-    }
-
-    /**
-     * Clicks on a row and checks that the activity detected the click.
-     */
-    @Test
-    public void row_Click_From_Second_Page() {
-        List<Address> addresses = createList(3000);
-        int sizeOfList = resultsFromListPage2.size();
-        Address addressFromSecondPage = resultsFromListPage2.get(new Random().nextInt(sizeOfList - 1));
-
-        final String addressFromSecondPageFullName = addressFromSecondPage.getFullName();
-
-        mainActivityActivityTestRule.launchActivity(new Intent());
-
-        // Click on one of the rows.
-        onRow(addressFromSecondPage).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
-
-        onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
-                ViewMatchers.isDisplayed()))
-                .check(matches(isShowingInputAddress(addressFromSecondPageFullName)));
-    }
-
-
-    /**
-     * Clicks on a row and checks that the activity detected the click.
-     */
-    @Test
-    public void row_Click_Last_Item_From_Last_Page() {
-        List<Address> addresses = createList(3000);
-        int sizeOfList = resultsFromListPage2.size();
-        Address lastAddressFromSecondPage = resultsFromListPage2.get(sizeOfList - 1);
-
-        final String lastAddressFromSecondPageFullName = lastAddressFromSecondPage.getFullName();
-
-        mainActivityActivityTestRule.launchActivity(new Intent());
-
-        // Click on one of the rows.
-        onRow(lastAddressFromSecondPage).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
-
-        onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
-                ViewMatchers.isDisplayed()))
-                .check(matches(isShowingInputAddress(lastAddressFromSecondPageFullName)));
-    }
-
-    @NonNull
-    private BaseMatcher<View> isShowingInputAddress(final String lastAddressFromSecondPageFullName) {
-        return new BaseMatcher<View>() {
-            @Override
-            public boolean matches(Object item) {
-                if (item instanceof TextView) {
-                    TextView textView = (TextView) item;
-                    String viewText = textView.getText().toString();
-
-                    if (!Strings.isNullOrEmpty(viewText) && viewText.equalsIgnoreCase(lastAddressFromSecondPageFullName)) {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-
-            @Override
-            public void describeTo(Description description) {
-            }
-        };
-    }
-
     @NonNull
     private Address generateRandomDisplayAddress(Random random, int i) {
         Address tempAddress = new Address();
@@ -329,6 +355,45 @@ public class LongListActivityTest {
         return tempAddress;
     }
 
+    private Address getAddressById(Integer value) {
+        Address foundAddress = null;
+        for (Address address : addressesExpected) {
+            if (Integer.compare(address.getId(), value) == 0) {
+                foundAddress = address;
+                break;
+            }
+        }
+
+        if (foundAddress == null) {
+            for (Address address : resultsFromList) {
+                if (address.getId() == value) {
+                    foundAddress = address;
+                    break;
+                }
+            }
+        }
+
+        if (foundAddress == null) {
+            for (Address address : resultsFromListPage1) {
+                if (address.getId() == value) {
+                    foundAddress = address;
+                    break;
+                }
+            }
+        }
+
+        if (foundAddress == null) {
+            for (Address address : resultsFromListPage2) {
+                if (address.getId() == value) {
+                    foundAddress = address;
+                    break;
+                }
+            }
+        }
+
+        return foundAddress;
+    }
+
     private static DataInteraction onRow(final Address addressToFind) {
         return onData(new BaseMatcher() {
             @Override
@@ -343,6 +408,59 @@ public class LongListActivityTest {
                 }
 
                 return false;
+            }
+        });
+    }
+
+    private static ViewInteraction scrollToLastRow() {
+
+        final Address[] lastAddress = new Address[1];
+        final boolean[] anAddressIsTrue = new boolean[1];
+        anAddressIsTrue[0] = true;
+
+        onData(new BaseMatcher() {
+            @Override
+            public void describeTo(Description description) {
+            }
+
+            @Override
+            public boolean matches(Object item) {
+                if (anAddressIsTrue[0]) {
+                    anAddressIsTrue[0] = false;
+                    return true;
+                }
+
+                Address address = (Address) item;
+                lastAddress[0] = address;
+                return false;
+            }
+        }).check(new ViewAssertion() {
+            @Override
+            public void check(View view, NoMatchingViewException noViewFoundException) {
+                int id = view.getId();
+            }
+        });
+
+        final Address finalAddress = lastAddress[0];
+
+        return onData(new BaseMatcher() {
+            @Override
+            public void describeTo(Description description) {
+            }
+
+            @Override
+            public boolean matches(Object item) {
+                if (item instanceof Address) {
+                    Address address = (Address) item;
+                    return Objects.equals(address, finalAddress);
+                }
+
+                return false;
+            }
+        }).check(new ViewAssertion() {
+            @Override
+            public void check(View view, NoMatchingViewException noViewFoundException) {
+                int id = view.getId();
             }
         });
     }
