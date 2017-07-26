@@ -213,33 +213,46 @@ public class LongListActivityTest {
         int addressPageIndex = new Random().nextInt(sizeOfList - 1);
         Address addressFromFirstPage = resultsFromListPage1.get(addressPageIndex);
 
-        int addressIndex = AddressDataListSingleton.indexOf(addressFromFirstPage);
-
-        addressesExpected.add(addressFromFirstPage);
-
-        Address previousAddress = AddressDataListSingleton.getOrNull(addressIndex - 1);
-        addressesExpected.add(previousAddress);
-
-        Address previousAddress2 = AddressDataListSingleton.getOrNull(addressIndex - 2);
-        addressesExpected.add(previousAddress2);
-
-        Address nextAddress = AddressDataListSingleton.getOrNull(addressIndex + 1);
-        addressesExpected.add(nextAddress);
-
-        Address nextAddress2 = AddressDataListSingleton.getOrNull(addressIndex + 2);
-        addressesExpected.add(nextAddress2);
-
         final String addressFromFirstPageFullName = addressFromFirstPage.getFullName();
 
         mainActivityActivityTestRule.launchActivity(new Intent());
 
         scrollToLastRow();
 
+        loadExpectedAddresses(addressFromFirstPage);
+
         onRow(addressFromFirstPage).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
 
         onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
                 ViewMatchers.isDisplayed()))
                 .check(matches(isShowingInputAddress(addressFromFirstPageFullName)));
+    }
+
+    private void loadExpectedAddresses(Address addressFromFirstPage) {
+        int addressIndex = AddressDataListSingleton.indexOf(addressFromFirstPage);
+
+        addressesExpected.add(addressFromFirstPage);
+        Log.i(TAG, "Source: " + (addressFromFirstPage == null ? "null" : addressFromFirstPage.getId()));
+        Log.i(TAG, "DataIndex: " + addressIndex);
+
+        Address sourceAddress = AddressDataListSingleton.getOrNull(addressIndex);
+        Log.i(TAG, "SourceAddressData: " + (sourceAddress == null ? "null" : sourceAddress.getId()));
+
+        Address previousAddress = AddressDataListSingleton.getOrNull(addressIndex - 1);
+        addressesExpected.add(previousAddress);
+        Log.i(TAG, "previousAddress: " + (previousAddress == null ? "null" : previousAddress.getId()));
+
+        Address previousAddress2 = AddressDataListSingleton.getOrNull(addressIndex - 2);
+        addressesExpected.add(previousAddress2);
+        Log.i(TAG, "previousAddress2: " + (previousAddress2 == null ? "null" : previousAddress2.getId()));
+
+        Address nextAddress = AddressDataListSingleton.getOrNull(addressIndex + 1);
+        addressesExpected.add(nextAddress);
+        Log.i(TAG, "nextAddress: " + (nextAddress == null ? "null" : nextAddress.getId()));
+
+        Address nextAddress2 = AddressDataListSingleton.getOrNull(addressIndex + 2);
+        addressesExpected.add(nextAddress2);
+        Log.i(TAG, "nextAddress2: " + (nextAddress2 == null ? "null" : nextAddress2.getId()));
     }
 
     /**
