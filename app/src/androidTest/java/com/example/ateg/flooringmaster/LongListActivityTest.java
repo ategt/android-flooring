@@ -228,46 +228,25 @@ public class LongListActivityTest {
                 .check(matches(isShowingInputAddress(addressFromFirstPageFullName)));
     }
 
-    private void loadExpectedAddresses(Address addressFromFirstPage) {
-        int addressIndex = AddressDataListSingleton.indexOf(addressFromFirstPage);
-
-        addressesExpected.add(addressFromFirstPage);
-        Log.i(TAG, "Source: " + (addressFromFirstPage == null ? "null" : addressFromFirstPage.getId()));
-        Log.i(TAG, "DataIndex: " + addressIndex);
-
-        Address sourceAddress = AddressDataListSingleton.getOrNull(addressIndex);
-        Log.i(TAG, "SourceAddressData: " + (sourceAddress == null ? "null" : sourceAddress.getId()));
-
-        Address previousAddress = AddressDataListSingleton.getOrNull(addressIndex - 1);
-        addressesExpected.add(previousAddress);
-        Log.i(TAG, "previousAddress: " + (previousAddress == null ? "null" : previousAddress.getId()));
-
-        Address previousAddress2 = AddressDataListSingleton.getOrNull(addressIndex - 2);
-        addressesExpected.add(previousAddress2);
-        Log.i(TAG, "previousAddress2: " + (previousAddress2 == null ? "null" : previousAddress2.getId()));
-
-        Address nextAddress = AddressDataListSingleton.getOrNull(addressIndex + 1);
-        addressesExpected.add(nextAddress);
-        Log.i(TAG, "nextAddress: " + (nextAddress == null ? "null" : nextAddress.getId()));
-
-        Address nextAddress2 = AddressDataListSingleton.getOrNull(addressIndex + 2);
-        addressesExpected.add(nextAddress2);
-        Log.i(TAG, "nextAddress2: " + (nextAddress2 == null ? "null" : nextAddress2.getId()));
-    }
-
     /**
      * Clicks on a row and checks that the activity detected the click.
      */
     @Test
-    public void row_Click_From_Second_Page() {
+    public void row_Click_From_Second_Page() throws InterruptedException {
         List<Address> addresses = createList(3000);
         int sizeOfList = resultsFromListPage2.size();
         Address addressFromSecondPage = resultsFromListPage2.get(new Random().nextInt(sizeOfList - 1));
-        addressesExpected.add(addressFromSecondPage);
 
         final String addressFromSecondPageFullName = addressFromSecondPage.getFullName();
 
         mainActivityActivityTestRule.launchActivity(new Intent());
+
+        scrollToLastRow();
+
+        Thread.sleep(100);
+
+        scrollToLastRow();
+        loadExpectedAddresses(addressFromSecondPage);
 
         // Click on one of the rows.
         onRow(addressFromSecondPage).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
@@ -282,15 +261,21 @@ public class LongListActivityTest {
      * Clicks on a row and checks that the activity detected the click.
      */
     @Test
-    public void row_Click_Last_Item_From_Last_Page() {
+    public void row_Click_Last_Item_From_Last_Page() throws InterruptedException {
         List<Address> addresses = createList(3000);
         int sizeOfList = resultsFromListPage2.size();
         Address lastAddressFromSecondPage = resultsFromListPage2.get(sizeOfList - 1);
-        addressesExpected.add(lastAddressFromSecondPage);
 
         final String lastAddressFromSecondPageFullName = lastAddressFromSecondPage.getFullName();
 
         mainActivityActivityTestRule.launchActivity(new Intent());
+
+        scrollToLastRow();
+
+        Thread.sleep(100);
+
+        scrollToLastRow();
+        loadExpectedAddresses(lastAddressFromSecondPage);
 
         // Click on one of the rows.
         onRow(lastAddressFromSecondPage).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
@@ -495,5 +480,32 @@ public class LongListActivityTest {
                 int id = view.getId();
             }
         });
+    }
+
+    private void loadExpectedAddresses(Address addressFromFirstPage) {
+        int addressIndex = AddressDataListSingleton.indexOf(addressFromFirstPage);
+
+        addressesExpected.add(addressFromFirstPage);
+        Log.i(TAG, "Source: " + (addressFromFirstPage == null ? "null" : addressFromFirstPage.getId()));
+        Log.i(TAG, "DataIndex: " + addressIndex);
+
+        Address sourceAddress = AddressDataListSingleton.getOrNull(addressIndex);
+        Log.i(TAG, "SourceAddressData: " + (sourceAddress == null ? "null" : sourceAddress.getId()));
+
+        Address previousAddress = AddressDataListSingleton.getOrNull(addressIndex - 1);
+        addressesExpected.add(previousAddress);
+        Log.i(TAG, "previousAddress: " + (previousAddress == null ? "null" : previousAddress.getId()));
+
+        Address previousAddress2 = AddressDataListSingleton.getOrNull(addressIndex - 2);
+        addressesExpected.add(previousAddress2);
+        Log.i(TAG, "previousAddress2: " + (previousAddress2 == null ? "null" : previousAddress2.getId()));
+
+        Address nextAddress = AddressDataListSingleton.getOrNull(addressIndex + 1);
+        addressesExpected.add(nextAddress);
+        Log.i(TAG, "nextAddress: " + (nextAddress == null ? "null" : nextAddress.getId()));
+
+        Address nextAddress2 = AddressDataListSingleton.getOrNull(addressIndex + 2);
+        addressesExpected.add(nextAddress2);
+        Log.i(TAG, "nextAddress2: " + (nextAddress2 == null ? "null" : nextAddress2.getId()));
     }
 }
