@@ -190,6 +190,94 @@ public class LongListActivityTest {
     }
 
     /**
+     * Test that the list is long enough for this sample, the last item shouldn't appear.
+     */
+    @Test
+    public void firstItemNotDisplayedAtBottom() {
+        List<Address> addresses = createList(3000);
+
+        final Address firstAddress = addresses.get(0);
+
+        mainActivityActivityTestRule.launchActivity(new Intent());
+
+        scrollToLastRow();
+
+        onView(new BaseMatcher<View>() {
+            @Override
+            public boolean matches(Object item) {
+
+                if (item instanceof TextView) {
+                    TextView textView = (TextView) item;
+                    String viewText = textView.getText().toString();
+
+                    if (!Strings.isNullOrEmpty(viewText) &&
+                            viewText.toLowerCase().contains(firstAddress.getCompany().toLowerCase())) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+            }
+        }).check(doesNotExist());
+    }
+
+    /**
+     * Test that the list is long enough for this sample, the last item shouldn't appear.
+     */
+    @Test
+    public void firstItemDisplayedAfterRoundTrip() throws InterruptedException {
+        List<Address> addresses = createList(3000);
+
+        final Address lastAddress = resultsFromListPage2.get(resultsFromListPage2.size() - 1);
+        final Address firstAddress = addresses.get(0);
+
+        mainActivityActivityTestRule.launchActivity(new Intent());
+
+        onRow(firstAddress).check(matches(isCompletelyDisplayed()));
+        onRow(lastAddress).check(doesNotExist());
+
+        scrollToLastRow();
+        Thread.sleep(50);
+        scrollToLastRow();
+        Thread.sleep(50);
+        scrollToLastRow();
+
+        onRow(lastAddress).check(matches(isCompletelyDisplayed()));
+        onRow(firstAddress).check(doesNotExist());
+
+        scrollToFirstRow();
+
+        onRow(firstAddress).check(matches(isCompletelyDisplayed()));
+        onRow(lastAddress).check(doesNotExist());
+
+        onView(new BaseMatcher<View>() {
+            @Override
+            public boolean matches(Object item) {
+
+                if (item instanceof TextView) {
+                    TextView textView = (TextView) item;
+                    String viewText = textView.getText().toString();
+
+                    if (!Strings.isNullOrEmpty(viewText) &&
+                            viewText.toLowerCase().contains(firstAddress.getCompany().toLowerCase())) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+            }
+        }).check(doesNotExist());
+    }
+
+    /**
      * Check that the item is created. onData() takes care of scrolling.
      */
     @Test
