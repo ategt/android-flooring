@@ -42,6 +42,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.doesNotExis
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
@@ -238,43 +239,35 @@ public class LongListActivityTest {
         mainActivityActivityTestRule.launchActivity(new Intent());
 
         onRow(firstAddress).check(matches(isCompletelyDisplayed()));
-        onRow(lastAddress).check(doesNotExist());
 
         scrollToLastRow();
         Thread.sleep(50);
         scrollToLastRow();
+        scrollToFirstRow();
+
+        onRow(firstAddress).check(matches(isCompletelyDisplayed()));
+        onRow(lastAddress).check(not(doesNotExist()));
+        onRow(lastAddress).check(matches(not(isCompletelyDisplayed())));
+
         Thread.sleep(50);
         scrollToLastRow();
 
         onRow(lastAddress).check(matches(isCompletelyDisplayed()));
-        onRow(firstAddress).check(doesNotExist());
+        onRow(firstAddress).check(not(doesNotExist()));
+        onRow(firstAddress).check(matches(not(isCompletelyDisplayed())));
 
         scrollToFirstRow();
 
         onRow(firstAddress).check(matches(isCompletelyDisplayed()));
         onRow(lastAddress).check(doesNotExist());
 
-        onView(new BaseMatcher<View>() {
-            @Override
-            public boolean matches(Object item) {
+        loadExpectedAddresses(firstAddress);
 
-                if (item instanceof TextView) {
-                    TextView textView = (TextView) item;
-                    String viewText = textView.getText().toString();
+        onRow(firstAddress).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
 
-                    if (!Strings.isNullOrEmpty(viewText) &&
-                            viewText.toLowerCase().contains(firstAddress.getCompany().toLowerCase())) {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-
-            @Override
-            public void describeTo(Description description) {
-            }
-        }).check(doesNotExist());
+        onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
+                ViewMatchers.isDisplayed()))
+                .check(matches(isShowingInputAddress(firstAddress.getFullName())));
     }
 
     /**
