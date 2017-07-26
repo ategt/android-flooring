@@ -52,6 +52,8 @@ import static org.mockito.Mockito.when;
 @LargeTest
 public class LongListActivityTest {
 
+    private final String TAG = "LongListActivityTest";
+
     private List<Address> resultsFromList;
     private List<Address> resultsFromListPage1;
     private List<Address> resultsFromListPage2;
@@ -208,8 +210,10 @@ public class LongListActivityTest {
     public void row_Click_From_First_Page() {
         List<Address> addresses = createList(3000);
         int sizeOfList = resultsFromListPage1.size();
-        int addressIndex = new Random().nextInt(sizeOfList - 1);
-        Address addressFromFirstPage = resultsFromListPage1.get(addressIndex);
+        int addressPageIndex = new Random().nextInt(sizeOfList - 1);
+        Address addressFromFirstPage = resultsFromListPage1.get(addressPageIndex);
+
+        int addressIndex = AddressDataListSingleton.indexOf(addressFromFirstPage);
 
         addressesExpected.add(addressFromFirstPage);
 
@@ -357,9 +361,9 @@ public class LongListActivityTest {
         String uuid = UUID.randomUUID().toString();
         int length = uuid.length();
         int randInt = random.nextInt(length);
-        Log.i("asd", uuid + ", Length:" + length + ", RandomInt:" + randInt);
+        Log.i(TAG, uuid + ", Length:" + length + ", RandomInt:" + randInt);
         String company = uuid.substring(0, randInt);
-        Log.i("adf", i + " : " + company);
+        Log.i(TAG, i + " : " + company);
 
         tempAddress.setCompany(company);
         tempAddress.setId(i);

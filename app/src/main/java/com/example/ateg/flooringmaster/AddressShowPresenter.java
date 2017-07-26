@@ -36,7 +36,11 @@ public class AddressShowPresenter extends BasePresenter<AddressShowView> {
 
             @Override
             protected void onPostExecute(Address address) {
-                loadAddress(address);
+                if (address != null) {
+                    loadAddress(address);
+                } else {
+                    mAddressShowView.showError(new Throwable("Empty Address Recieved."));
+                }
             }
         }.execute(id);
     }

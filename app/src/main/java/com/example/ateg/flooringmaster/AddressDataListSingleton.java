@@ -37,7 +37,7 @@ public class AddressDataListSingleton {
 
     public static Address getOrNull(Integer position){
 
-        if (position < respondWithAddressList().size()) {
+        if (position < respondWithAddressList().size() && position >= 0) {
             return respondWithAddressList().get(position);
         } else {
             return null;

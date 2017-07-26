@@ -84,7 +84,6 @@ public class AddressShowFragment extends BaseFragment<AddressShowPresenter> impl
             mLoadingDialog.dismiss();
         Log.e(TAG, "Error occured.", ex);
         Toast.makeText(getActivity(), "Error Ocurred!", Toast.LENGTH_SHORT).show();
-
     }
 
     @Override
