@@ -22,8 +22,6 @@ public class AddressShowPresenter extends BasePresenter<AddressShowView> {
     }
 
     public void loadAddress(Integer id) {
-
-
         if (id == null || id == 0)
             return;
 

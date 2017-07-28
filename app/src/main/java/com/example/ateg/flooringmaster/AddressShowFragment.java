@@ -3,6 +3,7 @@ package com.example.ateg.flooringmaster;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +26,22 @@ public class AddressShowFragment extends BaseFragment<AddressShowPresenter> impl
 
     public void setAddressIdToShow(Integer id) {
         this.id = id;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (id != null)
+            outState.putInt(ADDRESS_ID_TO_SHOW, id);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            id = savedInstanceState.getInt(ADDRESS_ID_TO_SHOW);
+        }
     }
 
     @Override

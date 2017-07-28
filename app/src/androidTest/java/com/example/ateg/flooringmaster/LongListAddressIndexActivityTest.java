@@ -46,7 +46,6 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class LongListAddressIndexActivityTest {

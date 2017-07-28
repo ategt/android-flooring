@@ -3,6 +3,7 @@ package com.example.ateg.flooringmaster;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
@@ -21,9 +22,11 @@ import static com.example.ateg.flooringmaster.R.id.viewPager;
 
 public class AddressPagerFragment extends BaseFragment<AddressPagerPresenter> implements AddressPagerView {
 
+    public static final String PAGER_POSITION_TO_SAVE = "com.example.ateg.flooringmaster.AddressPagerFragment.PAGER_POSITION";
+
+    private static final String TAG = "AddressPagerFragment";
+
     private ViewPager viewPager;
-    //private List<Address> addresses;
-    //private AddressDao addressDao;
 
     @Override
     protected int layout() {
@@ -124,5 +127,18 @@ public class AddressPagerFragment extends BaseFragment<AddressPagerPresenter> im
     @Override
     public void displayAddress(Address address) {
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(PAGER_POSITION_TO_SAVE, viewPager.getCurrentItem());
+
+        Intent intent = getActivity().getIntent();
+
+        Address address = AddressDataListSingleton.getOrNull(viewPager.getCurrentItem());
+
+        intent.putExtra(AddressShowFragment.ADDRESS_ID_TO_SHOW, address.getId());
+        intent.putExtra(AddressShowFragment.ADDRESS_TO_SHOW, address);
     }
 }

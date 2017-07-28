@@ -1,7 +1,9 @@
 package com.example.ateg.flooringmaster;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.support.annotation.NonNull;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.DataInteraction;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.NoMatchingViewException;
@@ -296,6 +298,18 @@ public class SmallAddressIndexActivityTest {
         onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
                 ViewMatchers.isDisplayed()))
                 .check(matches(isShowingInputAddress(firstAddressFullName)));
+
+        mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
+                ViewMatchers.isDisplayed()))
+                .check(matches(isShowingInputAddress(firstAddressFullName)));
+
+        mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
+                ViewMatchers.isDisplayed()))
+                .check(matches(isShowingInputAddress(firstAddressFullName)));
     }
 
     /**
@@ -324,7 +338,7 @@ public class SmallAddressIndexActivityTest {
      * Clicks on a row and checks that the activity detected the click.
      */
     @Test
-    public void clickOnRandomItem() {
+    public void clickOnRandomItemThenRotate() {
         List<Address> addresses = createList(smallCountAddressItems);
         int sizeOfList = resultsFromList.size();
         int addressPageIndex = new Random().nextInt(sizeOfList - 1);
@@ -337,6 +351,17 @@ public class SmallAddressIndexActivityTest {
         scrollToLastRow();
 
         onRow(randomAddress).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
+
+        onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
+                ViewMatchers.isDisplayed()))
+                .check(matches(isShowingInputAddress(randomAddressFullName)));
+        mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
+                ViewMatchers.isDisplayed()))
+                .check(matches(isShowingInputAddress(randomAddressFullName)));
+
+        mainActivityActivityTestRule.getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
                 ViewMatchers.isDisplayed()))
