@@ -282,7 +282,8 @@ public class SingleAddressIndexActivityTest {
     public void row_Click_From_First_Page() {
         List<Address> addresses = createList();
         int sizeOfList = resultsFromList.size();
-        int addressPageIndex = new Random().nextInt(sizeOfList - 1);
+
+        int addressPageIndex = new Random().nextInt(sizeOfList);
         Address addressFromFirstPage = resultsFromList.get(addressPageIndex);
 
         final String addressFromFirstPageFullName = addressFromFirstPage.getFullName();
@@ -349,7 +350,7 @@ public class SingleAddressIndexActivityTest {
     public void clickOnRandomItem() {
         List<Address> addresses = createList();
         int sizeOfList = resultsFromList.size();
-        int addressPageIndex = new Random().nextInt(sizeOfList - 1);
+        int addressPageIndex = new Random().nextInt(sizeOfList);
         Address randomAddress = resultsFromList.get(addressPageIndex);
 
         final String randomAddressFullName = randomAddress.getFullName();
@@ -478,13 +479,13 @@ public class SingleAddressIndexActivityTest {
 
             @Override
             public boolean matches(Object item) {
+                Address address = (Address) item;
+                lastAddress[0] = address;
+
                 if (anAddressIsTrue[0]) {
                     anAddressIsTrue[0] = false;
                     return true;
                 }
-
-                Address address = (Address) item;
-                lastAddress[0] = address;
                 return false;
             }
         }).check(new ViewAssertion() {
