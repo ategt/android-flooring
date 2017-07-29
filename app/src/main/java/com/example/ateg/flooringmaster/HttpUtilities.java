@@ -167,6 +167,8 @@ public class HttpUtilities {
             int responseCode = httpURLConnection.getResponseCode();
             Log.i(TAG, "POST Response Code :: " + responseCode);
 
+            httpURLConnection.
+
             byte[] bytes = getBytes(httpURLConnection);
             if (bytes == null) {
                 return null;
