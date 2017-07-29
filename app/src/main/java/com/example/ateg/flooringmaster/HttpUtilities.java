@@ -111,30 +111,16 @@ public class HttpUtilities {
     }
 
     private byte[] getBytes(HttpURLConnection httpURLConnection) {
-
-        boolean isNetworkActive = checkForActiveNetwork();
-
-        if (!isNetworkActive)
-            return null;
-
         try {
             Log.d(TAG, httpURLConnection.getURL().toString());
 
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             InputStream inputStream = httpURLConnection.getInputStream();
 
             if (httpURLConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 return null;
             }
 
-            int bytesRead = 0;
-            byte[] buffer = new byte[1024];
-
-            while ((bytesRead = inputStream.read(buffer)) > 0) {
-                outputStream.write(buffer, 0, bytesRead);
-            }
-            outputStream.close();
-            return outputStream.toByteArray();
+            return getBytes(inputStream);
         } catch (IOException e) {
             Log.e(TAG, "IO Problem", e);
         } finally {
@@ -142,6 +128,19 @@ public class HttpUtilities {
         }
 
         return null;
+    }
+
+    private byte[] getBytes(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        int bytesRead = 0;
+        byte[] buffer = new byte[1024];
+
+        while ((bytesRead = inputStream.read(buffer)) > 0) {
+            outputStream.write(buffer, 0, bytesRead);
+        }
+        outputStream.close();
+        return outputStream.toByteArray();
     }
 
     private boolean checkForActiveNetwork() {
@@ -167,7 +166,8 @@ public class HttpUtilities {
             int responseCode = httpURLConnection.getResponseCode();
             Log.i(TAG, "POST Response Code :: " + responseCode);
 
-            httpURLConnection.
+            byte[] errors = getBytes(httpURLConnection.getErrorStream());
+            String error = new String(errors);
 
             byte[] bytes = getBytes(httpURLConnection);
             if (bytes == null) {
