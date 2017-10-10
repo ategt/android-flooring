@@ -1,5 +1,6 @@
 package com.example.ateg.flooringmaster;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.test.espresso.DataInteraction;
@@ -102,22 +103,6 @@ public class EmptyAddressIndexActivityTest {
         onView(findViewBasedOnTextView(lastAddress)).check(doesNotExist());
     }
 
-    /**
-     * Test that the list is long enough for this sample, the last item shouldn't appear.
-     */
-    @Test
-    public void firstItemNotDisplayedAtBottom() {
-        List<Address> addresses = createList();
-
-        final Address firstAddress = addresses.get(0);
-
-        mainActivityActivityTestRule.launchActivity(new Intent());
-
-        scrollToLastRow();
-
-        onView(findViewBasedOnTextView(firstAddress)).check(doesNotExist());
-    }
-
     @NonNull
     private BaseMatcher<View> findViewBasedOnTextView(final Address firstAddress) {
         return new BaseMatcher<View>() {
@@ -144,56 +129,14 @@ public class EmptyAddressIndexActivityTest {
     }
 
     /**
-     * Test that the list is long enough for this sample, the last item shouldn't appear.
+     * Check that the item is created. onData() takes care of scrolling.
      */
     @Test
-    public void firstItemDisplayedAndClickable() throws InterruptedException {
-        List<Address> addresses = createList();
-
-        final Address firstAddress = addresses.get(0);
-
+    public void list_Scrolls() {
         mainActivityActivityTestRule.launchActivity(new Intent());
-
-        onRow(firstAddress).check(matches(isCompletelyDisplayed()));
-
-        onRow(firstAddress).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
-
-        onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
-                ViewMatchers.isDisplayed()))
-                .check(matches(isShowingInputAddress(firstAddress.getFullName())));
-    }
-
-    /**
-     * Test that the list is long enough for this sample, the last item shouldn't appear.
-     */
-    @Test
-    public void firstItemDisplayedAfterRoundTrip() throws InterruptedException {
-        List<Address> addresses = createList();
-
-        final Address lastAddress = resultsFromList.get(resultsFromList.size() - 1);
-        final Address firstAddress = addresses.get(0);
-
-        mainActivityActivityTestRule.launchActivity(new Intent());
-
-        onRow(firstAddress).check(matches(isCompletelyDisplayed()));
-
-        scrollToLastRow();
-        scrollToFirstRow();
-
-        onRow(firstAddress).check(matches(isCompletelyDisplayed()));
-
-        Thread.sleep(50);
-        scrollToLastRow();
-        scrollToFirstRow();
-
-        onRow(firstAddress).check(matches(isCompletelyDisplayed()));
-
-        Thread.sleep(50);
-        scrollToLastRow();
-
-        onRow(lastAddress).check(matches(isCompletelyDisplayed()));
 
         Espresso.onView(ViewMatchers.withId(R.id.address_index_listView))
+                .perform(ViewActions.swipeUp())
                 .perform(ViewActions.swipeUp())
                 .perform(ViewActions.swipeUp())
                 .perform(ViewActions.swipeUp())
@@ -205,75 +148,26 @@ public class EmptyAddressIndexActivityTest {
                 .check(ViewAssertions.matches(ViewMatchers.withId(R.id.address_index_listView)))
                 .check(ViewAssertions.matches(ViewMatchers.hasSibling(ViewMatchers.withId(R.id.create_addresss_action_button))));
 
-        scrollToFirstRow();
-
-        onRow(firstAddress).check(matches(isCompletelyDisplayed()));
-
-        onRow(firstAddress).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
-
-        onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
-                ViewMatchers.isDisplayed()))
-                .check(matches(isShowingInputAddress(firstAddress.getFullName())));
     }
 
-    /**
-     * Check that the item is created. onData() takes care of scrolling.
-     */
     @Test
-    public void list_Scrolls() {
-        List<Address> addresses = createList();
-        int sizeOfList = resultsFromList.size();
-        Address lastAddress = resultsFromList.get(sizeOfList - 1);
-
+    public void swipeRandomly() {
+        Random random = new Random();
         mainActivityActivityTestRule.launchActivity(new Intent());
 
-        onRow(lastAddress).check(matches(isCompletelyDisplayed()));
-    }
+        ViewInteraction viewInteraction = Espresso.onView(ViewMatchers.withId(R.id.address_index_listView));
 
-    /**
-     * Clicks on a row and checks that the activity detected the click.
-     */
-    @Test
-    public void row_Click_From_First_Page() {
-        List<Address> addresses = createList();
-        int sizeOfList = resultsFromList.size();
-        int addressPageIndex = new Random().nextInt(sizeOfList - 1);
-        Address addressFromFirstPage = resultsFromList.get(addressPageIndex);
-
-        final String addressFromFirstPageFullName = addressFromFirstPage.getFullName();
-
-        mainActivityActivityTestRule.launchActivity(new Intent());
-
-        scrollToLastRow();
-
-        onRow(addressFromFirstPage).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
-
-        onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
-                ViewMatchers.isDisplayed()))
-                .check(matches(isShowingInputAddress(addressFromFirstPageFullName)));
-    }
-
-    @NonNull
-    private BaseMatcher<View> isShowingInputAddress(final String lastAddressFromSecondPageFullName) {
-        return new BaseMatcher<View>() {
-            @Override
-            public boolean matches(Object item) {
-                if (item instanceof TextView) {
-                    TextView textView = (TextView) item;
-                    String viewText = textView.getText().toString();
-
-                    if (!Strings.isNullOrEmpty(viewText) && viewText.equalsIgnoreCase(lastAddressFromSecondPageFullName)) {
-                        return true;
-                    }
-                }
-
-                return false;
+        for (int i = 0; i < 10; i++) {
+            if (random.nextBoolean()) {
+                viewInteraction.perform(ViewActions.swipeUp());
+            } else {
+                viewInteraction.perform(ViewActions.swipeDown());
             }
+        }
 
-            @Override
-            public void describeTo(Description description) {
-            }
-        };
+        viewInteraction
+                .check(ViewAssertions.matches(ViewMatchers.withId(R.id.address_index_listView)))
+                .check(ViewAssertions.matches(ViewMatchers.hasSibling(ViewMatchers.withId(R.id.create_addresss_action_button))));
     }
 
     @NonNull
@@ -288,98 +182,5 @@ public class EmptyAddressIndexActivityTest {
         resultsFromList.add(firstAddress);
 
         return resultsFromList;
-    }
-
-    private Address getAddressById(Integer value) {
-        Address foundAddress = null;
-        for (Address address : resultsFromList) {
-            if (value != null && address != null && Integer.compare(address.getId(), value) == 0) {
-                foundAddress = address;
-                break;
-            }
-        }
-
-        if (foundAddress == null) {
-            Log.e(TAG, "Integer Not Found: " + value);
-        }
-
-        return foundAddress;
-    }
-
-    private static DataInteraction onRow(final Address addressToFind) {
-        return onData(new BaseMatcher() {
-            @Override
-            public void describeTo(Description description) {
-            }
-
-            @Override
-            public boolean matches(Object item) {
-                if (item instanceof Address) {
-                    Address address = (Address) item;
-                    return Objects.equals(address, addressToFind);
-                }
-
-                return false;
-            }
-        });
-    }
-
-    private static ViewInteraction scrollToLastRow() {
-
-        final Address[] lastAddress = scrollToFirstRow();
-
-        final Address finalAddress = lastAddress[0];
-
-        return onData(new BaseMatcher() {
-            @Override
-            public void describeTo(Description description) {
-            }
-
-            @Override
-            public boolean matches(Object item) {
-                if (item instanceof Address) {
-                    Address address = (Address) item;
-                    return Objects.equals(address, finalAddress);
-                }
-
-                return false;
-            }
-        }).check(new ViewAssertion() {
-            @Override
-            public void check(View view, NoMatchingViewException noViewFoundException) {
-                int id = view.getId();
-            }
-        });
-    }
-
-    @NonNull
-    private static Address[] scrollToFirstRow() {
-        final Address[] lastAddress = new Address[1];
-        final boolean[] anAddressIsTrue = new boolean[1];
-        anAddressIsTrue[0] = true;
-
-        onData(new BaseMatcher() {
-            @Override
-            public void describeTo(Description description) {
-            }
-
-            @Override
-            public boolean matches(Object item) {
-                if (anAddressIsTrue[0]) {
-                    anAddressIsTrue[0] = false;
-                    return true;
-                }
-
-                Address address = (Address) item;
-                lastAddress[0] = address;
-                return false;
-            }
-        }).check(new ViewAssertion() {
-            @Override
-            public void check(View view, NoMatchingViewException noViewFoundException) {
-                int id = view.getId();
-            }
-        });
-        return lastAddress;
     }
 }
