@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
@@ -106,7 +107,7 @@ public class AddressBufferedClientTest {
      * Test of create method, of class AddressDaoPostgresImpl.
      */
     @Test
-    public void testCRUD() {
+    public void testCRUD() throws InterruptedException {
         System.out.println("CRUD test");
 
         String city = UUID.randomUUID().toString();
@@ -120,9 +121,10 @@ public class AddressBufferedClientTest {
 
         Address address = addressBuilder(city, company, firstName, lastName, state, streetName, streetNumber, zip);
 
-        int beforeCreation = addressDao.size();
+        int beforeCreation = addressDao.size(true);
+
         Address result = addressCloner(addressDao.create(address));
-        int afterCreation = addressDao.size();
+        int afterCreation = addressDao.size(true);
 
         assertEquals(beforeCreation + 1, afterCreation);
 
@@ -147,7 +149,7 @@ public class AddressBufferedClientTest {
 
         addressDao.delete(companyAddress.getId());
 
-        assertEquals(afterCreation - 1, addressDao.size());
+        assertEquals(afterCreation - 1, addressDao.size(true));
 
         Address deletedAddress = addressDao.get(companyAddress.getId());
         assertNull(deletedAddress);
@@ -157,6 +159,18 @@ public class AddressBufferedClientTest {
 
         Address alsoDeleted2 = addressDao.get(company);
         assertNull(alsoDeleted2);
+    }
+
+    @Test
+    public void sizesAllReturnSameValue(){
+        int preBuffer = addressDao.size();
+
+        int blocked = addressDao.size(true);
+        int notBlocked = addressDao.size(false);
+        int postBlocked = addressDao.size();
+
+        assertEquals(blocked, notBlocked);
+        assertEquals(blocked, postBlocked);
     }
 
     private Address addressCloner(Address address) {
@@ -170,8 +184,11 @@ public class AddressBufferedClientTest {
                 address.getStreetNumber(),
                 address.getZip()
         );
+
         if (address.getId() != null)
             address1.setId(address.getId());
+
+        assertEquals(address, address1);
         return address1;
     }
 
@@ -200,7 +217,7 @@ public class AddressBufferedClientTest {
 
         List<Address> list = addressDao.list();
 
-        assertEquals(list.size(), addressDao.size());
+        assertEquals(list.size(), addressDao.size(true));
 
         assertTrue(list.contains(address));
     }
@@ -499,16 +516,16 @@ public class AddressBufferedClientTest {
         }
     }
 
-    @SuppressWarnings("Since15")
     @Test
     public void getSortedByName() {
-        List<Address> addresses = addressDao.list();
+        List<Address> addresse1s = addressDao.list();
         List<Address> addressesFromDb = addressDao.list(AddressDao.SORT_BY_LAST_NAME);
 
-        addresses.sort(sortByLastNameComparator());
+        Address[] addressArray = addresse1s.toArray(new Address[addresse1s.size()]);
+        Arrays.sort(addressArray, sortByLastNameComparator());
 
-        for (int i = 0; i < addresses.size(); i++) {
-            assertEquals(addresses.get(i), addressesFromDb.get(i));
+        for (int i = 0; i < addressArray.length; i++) {
+            assertEquals(addressArray[i], addressesFromDb.get(i));
         }
     }
 
@@ -517,12 +534,12 @@ public class AddressBufferedClientTest {
         List<Address> addresses = addressDao.list();
         List<Address> addressesFromDb = addressDao.getAddressesSortedByParameter("last_name");
 
-        //noinspection Since15
-        addresses.sort(sortByLastNameComparator());
+        Address[] addressArray = addresses.toArray(new Address[addresses.size()]);
+        Arrays.sort(addressArray, sortByLastNameComparator());
 
-        for (int i = 0; i < addresses.size(); i++) {
+        for (int i = 0; i < addressArray.length; i++) {
 
-            assertEquals(" First Incongruency at : " + i + " compared: " + addresses.get(i).getId() + " \t Db: " + addressesFromDb.get(i).getId(), addresses.get(i), addressesFromDb.get(i));
+            assertEquals(" First Incongruency at : " + i + " compared: " + addressArray[i].getId() + " \t Db: " + addressesFromDb.get(i).getId(), addressArray[i], addressesFromDb.get(i));
 
         }
     }

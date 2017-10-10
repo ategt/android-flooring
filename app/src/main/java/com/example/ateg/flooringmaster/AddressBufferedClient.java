@@ -2,6 +2,7 @@ package com.example.ateg.flooringmaster;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.util.LruCache;
 import android.util.Pair;
 
@@ -19,9 +20,12 @@ import java.util.UUID;
 
 public class AddressBufferedClient implements AddressDao, AddressClient {
 
+    private final static String TAG = "AddressBufferedClient";
     private AddressDao addressDao;
     private LruCache<Integer, Address> lruCache;
     private Pair<Long, Integer> sizePair;
+    private boolean updateInProgress;
+    private AsyncTask<Void, Void, Integer> sizeUpdater;
 
     public AddressBufferedClient(AddressDao addressDao, int maxSize) {
         if (addressDao == null || addressDao.getClass().isInstance(AddressBufferedClient.class))
@@ -29,6 +33,7 @@ public class AddressBufferedClient implements AddressDao, AddressClient {
         this.addressDao = addressDao;
         lruCache = new LruCache(maxSize);
         updateSize(false);
+        updateInProgress = false;
     }
 
     @Override
@@ -93,7 +98,13 @@ public class AddressBufferedClient implements AddressDao, AddressClient {
     private void updateSize(boolean forceUpdate) {
         if (forceUpdate || sizePair == null || sizePair.second == null || sizePair.first + 60000 < System.currentTimeMillis()) {
 
-            new AsyncTask<Void, Void, Integer>() {
+            updateInProgress = true;
+
+            if (sizeUpdater != null){
+                sizeUpdater.cancel(true);
+            }
+
+            sizeUpdater = new AsyncTask<Void, Void, Integer>() {
                 @Override
                 protected Integer doInBackground(Void... params) {
                     return addressDao.size();
@@ -102,14 +113,33 @@ public class AddressBufferedClient implements AddressDao, AddressClient {
                 @Override
                 protected void onPostExecute(Integer integer) {
                     sizePair = new Pair(System.currentTimeMillis(), integer);
+                    updateInProgress = false;
+                    sizeUpdater = null;
                 }
-            }.execute();
+            };
+            sizeUpdater.execute();
         }
     }
 
     @Override
     public int size() {
+        return size(false);
+    }
+
+    @Override
+    public int size(boolean blockForUpdate) {
         updateSize(false);
+
+        if (blockForUpdate) {
+            try {
+                while (updateInProgress) {
+                    Thread.sleep(100);
+                }
+            } catch (InterruptedException e) {
+             Log.e(TAG, "Problem in size buffering.", e);
+                e.printStackTrace();
+            }
+        }
 
         if (sizePair == null)
             return 0;
@@ -140,7 +170,7 @@ public class AddressBufferedClient implements AddressDao, AddressClient {
     @Override
     public List<Address> list(ResultProperties resultProperties) {
         List<Address> addressList = addressDao.list(resultProperties);
-        for (Address address : addressList){
+        for (Address address : addressList) {
             lruCache.put(address.getId(), address);
         }
         return addressList;

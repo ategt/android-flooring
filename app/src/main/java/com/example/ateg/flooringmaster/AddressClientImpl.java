@@ -147,6 +147,11 @@ public class AddressClientImpl implements AddressDao, AddressClient {
     }
 
     @Override
+    public int size(boolean block) {
+        return size();
+    }
+
+    @Override
     public List<Address> getAddressesSortedByParameter(String sortBy) {
         Integer sortByInt = AddressSortByEnum.parse(sortBy).intValue();
 

@@ -23,6 +23,7 @@ public interface AddressDao extends AddressClient {
     public Address delete(Integer id);
 
     public int size();
+    public int size(boolean block);
 
     public List<Address> getAddressesSortedByParameter(String sortBy);
     public Set<String> getCompletionGuesses(String input, int limit);

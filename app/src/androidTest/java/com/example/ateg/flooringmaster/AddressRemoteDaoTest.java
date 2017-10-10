@@ -558,6 +558,18 @@ public class AddressRemoteDaoTest {
         }
     }
 
+    @Test
+    public void sizesAllReturnSameValue(){
+        int preBuffer = addressDao.size();
+
+        int blocked = addressDao.size(true);
+        int notBlocked = addressDao.size(false);
+        int postBlocked = addressDao.size();
+
+        assertEquals(blocked, notBlocked);
+        assertEquals(blocked, postBlocked);
+    }
+
     private String caseRandomizer(final Random random, String input) {
         switch (random.nextInt(6)) {
 
