@@ -171,9 +171,9 @@ public class AddressDaoRemoteImpl implements AddressDao {
                     .buildUpon()
                     .appendPath("address")
                     .appendPath("")
-                    .appendQueryParameter("page", resultProperties.getPageNumber().toString())
-                    .appendQueryParameter("results", resultProperties.getResultsPerPage().toString())
-                    .appendQueryParameter("sort_by", resultProperties.getSortByEnum().value())
+                    .appendQueryParameter("page", resultProperties.getPageNumber() == null ? "0" : resultProperties.getPageNumber().toString())
+                    .appendQueryParameter("results", resultProperties.getResultsPerPage() == null ? Integer.toString(Integer.MAX_VALUE) : resultProperties.getResultsPerPage().toString())
+                    .appendQueryParameter("sort_by", resultProperties.getSortByEnum() == null ? "" : resultProperties.getSortByEnum().value())
                     .build();
 
             addressString = httpUtilities.requestJSON(uri.toString());

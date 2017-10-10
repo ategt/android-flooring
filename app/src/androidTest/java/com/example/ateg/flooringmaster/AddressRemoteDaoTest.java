@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -482,16 +483,16 @@ public class AddressRemoteDaoTest {
         }
     }
 
-    @SuppressWarnings("Since15")
     @Test
     public void getSortedByName() {
         List<Address> addresses = addressDao.list();
         List<Address> addressesFromDb = addressDao.list(AddressDao.SORT_BY_LAST_NAME);
 
-        addresses.sort(sortByLastNameComparator());
+        Address[] addressArray = addresses.toArray(new Address[addresses.size()]);
+        Arrays.sort(addressArray, sortByLastNameComparator());
 
-        for (int i = 0; i < addresses.size(); i++) {
-            assertEquals(addresses.get(i), addressesFromDb.get(i));
+        for (int i = 0; i < addressArray.length; i++) {
+            assertEquals(addressArray[i], addressesFromDb.get(i));
         }
     }
 
@@ -500,12 +501,12 @@ public class AddressRemoteDaoTest {
         List<Address> addresses = addressDao.list();
         List<Address> addressesFromDb = addressDao.getAddressesSortedByParameter("last_name");
 
-        //noinspection Since15
-        addresses.sort(sortByLastNameComparator());
+        Address[] addressArray = addresses.toArray(new Address[addresses.size()]);
+        Arrays.sort(addressArray, sortByLastNameComparator());
 
-        for (int i = 0; i < addresses.size(); i++) {
+        for (int i = 0; i < addressArray.length; i++) {
 
-            assertEquals(" First Incongruency at : " + i + " compared: " + addresses.get(i).getId() + " \t Db: " + addressesFromDb.get(i).getId(), addresses.get(i), addressesFromDb.get(i));
+            assertEquals(" First Incongruency at : " + i + " compared: " + addressArray[i].getId() + " \t Db: " + addressesFromDb.get(i).getId(), addressArray[i], addressesFromDb.get(i));
 
         }
     }
