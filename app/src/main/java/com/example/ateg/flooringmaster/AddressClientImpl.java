@@ -180,10 +180,12 @@ public class AddressClientImpl implements AddressDao, AddressClient {
     }
 
     private Uri.Builder appendResultProperties(Uri.Builder builder, ResultProperties resultProperties){
-        return builder
-                .appendQueryParameter("page", resultProperties.getPageNumber().toString())
-                .appendQueryParameter("results", resultProperties.getResultsPerPage().toString())
-                .appendQueryParameter("sort_by", resultProperties.getSortByEnum().value());
+        return resultProperties == null ?
+                builder :
+                builder
+                .appendQueryParameter("page", resultProperties.getPageNumber() == null ? "0" : resultProperties.getPageNumber().toString())
+                .appendQueryParameter("results", resultProperties.getResultsPerPage() == null ? Integer.toString(Integer.MAX_VALUE) : resultProperties.getResultsPerPage().toString())
+                .appendQueryParameter("sort_by", resultProperties.getSortByEnum() == null ? "" : resultProperties.getSortByEnum().value());
     }
 
     @Override
