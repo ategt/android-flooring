@@ -131,6 +131,9 @@ public class HttpUtilities {
     }
 
     private byte[] getBytes(InputStream inputStream) throws IOException {
+        if (inputStream == null)
+            return null;
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         int bytesRead = 0;
@@ -166,14 +169,20 @@ public class HttpUtilities {
             int responseCode = httpURLConnection.getResponseCode();
             Log.i(TAG, "POST Response Code :: " + responseCode);
 
-            byte[] errors = getBytes(httpURLConnection.getErrorStream());
-            String error = new String(errors);
+            InputStream errorStream = httpURLConnection.getErrorStream();
+            if (errorStream != null) {
+                byte[] errors = getBytes(errorStream);
+                String error = new String(errors);
+                Log.e(TAG, "Connection error: " + error);
+                throw new RuntimeException(error);
+            } else {
 
-            byte[] bytes = getBytes(httpURLConnection);
-            if (bytes == null) {
-                return null;
-            } else
-                return new String(bytes);
+                byte[] bytes = getBytes(httpURLConnection);
+                if (bytes == null) {
+                    return null;
+                } else
+                    return new String(bytes);
+            }
         } catch (MalformedURLException e) {
             Log.e(TAG, "Bad URL", e);
         } catch (IOException e) {
