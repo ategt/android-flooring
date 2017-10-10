@@ -10,6 +10,6 @@ public class RemoteMessage {
     private String message;
 
     public RemoteMessage(String fieldName, String message){
-        this.
+        //this.
     }
 }
