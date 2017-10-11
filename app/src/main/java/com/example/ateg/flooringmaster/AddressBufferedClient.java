@@ -34,6 +34,8 @@ public class AddressBufferedClient implements AddressDao, AddressClient {
         lruCache = new LruCache(maxSize);
         updateSize(false);
         updateInProgress = false;
+
+        size(false);
     }
 
     @Override

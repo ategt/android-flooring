@@ -17,6 +17,7 @@ public interface AddressClient {
     public Address delete(Integer id);
 
     public int size();
+    public int size(boolean block);
 
     public Set<String> getCompletionGuesses(String input, int limit);
     public List<Address> list(ResultProperties resultProperties);

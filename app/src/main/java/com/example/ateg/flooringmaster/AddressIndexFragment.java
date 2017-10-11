@@ -139,6 +139,8 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
                         .inflate(R.layout.list_item_address, null);
             }
 
+            Log.d(TAG, "Position: " + position);
+
             Address address = getItem(position);
 
             int positionInList = AddressDataListSingleton.indexOf(address);
