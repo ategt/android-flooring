@@ -25,6 +25,7 @@
     <!--<string name="starting_root_url">http://mighty-eyrie-28532.heroku.com</string>-->
 
     <string name="edit_address_button">Edit</string>
+    <string name="return_address_button">Return</string>
     <string name="address_show_fullName_text">Full Name</string>
     <string name="address_show_company_text">Company Name</string>
     <string name="address_show_streetAddress_text">Street Address</string>

@@ -79,6 +79,7 @@ public class AddressShowFragment extends BaseFragment<AddressShowPresenter> impl
     @Override
     protected void setListeners() {
         View view = getCreatedView();
+
         Button editButton = (Button) view.findViewById(R.id.address_show_edit_address_button);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +87,14 @@ public class AddressShowFragment extends BaseFragment<AddressShowPresenter> impl
                 Intent intent = new Intent(getActivity(), AddressEditActivity.class);
                 intent.putExtra(AddressEditFragment.EXTRA_ADDRESS_ID_TO_SHOW, id);
                 startActivity(intent);
+            }
+        });
+
+        Button returnButton = (Button) view.findViewById(R.id.address_show_return_address_button);
+        returnButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finishActivity(0);
             }
         });
     }
