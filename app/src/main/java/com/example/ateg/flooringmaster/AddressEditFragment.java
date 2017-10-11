@@ -125,6 +125,11 @@ public class AddressEditFragment extends BaseFragment<AddressEditPresenter> impl
         return new AddressEditPresenter(this);
     }
 
+    public void showAddress(Address address){
+        loadFormFromAddress(address);
+        
+    }
+
     private Address buildAddressFromForm() {
         View view = getView();
 
@@ -164,5 +169,33 @@ public class AddressEditFragment extends BaseFragment<AddressEditPresenter> impl
         address.setZip(zipcode);
 
         return address;
+    }
+
+    private void loadFormFromAddress(Address address){
+        View view = getView();
+
+        TextView firstNameTextView = (TextView) view.findViewById(R.id.address_edit_firstName_editTextView);
+        firstNameTextView.setText(address.getFirstName());
+
+        TextView lastNameTextView = (TextView) view.findViewById(R.id.address_edit_lastName_editTextView);
+        lastNameTextView.setText(address.getLastName());
+
+        TextView companyTextView = (TextView) view.findViewById(R.id.address_edit_company_editTextView);
+        companyTextView.setText(address.getCompany());
+
+        TextView streetNumberTextView = (TextView) view.findViewById(R.id.address_edit_streetNumber_editTextView);
+        streetNumberTextView.setText(address.getStreetNumber());
+
+        TextView streetNameTextView = (TextView) view.findViewById(R.id.address_edit_streetName_editTextView);
+        streetNameTextView.setText(address.getStreetName());
+
+        TextView cityTextView = (TextView) view.findViewById(R.id.address_edit_city_editTextView);
+        cityTextView.setText(address.getCity());
+
+        TextView stateTextView = (TextView) view.findViewById(R.id.address_edit_state_editTextView);
+        stateTextView.setText(address.getState());
+
+        TextView zipTextView = (TextView) view.findViewById(R.id.address_edit_zip_editTextView);
+        zipTextView.setText(address.getZip());
     }
 }

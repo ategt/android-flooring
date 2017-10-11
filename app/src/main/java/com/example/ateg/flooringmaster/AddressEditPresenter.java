@@ -25,6 +25,11 @@ public class AddressEditPresenter extends BasePresenter<AddressEditView> {
                 Address address = AddressDaoSingleton.getAddressDao(null).get(params[0]);
                 return address;
             }
+
+            @Override
+            protected void onPostExecute(Address address) {
+
+            }
         }.execute(id);
     }
 
