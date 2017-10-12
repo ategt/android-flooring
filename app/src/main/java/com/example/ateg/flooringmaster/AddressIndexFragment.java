@@ -38,8 +38,10 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
 
             if (listAdapter != null) {
                 int position = AddressDataListSingleton.indexOf(AddressDaoSingleton.getAddressDao(getActivity()).get(id));
-                listView.setSelection(position);
-                listView.smoothScrollToPosition(position);
+                if (position > 0) {
+                    listView.setSelection(position);
+                    listView.smoothScrollToPosition(position);
+                }
             }
         }
     }
