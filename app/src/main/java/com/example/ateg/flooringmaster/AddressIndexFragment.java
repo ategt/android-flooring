@@ -24,7 +24,6 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
     public static final String ADDRESS_ID_TO_SHOW = "com.example.ateg.flooringmaster.ADDRESS_ID_TO_SHOW";
     private static final String TAG = "AddressListMvpActivity";
     private ProgressDialog mLoadingDialog;
-    private Integer id;
 
     @Override
     public void onResume() {
@@ -33,12 +32,15 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
         Intent intent = getActivity().getIntent();
 
         if (intent.hasExtra(ADDRESS_ID_TO_SHOW)) {
-            id = intent.getIntExtra(ADDRESS_ID_TO_SHOW, 0);
+            Integer id = intent.getIntExtra(ADDRESS_ID_TO_SHOW, 0);
             ListView listView = (ListView) getCreatedView().findViewById(R.id.address_index_listView);
             ListAdapter listAdapter = listView.getAdapter();
 
-
-            listView.scr
+            if (listAdapter != null) {
+                int position = AddressDataListSingleton.indexOf(AddressDaoSingleton.getAddressDao(getActivity()).get(id));
+                listView.setSelection(position);
+                listView.smoothScrollToPosition(position);
+            }
         }
     }
 
