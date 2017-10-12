@@ -3,11 +3,15 @@ package com.example.ateg.flooringmaster;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.ateg.flooringmaster.errors.ErrorDialog;
 import com.example.ateg.flooringmaster.errors.ValidationException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ATeg on 10/12/2017.
@@ -40,8 +44,41 @@ public class AddressSearchFragment extends BaseFragment<AddressSearchPresenter> 
 
     @Override
     protected void setUi(View v) {
-        Spinner spinner = (Spinner) v.findViewById(R.id.search_option_spinner);
-        spinner.setAdapter(new ArrayAdapter<AddressSearchByOptionEnum>(getActivity(), 0, AddressSearchByOptionEnum.values()));
+        Spinner spinner = (Spinner) v.findViewById(R.id.search_option_spinner_2);
+
+        List<String> list = new ArrayList<>();
+
+        for (AddressSearchByOptionEnum addressSearchByOptionEnum : AddressSearchByOptionEnum.values()) {
+            list.add(addressSearchByOptionEnum.toString());
+        }
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
+                R.layout.simple_spinner_item, list);
+
+        dataAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
+    }
+
+    public void addListenerOnSpinner() {
+        Spinner spinner = (Spinner) getCreatedView().findViewById(R.id.search_option_spinner);
+        spinner.setOnItemSelectedListener(new CustomItemSelectedListener());
+    }
+
+    public void addListenerOnButton() {
+        final Spinner spinner = (Spinner) getCreatedView().findViewById(R.id.search_option_spinner);
+        final Spinner spinner2 = (Spinner) getCreatedView().findViewById(R.id.search_option_spinner_2);
+
+        Button button = (Button) getCreatedView().findViewById(R.id.search_submit_button);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "OnClickListener: " +
+                                "\nSpinner 1: " + String.valueOf(spinner.getSelectedItem()) +
+                                "\nSpinner 2: " + String.valueOf(spinner2.getSelectedItem()),
+                        Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
@@ -56,7 +93,8 @@ public class AddressSearchFragment extends BaseFragment<AddressSearchPresenter> 
 
     @Override
     protected void setListeners() {
-
+        addListenerOnSpinner();
+        addListenerOnButton();
     }
 
     @Override

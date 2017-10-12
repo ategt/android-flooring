@@ -34,4 +34,15 @@
     <string name="error_dialog_text">Something Went Wrong During Operation</string>
     <string name="error_accept">Ok</string>
     <string name="validation_errors">Validation Error</string>
+
+    <string-array name="search_by_array">
+        <item>Everything</item>
+        <item>Name</item>
+        <item>Company</item>
+        <item>Name Or Company</item>
+        <item>Street</item>
+        <item>City</item>
+        <item>State</item>
+        <item>Zipcode</item>
+    </string-array>
 </resources>
