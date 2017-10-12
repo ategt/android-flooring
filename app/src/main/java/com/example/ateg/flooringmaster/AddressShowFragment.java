@@ -94,7 +94,7 @@ public class AddressShowFragment extends BaseFragment<AddressShowPresenter> impl
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().finishActivity(0);
+                getActivity().finish();
             }
         });
     }

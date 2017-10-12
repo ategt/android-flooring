@@ -14,14 +14,14 @@ import java.io.Serializable;
  * Created by ATeg on 7/21/2017.
  */
 
-public class AddressEditFragment extends BaseFragment<AddressEditPresenter> implements AddressEditView{
+public class AddressEditFragment extends BaseFragment<AddressEditPresenter> implements AddressEditView {
     private static final String TAG = "Address Edit Fragment";
     public static final String EXTRA_ADDRESS_ID_TO_SHOW = "com.example.ateg.flooringmaster.AddressEditFragment.EXTRA_ADDRESS_ID_TO_SHOW";
 
     private Integer id;
     private ProgressDialog mSubmittingDialog;
 
-    public void setAddressId(Integer id){
+    public void setAddressId(Integer id) {
         this.id = id;
     }
 
@@ -42,6 +42,7 @@ public class AddressEditFragment extends BaseFragment<AddressEditPresenter> impl
     public void displayAddress(Address address) {
         View view = getCreatedView();
 
+        TextView idTextView = (TextView) view.findViewById(R.id.address_edit_id_textView);
         EditText firstNameEditText = (EditText) view.findViewById(R.id.address_edit_firstName_editTextView);
         EditText lastNameEditText = (EditText) view.findViewById(R.id.address_edit_lastName_editTextView);
         EditText companyEditText = (EditText) view.findViewById(R.id.address_edit_company_editTextView);
@@ -50,6 +51,9 @@ public class AddressEditFragment extends BaseFragment<AddressEditPresenter> impl
         EditText cityEditText = (EditText) view.findViewById(R.id.address_edit_city_editTextView);
         EditText stateEditText = (EditText) view.findViewById(R.id.address_edit_state_editTextView);
         EditText zipEditText = (EditText) view.findViewById(R.id.address_edit_zip_editTextView);
+
+        idTextView.setText(address.getId() == null ? getString(R.string.address_id_null) :
+                getString(R.string.address_id_prefix) + Integer.toString(address.getId()));
 
         firstNameEditText.setText(address.getFirstName());
         lastNameEditText.setText(address.getLastName());
@@ -74,7 +78,7 @@ public class AddressEditFragment extends BaseFragment<AddressEditPresenter> impl
 
     @Override
     public void launchShowAddress(Integer addressId) {
-        Intent intent = new Intent(getActivity(), AddressShowFragment.class);
+        Intent intent = new Intent(getActivity(), AddressShowActivity.class);
         intent.putExtra(AddressShowFragment.ADDRESS_ID_TO_SHOW, addressId);
         startActivity(intent);
     }
@@ -125,13 +129,11 @@ public class AddressEditFragment extends BaseFragment<AddressEditPresenter> impl
         return new AddressEditPresenter(this);
     }
 
-    public void showAddress(Address address){
-        loadFormFromAddress(address);
-        
-    }
-
     private Address buildAddressFromForm() {
         View view = getView();
+
+        TextView idTextView = (TextView) view.findViewById(R.id.address_edit_id_textView);
+        String idString = idTextView.getText().toString();
 
         TextView firstNameTextView = (TextView) view.findViewById(R.id.address_edit_firstName_editTextView);
         String firstName = firstNameTextView.getText().toString();
@@ -168,34 +170,17 @@ public class AddressEditFragment extends BaseFragment<AddressEditPresenter> impl
         address.setState(state);
         address.setZip(zipcode);
 
+        try {
+            idString = idString.replace(getString(R.string.address_id_prefix), "");
+            idString = idString.replace(getString(R.string.address_id_label), "");
+            idString = idString.trim();
+
+            Integer id = Integer.parseInt(idString);
+            address.setId(id);
+        } catch (NumberFormatException ex) {
+
+        }
+
         return address;
-    }
-
-    private void loadFormFromAddress(Address address){
-        View view = getView();
-
-        TextView firstNameTextView = (TextView) view.findViewById(R.id.address_edit_firstName_editTextView);
-        firstNameTextView.setText(address.getFirstName());
-
-        TextView lastNameTextView = (TextView) view.findViewById(R.id.address_edit_lastName_editTextView);
-        lastNameTextView.setText(address.getLastName());
-
-        TextView companyTextView = (TextView) view.findViewById(R.id.address_edit_company_editTextView);
-        companyTextView.setText(address.getCompany());
-
-        TextView streetNumberTextView = (TextView) view.findViewById(R.id.address_edit_streetNumber_editTextView);
-        streetNumberTextView.setText(address.getStreetNumber());
-
-        TextView streetNameTextView = (TextView) view.findViewById(R.id.address_edit_streetName_editTextView);
-        streetNameTextView.setText(address.getStreetName());
-
-        TextView cityTextView = (TextView) view.findViewById(R.id.address_edit_city_editTextView);
-        cityTextView.setText(address.getCity());
-
-        TextView stateTextView = (TextView) view.findViewById(R.id.address_edit_state_editTextView);
-        stateTextView.setText(address.getState());
-
-        TextView zipTextView = (TextView) view.findViewById(R.id.address_edit_zip_editTextView);
-        zipTextView.setText(address.getZip());
     }
 }

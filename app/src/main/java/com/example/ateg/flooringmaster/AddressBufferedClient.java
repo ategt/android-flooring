@@ -52,6 +52,10 @@ public class AddressBufferedClient implements AddressDao, AddressClient {
     @Override
     public void update(Address address) {
         if (address != null) {
+            if (address.getId() == null){
+                Log.e(TAG, "An address was passed to the update method with no ID");
+                throw new UnsupportedOperationException("An address was passed to the update method with no ID");
+            }
             lruCache.remove(address.getId());
             lruCache.put(address.getId(), address);
         }

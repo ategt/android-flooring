@@ -3,74 +3,79 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_margin="@dimen/edit_margin">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/address_edit_id_textView"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/address_id_label" />
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/edit_margin"
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/address_edit_firstName_editTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/address_firstName_hint" />
+            <TextView
+                android:id="@+id/address_edit_id_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/address_id_label" />
 
-        <EditText
-            android:id="@+id/address_edit_lastName_editTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/address_lastName_hint" />
+            <EditText
+                android:id="@+id/address_edit_firstName_editTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/address_firstName_hint" />
 
-        <EditText
-            android:id="@+id/address_edit_company_editTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/address_company_hint" />
+            <EditText
+                android:id="@+id/address_edit_lastName_editTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/address_lastName_hint" />
 
-        <EditText
-            android:id="@+id/address_edit_streetNumber_editTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/address_streetNumber_hint" />
+            <EditText
+                android:id="@+id/address_edit_company_editTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/address_company_hint" />
 
-        <EditText
-            android:id="@+id/address_edit_streetName_editTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/address_streetName_hint" />
+            <EditText
+                android:id="@+id/address_edit_streetNumber_editTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/address_streetNumber_hint" />
 
-        <EditText
-            android:id="@+id/address_edit_city_editTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/address_city_hint" />
+            <EditText
+                android:id="@+id/address_edit_streetName_editTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/address_streetName_hint" />
 
-        <EditText
-            android:id="@+id/address_edit_state_editTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/address_state_hint" />
+            <EditText
+                android:id="@+id/address_edit_city_editTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/address_city_hint" />
 
-        <EditText
-            android:id="@+id/address_edit_zip_editTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/address_zip_hint" />
+            <EditText
+                android:id="@+id/address_edit_state_editTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/address_state_hint" />
 
-        <Button
-            android:id="@+id/submit_button"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="@string/submit_button"
-            android:layout_margin="@dimen/submit_margin"/>
+            <EditText
+                android:id="@+id/address_edit_zip_editTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/address_zip_hint" />
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/submit_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/submit_margin"
+                android:text="@string/submit_button" />
+
+        </LinearLayout>
+    </ScrollView>
 
     <RelativeLayout
         android:id="@+id/loadingPanel"
@@ -79,14 +84,13 @@
         android:gravity="center_horizontal"
         android:paddingBottom="40dp"
         android:paddingLeft="40dp"
-        android:paddingTop="40dp"
-        android:paddingRight="40dp">
+        android:paddingRight="40dp"
+        android:paddingTop="40dp">
 
-    <ProgressBar
+        <ProgressBar
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:indeterminate="true"
-            android:visibility="visible"
-            />
+            android:visibility="visible" />
     </RelativeLayout>
 </RelativeLayout>

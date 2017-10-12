@@ -28,7 +28,7 @@ public class AddressEditPresenter extends BasePresenter<AddressEditView> {
 
             @Override
             protected void onPostExecute(Address address) {
-
+                getView().displayAddress(address);
             }
         }.execute(id);
     }
@@ -40,7 +40,7 @@ public class AddressEditPresenter extends BasePresenter<AddressEditView> {
 
             @Override
             protected Void doInBackground(Address... params) {
-                addressClient.update(address);
+                addressClient.update(params[0]);
                 return null;
             }
 
