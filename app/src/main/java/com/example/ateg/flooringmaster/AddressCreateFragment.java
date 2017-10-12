@@ -2,12 +2,14 @@ package com.example.ateg.flooringmaster;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ateg.flooringmaster.errors.ErrorDialog;
 import com.example.ateg.flooringmaster.errors.ValidationException;
 
 import org.w3c.dom.Text;
@@ -47,11 +49,21 @@ public class AddressCreateFragment extends BaseFragment<AddressCreatePresenter> 
 
     @Override
     protected void setListeners() {
-        Button button = (Button) getCreatedView().findViewById(R.id.submit_button);
+        View view = getCreatedView();
+        Button button = (Button) view.findViewById(R.id.submit_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPresenter.createAddress(buildAddressFromForm());
+            }
+        });
+
+        Button returnButton = (Button) view.findViewById(R.id.address_edit_return_address_button);
+        returnButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //NavUtils.navigateUpFromSameTask(getActivity());
+                getActivity().finish();
             }
         });
     }
@@ -136,6 +148,10 @@ public class AddressCreateFragment extends BaseFragment<AddressCreatePresenter> 
 
     @Override
     public void showValidationError(ValidationException ex) {
+        if (mSubmittingDialog != null)
+            mSubmittingDialog.dismiss();
 
+        Toast.makeText(getActivity(), R.string.error_dialog_text, Toast.LENGTH_LONG).show();
+        ErrorDialog.BuildErrorDialog(getActivity(), ex).show();
     }
 }

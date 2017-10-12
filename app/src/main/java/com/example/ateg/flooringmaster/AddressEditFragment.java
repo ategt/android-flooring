@@ -11,8 +11,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ateg.flooringmaster.errors.ErrorDialog;
 import com.example.ateg.flooringmaster.errors.ValidationError;
 import com.example.ateg.flooringmaster.errors.ValidationErrorContainer;
+import com.example.ateg.flooringmaster.errors.ValidationException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -94,12 +96,12 @@ public class AddressEditFragment extends BaseFragment<AddressEditPresenter> impl
     }
 
     @Override
-    public void displayErrors(ValidationErrorContainer validationErrorContainer) {
+    public void displayErrors(ValidationException validationException) {
         if (mSubmittingDialog != null)
             mSubmittingDialog.dismiss();
 
         Toast.makeText(getActivity(), R.string.error_dialog_text, Toast.LENGTH_LONG).show();
-show();
+        ErrorDialog.BuildErrorDialog(getActivity(), validationException).show();
     }
 
     @Override
@@ -146,7 +148,9 @@ show();
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NavUtils.navigateUpFromSameTask(getActivity());
+                Intent intent = NavUtils.getParentActivityIntent(getActivity());
+                intent.putExtra(AddressIndexFragment.ADDRESS_ID_TO_SHOW, id);
+                NavUtils.navigateUpTo(getActivity(), intent);
             }
         });
     }

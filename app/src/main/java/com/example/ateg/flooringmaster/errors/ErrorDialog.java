@@ -17,40 +17,31 @@ import java.util.List;
 
 public class ErrorDialog {
 
-    private ValidationException validationException;
-    private Context context;
-    private Dialog mErrorDialog;
-
-    public ErrorDialog(Context context, ValidationException validationException){
-        this.validationException = validationException;
-        this.context = context;
-
-        init();
-    }
-
-    private void init(){
+    public static Dialog BuildErrorDialog(Context context, ValidationException validationException){
         List<ValidationError> validationErrors = validationException.getValidationErrorContainer().getErrors();
 
         String errorMessage = generateMessage(validationErrors);
 
-        mErrorDialog = new Dialog(context, R.style.ValidationErrorDialog);
-        mErrorDialog.setContentView(R.layout.validation_errors_dialog);
-        mErrorDialog.setTitle(R.string.validation_errors);
+        final Dialog errorDialog = new Dialog(context, R.style.ValidationErrorDialog);
+        errorDialog.setContentView(R.layout.validation_errors_dialog);
+        errorDialog.setTitle(R.string.validation_errors);
 
-        TextView errorText = (TextView) mErrorDialog.findViewById(R.id.validation_dialog_textView);
+        TextView errorText = (TextView) errorDialog.findViewById(R.id.validation_dialog_textView);
         errorText.setText(errorMessage);
 
-        Button button = (Button) mErrorDialog.findViewById(R.id.validation_error_dialog_accept_button);
+        Button button = (Button) errorDialog.findViewById(R.id.validation_error_dialog_accept_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mErrorDialog.cancel();
+                errorDialog.cancel();
             }
         });
-    }
+
+        return errorDialog;
+    };
 
     @NonNull
-    private String generateMessage(List<ValidationError> validationErrors) {
+    private static String generateMessage(List<ValidationError> validationErrors) {
         String errorMessage = "";
 
         for (ValidationError validationError : validationErrors) {

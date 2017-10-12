@@ -40,7 +40,8 @@ public class AddressCreatePresenter extends BasePresenter<AddressCreateView> {
                 if (address != null)
                     mAddressCreateView.addressCreationSuccessful(address);
                 else if (validationException != null)
-                        //mAddressCreateView.
+                    mAddressCreateView.showValidationError(validationException);
+                else
                     mAddressCreateView.showError(null);
             }
         }.execute(address);

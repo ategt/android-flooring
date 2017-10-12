@@ -44,23 +44,23 @@ public class AddressEditPresenter extends BasePresenter<AddressEditView> {
 
         new AsyncTask<Address, Void, Address>() {
 
-            ValidationErrorContainer validationErrorContainer;
+            ValidationException validationException;
 
             @Override
             protected Address doInBackground(Address... params) {
                 try {
                     addressClient.update(params[0]);
                     return params[0];
-                } catch (ValidationException ex) {
-                    validationErrorContainer = ex.getValidationErrorContainer();
-                    return null;
+                } catch (ValidationException validationException) {
+                    this.validationException = validationException;
                 }
+                return null;
             }
 
             @Override
             protected void onPostExecute(Address address) {
-                if (validationErrorContainer != null) {
-                    getView().displayErrors(validationErrorContainer);
+                if (validationException != null) {
+                    getView().displayErrors(validationException);
                 } else
                     getView().launchShowAddress(address.getId());
             }
