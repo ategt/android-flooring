@@ -6,4 +6,5 @@
     <dimen name="submit_margin">16dp</dimen>
     <dimen name="edit_margin">20dp</dimen>
     <dimen name="address_show_margin">20dp</dimen>
+    <dimen name="seperator_width">10dp</dimen>
 </resources>

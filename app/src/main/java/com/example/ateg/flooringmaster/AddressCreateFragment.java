@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ateg.flooringmaster.errors.ValidationException;
+
 import org.w3c.dom.Text;
 
 /**
@@ -130,5 +132,10 @@ public class AddressCreateFragment extends BaseFragment<AddressCreatePresenter> 
                                     getString(R.string.submit_progress_title),
                                     getString(R.string.submit_progress_body),
                                     true);
+    }
+
+    @Override
+    public void showValidationError(ValidationException ex) {
+
     }
 }

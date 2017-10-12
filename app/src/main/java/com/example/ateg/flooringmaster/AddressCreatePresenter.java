@@ -2,6 +2,8 @@ package com.example.ateg.flooringmaster;
 
 import android.os.AsyncTask;
 
+import com.example.ateg.flooringmaster.errors.ValidationException;
+
 /**
  * Created by ATeg on 7/19/2017.
  */
@@ -16,22 +18,29 @@ public class AddressCreatePresenter extends BasePresenter<AddressCreateView> {
         addressClient = AddressDaoSingleton.getAddressDao(null);
     }
 
-    public void createAddress(final Address address) {
+    public void createAddress(Address address) {
         mAddressCreateView.showSubmitting();
-
 
         new AsyncTask<Address, Void, Address>() {
 
+            ValidationException validationException = null;
+
             @Override
             protected Address doInBackground(Address... params) {
-                return addressClient.create(address);
+                try {
+                    return addressClient.create(params[0]);
+                } catch (ValidationException validationException) {
+                    this.validationException = validationException;
+                }
+                return null;
             }
 
             @Override
             protected void onPostExecute(Address address) {
                 if (address != null)
                     mAddressCreateView.addressCreationSuccessful(address);
-                else
+                else if (validationException != null)
+                        //mAddressCreateView.
                     mAddressCreateView.showError(null);
             }
         }.execute(address);

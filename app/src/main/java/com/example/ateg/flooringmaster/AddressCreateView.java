@@ -1,5 +1,7 @@
 package com.example.ateg.flooringmaster;
 
+import com.example.ateg.flooringmaster.errors.ValidationException;
+
 import java.util.List;
 
 /**
@@ -9,4 +11,5 @@ import java.util.List;
 public interface AddressCreateView extends LEView {
     void addressCreationSuccessful(Address address);
     void showSubmitting();
+    void showValidationError(ValidationException ex);
 }

@@ -3,6 +3,7 @@ package com.example.ateg.flooringmaster;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -98,34 +99,7 @@ public class AddressEditFragment extends BaseFragment<AddressEditPresenter> impl
             mSubmittingDialog.dismiss();
 
         Toast.makeText(getActivity(), R.string.error_dialog_text, Toast.LENGTH_LONG).show();
-
-        List<ValidationError> validationErrors = validationErrorContainer.getErrors();
-
-        String errorMessage = "";
-
-        for (ValidationError validationError : validationErrors) {
-            errorMessage += validationError.getFieldName().toUpperCase() + " : "
-                    + validationError.getMessage()
-                    + System.lineSeparator();
-        }
-
-        mErrorDialog = new Dialog(getActivity(), R.style.ValidationErrorDialog);
-        mErrorDialog.setContentView(R.layout.validation_errors_dialog);
-        mErrorDialog.setTitle(R.string.validation_errors);
-
-
-        TextView errorText = (TextView) mErrorDialog.findViewById(R.id.validation_dialog_textView);
-        errorText.setText(errorMessage);
-
-        Button button = (Button) mErrorDialog.findViewById(R.id.validation_error_dialog_accept_button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mErrorDialog.cancel();
-            }
-        });
-
-        mErrorDialog.show();
+show();
     }
 
     @Override
@@ -165,6 +139,14 @@ public class AddressEditFragment extends BaseFragment<AddressEditPresenter> impl
             @Override
             public void onClick(View v) {
                 mPresenter.submitAddress(buildAddressFromForm());
+            }
+        });
+
+        Button returnButton = (Button) view.findViewById(R.id.address_edit_return_address_button);
+        returnButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavUtils.navigateUpFromSameTask(getActivity());
             }
         });
     }
