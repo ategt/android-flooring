@@ -78,6 +78,8 @@ public class AddressEditFragment extends BaseFragment<AddressEditPresenter> impl
 
     @Override
     public void launchShowAddress(Integer addressId) {
+        getActivity().finish();
+
         Intent intent = new Intent(getActivity(), AddressShowActivity.class);
         intent.putExtra(AddressShowFragment.ADDRESS_ID_TO_SHOW, addressId);
         startActivity(intent);
