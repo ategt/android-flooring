@@ -13,6 +13,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ateg.flooringmaster.errors.ErrorDialog;
+import com.example.ateg.flooringmaster.errors.ValidationException;
+
 import java.util.List;
 
 /**
@@ -37,22 +40,22 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
             ListAdapter listAdapter = listView.getAdapter();
 
             if (listAdapter != null) {
-                int position = AddressDataListSingleton.indexOf(AddressDaoSingleton.getAddressDao(getActivity()).get(id));
-                if (position > 0) {
-                    listView.setSelection(position);
-                    listView.smoothScrollToPosition(position);
-                }
+               mPresenter.scrollToId(id);
             }
         }
     }
 
     @Override
     public void showError(Throwable ex) {
-        Log.e(TAG, "Thing wrong.", ex);
+        Log.e(TAG, "Something is wrong.", ex);
+
         if (mLoadingDialog != null)
             mLoadingDialog.dismiss();
-        Toast.makeText(getActivity(), "An Error Occurred.", Toast.LENGTH_SHORT).show();
-        Log.e(TAG, "Error ocurred.", ex);
+
+        if (ex.getClass().isInstance(ValidationException.class)) {
+            ErrorDialog.BuildErrorDialog(getActivity(), (ValidationException) ex).show();
+        } else
+            Toast.makeText(getActivity(), "An Error Occurred.", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -81,12 +84,24 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
     }
 
     @Override
+    public void scrollToAddress(Address address) {
+        int position = AddressDataListSingleton.indexOf(address);
+        if (position > 0) {
+            ListView listView = (ListView) getCreatedView().findViewById(R.id.address_index_listView);
+            listView.setSelection(position);
+            listView.smoothScrollToPosition(position);
+        }
+    }
+
+    @Override
     protected int layout() {
         return R.layout.list_addresses;
     }
 
     @Override
     protected void setUi(View v) {
+        ListView listView = (ListView) v.findViewById(R.id.address_index_listView);
+        listView.setEmptyView(v.findViewById(R.id.address_list_empty));
     }
 
     @Override
@@ -132,6 +147,15 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AddressCreateActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        View searchAddressButton = createdView.findViewById(R.id.addresss_index_search_action_button);
+        searchAddressButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AddressSearchActivity.class);
                 startActivity(intent);
             }
         });

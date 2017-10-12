@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ateg.flooringmaster.R;
 
@@ -18,6 +19,7 @@ import java.util.List;
 public class ErrorDialog {
 
     public static Dialog BuildErrorDialog(Context context, ValidationException validationException){
+        Toast.makeText(context, R.string.error_dialog_text, Toast.LENGTH_LONG).show();
         List<ValidationError> validationErrors = validationException.getValidationErrorContainer().getErrors();
 
         String errorMessage = generateMessage(validationErrors);

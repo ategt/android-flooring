@@ -2,6 +2,8 @@ package com.example.ateg.flooringmaster;
 
 import android.os.AsyncTask;
 
+import com.example.ateg.flooringmaster.errors.ValidationException;
+
 import java.util.List;
 
 /**
@@ -48,7 +50,7 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
         if (loadingNextPage) return;
         loadingNextPage = true;
 
-        new AsyncTask<ResultProperties, Void, List<Address>>() {
+        AsyncTask<ResultProperties, Void, List<Address>> asyncTask = new AsyncTask<ResultProperties, Void, List<Address>>() {
 
             @Override
             protected List<Address> doInBackground(ResultProperties... params) {
@@ -66,7 +68,9 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
                     getView().showError(new IllegalArgumentException("Invalid Address"));
                 }
             }
-        }.execute(resultProperties);
+        };
+        registerNetworkCall(asyncTask);
+        asyncTask.execute(resultProperties);
     }
 
     public boolean considerLoadingNextPage(int positionInList, int listSize) {
@@ -80,5 +84,37 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
         } else {
             return false;
         }
+    }
+
+    public void scrollToId(Integer id) {
+        if (id == null) {
+            return;
+        }
+
+        registerNetworkCall(new AsyncTask<Integer, Void, Address>() {
+
+            ValidationException validationException;
+
+            @Override
+            protected Address doInBackground(Integer... params) {
+                try {
+                    return addressDao.get(params[0]);
+                } catch (ValidationException validationException) {
+                    this.validationException = validationException;
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(Address address) {
+                if (address != null) {
+                    getView().scrollToAddress(address);
+                } else if(validationException != null){
+                    getView().showError(validationException);
+                } else {
+                    getView().showError(new IllegalArgumentException("Invalid Address"));
+                }
+            }
+        }).execute(resultProperties);
     }
 }

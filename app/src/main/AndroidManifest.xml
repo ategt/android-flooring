@@ -34,6 +34,10 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".AddressIndexActivity" />
         </activity>
+        <activity android:name=".AddressSearchActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".AddressIndexActivity" />
+        </activity>
     </application>
 
 </manifest>
