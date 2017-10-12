@@ -12,6 +12,12 @@
         android:padding="10dp"
         android:entries="@array/search_by_array"/>
 
+    <TextView
+        android:id="@+id/search_option_spinner_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Eaasds"/>
+
     <Spinner
         android:id="@+id/search_option_spinner_2"
         android:layout_width="match_parent"

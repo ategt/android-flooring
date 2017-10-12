@@ -2,10 +2,7 @@ package com.example.ateg.flooringmaster;
 
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Spinner;
-import android.widget.Toast;
+import android.widget.*;
 
 import com.example.ateg.flooringmaster.errors.ErrorDialog;
 import com.example.ateg.flooringmaster.errors.ValidationException;
@@ -46,6 +43,9 @@ public class AddressSearchFragment extends BaseFragment<AddressSearchPresenter> 
     protected void setUi(View v) {
         Spinner spinner = (Spinner) v.findViewById(R.id.search_option_spinner_2);
 
+        //spinner.setAdapter(new SpinnerAdapter(getActivity()));
+
+
         List<String> list = new ArrayList<>();
 
         for (AddressSearchByOptionEnum addressSearchByOptionEnum : AddressSearchByOptionEnum.values()) {
@@ -53,7 +53,7 @@ public class AddressSearchFragment extends BaseFragment<AddressSearchPresenter> 
         }
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
-                R.layout.simple_spinner_item, list);
+                R.id.search_option_spinner_textView, list);
 
         dataAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
