@@ -94,6 +94,11 @@ public class AddressEditFragment extends BaseFragment<AddressEditPresenter> impl
 
     @Override
     public void displayErrors(ValidationErrorContainer validationErrorContainer) {
+        if (mSubmittingDialog != null)
+            mSubmittingDialog.dismiss();
+
+        Toast.makeText(getActivity(), R.string.error_dialog_text, Toast.LENGTH_LONG).show();
+
         List<ValidationError> validationErrors = validationErrorContainer.getErrors();
 
         String errorMessage = "";
@@ -107,8 +112,10 @@ public class AddressEditFragment extends BaseFragment<AddressEditPresenter> impl
         mErrorDialog = new Dialog(getActivity());
         mErrorDialog.setContentView(R.layout.validation_errors_dialog);
         mErrorDialog.setTitle(R.string.validation_errors);
+        
 
         TextView errorText = (TextView) mErrorDialog.findViewById(R.id.validation_dialog_textView);
+        errorText.setText(errorMessage);
 
         Button button = (Button) mErrorDialog.findViewById(R.id.validation_error_dialog_accept_button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -118,6 +125,7 @@ public class AddressEditFragment extends BaseFragment<AddressEditPresenter> impl
             }
         });
 
+        mErrorDialog.show();
     }
 
     @Override

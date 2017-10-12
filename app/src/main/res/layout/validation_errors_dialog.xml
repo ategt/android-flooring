@@ -2,16 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:>
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/validation_dialog_textView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:padding="10dp"
             android:text="@string/error_dialog_text"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -19,10 +20,11 @@
 
     <Button
         android:id="@+id/validation_error_dialog_accept_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:padding="10dp"
-        android:text="@string/error_accept" />
+        android:text="@string/error_accept"
+        android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>
