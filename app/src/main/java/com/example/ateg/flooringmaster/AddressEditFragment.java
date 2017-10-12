@@ -1,5 +1,6 @@
 package com.example.ateg.flooringmaster;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.util.Log;
@@ -8,7 +9,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ateg.flooringmaster.errors.ValidationError;
+import com.example.ateg.flooringmaster.errors.ValidationErrorContainer;
+
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by ATeg on 7/21/2017.
@@ -83,6 +88,12 @@ public class AddressEditFragment extends BaseFragment<AddressEditPresenter> impl
         Intent intent = new Intent(getActivity(), AddressShowActivity.class);
         intent.putExtra(AddressShowFragment.ADDRESS_ID_TO_SHOW, addressId);
         startActivity(intent);
+    }
+
+    @Override
+    public void displayErrors(ValidationErrorContainer validationErrorContainer) {
+        List<ValidationError> validationErrors = validationErrorContainer.getErrors();
+        new Dialog().
     }
 
     @Override

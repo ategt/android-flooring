@@ -9,6 +9,8 @@ import android.os.Environment;
 import android.util.Log;
 import android.util.Pair;
 
+import com.example.ateg.flooringmaster.errors.ValidationErrorContainer;
+import com.example.ateg.flooringmaster.errors.ValidationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -171,10 +173,13 @@ public class HttpUtilities {
 
             InputStream errorStream = httpURLConnection.getErrorStream();
             if (errorStream != null) {
+                Gson gson = new GsonBuilder().create();
                 byte[] errors = getBytes(errorStream);
-                String error = new String(errors);
-                Log.e(TAG, "Connection error: " + error);
-                throw new RuntimeException(error);
+                String errorJson = new String(errors);
+                ValidationErrorContainer validationErrorContainer
+                        = gson.fromJson(errorJson, ValidationErrorContainer.class);
+                Log.e(TAG, "Connection error: " + errorJson);
+                throw new ValidationException("Something Must Be Wrong", validationErrorContainer);
             } else {
 
                 byte[] bytes = getBytes(httpURLConnection);

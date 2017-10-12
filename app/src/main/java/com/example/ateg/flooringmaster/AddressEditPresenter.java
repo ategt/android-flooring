@@ -2,6 +2,12 @@ package com.example.ateg.flooringmaster;
 
 import android.os.AsyncTask;
 
+import com.example.ateg.flooringmaster.errors.ValidationError;
+import com.example.ateg.flooringmaster.errors.ValidationErrorContainer;
+import com.example.ateg.flooringmaster.errors.ValidationException;
+
+import java.util.List;
+
 /**
  * Created by ATeg on 7/21/2017.
  */
@@ -36,17 +42,27 @@ public class AddressEditPresenter extends BasePresenter<AddressEditView> {
     public void submitAddress(final Address address) {
         getView().showSubmitting();
 
-        new AsyncTask<Address, Void, Void>() {
+        new AsyncTask<Address, Void, Address>() {
+
+            ValidationErrorContainer validationErrorContainer;
 
             @Override
-            protected Void doInBackground(Address... params) {
-                addressClient.update(params[0]);
-                return null;
+            protected Address doInBackground(Address... params) {
+                try {
+                    addressClient.update(params[0]);
+                    return params[0];
+                } catch (ValidationException ex) {
+                    validationErrorContainer = ex.getValidationErrorContainer();
+                    return null;
+                }
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
-                getView().launchShowAddress(address.getId());
+            protected void onPostExecute(Address address) {
+                if (validationErrorContainer != null) {
+                    getView().displayErrors(validationErrorContainer);
+                } else
+                    getView().launchShowAddress(address.getId());
             }
         }.execute(address);
     }
