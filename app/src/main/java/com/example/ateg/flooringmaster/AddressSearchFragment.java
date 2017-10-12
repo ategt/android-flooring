@@ -53,7 +53,7 @@ public class AddressSearchFragment extends BaseFragment<AddressSearchPresenter> 
         }
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
-                R.id.search_option_spinner_textView, list);
+                R.layout.simple_spinner_item, list);
 
         dataAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
