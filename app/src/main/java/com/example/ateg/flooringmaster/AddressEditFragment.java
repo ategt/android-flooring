@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +26,7 @@ public class AddressEditFragment extends BaseFragment<AddressEditPresenter> impl
 
     private Integer id;
     private ProgressDialog mSubmittingDialog;
+    private Dialog mErrorDialog;
 
     public void setAddressId(Integer id) {
         this.id = id;
@@ -93,7 +95,29 @@ public class AddressEditFragment extends BaseFragment<AddressEditPresenter> impl
     @Override
     public void displayErrors(ValidationErrorContainer validationErrorContainer) {
         List<ValidationError> validationErrors = validationErrorContainer.getErrors();
-        new Dialog().
+
+        String errorMessage = "";
+
+        for (ValidationError validationError : validationErrors) {
+            errorMessage += validationError.getFieldName().toUpperCase() + " : "
+                    + validationError.getMessage()
+                    + System.lineSeparator();
+        }
+
+        mErrorDialog = new Dialog(getActivity());
+        mErrorDialog.setContentView(R.layout.validation_errors_dialog);
+        mErrorDialog.setTitle(R.string.validation_errors);
+
+        TextView errorText = (TextView) mErrorDialog.findViewById(R.id.validation_dialog_textView);
+
+        Button button = (Button) mErrorDialog.findViewById(R.id.validation_error_dialog_accept_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mErrorDialog.cancel();
+            }
+        });
+
     }
 
     @Override

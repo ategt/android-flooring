@@ -31,4 +31,7 @@
     <string name="address_show_company_text">Company Name</string>
     <string name="address_show_streetAddress_text">Street Address</string>
     <string name="address_show_cityStateAndZip_text">City State And Zipcode</string>
+    <string name="error_dialog_text">Something Went Wrong During Operation</string>
+    <string name="error_accept">Ok</string>
+    <string name="validation_errors">Validation Error</string>
 </resources>
