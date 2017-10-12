@@ -109,10 +109,10 @@ public class AddressEditFragment extends BaseFragment<AddressEditPresenter> impl
                     + System.lineSeparator();
         }
 
-        mErrorDialog = new Dialog(getActivity());
+        mErrorDialog = new Dialog(getActivity(), R.style.ValidationErrorDialog);
         mErrorDialog.setContentView(R.layout.validation_errors_dialog);
         mErrorDialog.setTitle(R.string.validation_errors);
-        
+
 
         TextView errorText = (TextView) mErrorDialog.findViewById(R.id.validation_dialog_textView);
         errorText.setText(errorMessage);

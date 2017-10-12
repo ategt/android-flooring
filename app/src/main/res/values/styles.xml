@@ -5,4 +5,17 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="ValidationErrorDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowTitleStyle">@style/ValidationErrorDialogTitle</item>
+    </style>
+
+    <style name="ValidationErrorDialogTitle" parent="@android:style/TextAppearance.DialogWindowTitle">
+        <item name="android:gravity">center_horizontal</item>
+    </style>
+
+    <style name="DialogWindowTitle">
+        <item name="android:maxLines">1</item>
+        <item name="android:scrollHorizontally">true</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.DialogWindowTitle</item>
+    </style>
 </resources>
