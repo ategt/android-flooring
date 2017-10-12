@@ -16,12 +16,17 @@
         android:id="@+id/search_option_spinner_textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Eaasds"/>
+        android:text="@string/search_by"
+        android:padding="5dp"
+        android:textAlignment="center"/>
 
     <Spinner
         android:id="@+id/search_option_spinner_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:textAlignment="center"
+        android:gravity="center"
         />
 
     <EditText

@@ -35,6 +35,8 @@
     <string name="error_accept">Ok</string>
     <string name="validation_errors">Validation Error</string>
 
+    <string name="search_by">Search By:</string>
+
     <string-array name="search_by_array">
         <item>Everything</item>
         <item>Name</item>
