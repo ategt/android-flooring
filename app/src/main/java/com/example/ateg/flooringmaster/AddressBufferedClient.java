@@ -159,7 +159,7 @@ public class AddressBufferedClient implements AddressDao, AddressClient {
     }
 
     @Override
-    public Set<String> getCompletionGuesses(String input, int limit) {
+    public List<String> getCompletionGuesses(String input, int limit) {
         return addressDao.getCompletionGuesses(input, limit);
     }
 
@@ -174,7 +174,7 @@ public class AddressBufferedClient implements AddressDao, AddressClient {
     }
 
     @Override
-    public List<Address> list(ResultProperties resultProperties) {
+    public List<Address> list(ResultSegment<AddressSortByEnum> resultProperties) {
         List<Address> addressList = addressDao.list(resultProperties);
         for (Address address : addressList) {
             lruCache.put(address.getId(), address);
@@ -183,7 +183,7 @@ public class AddressBufferedClient implements AddressDao, AddressClient {
     }
 
     @Override
-    public List<Address> search(AddressSearchRequest addressSearchRequest, ResultProperties resultProperties) {
+    public List<Address> search(AddressSearchRequest addressSearchRequest, ResultSegment<AddressSortByEnum> resultProperties) {
         return addressDao.search(addressSearchRequest, resultProperties);
     }
 

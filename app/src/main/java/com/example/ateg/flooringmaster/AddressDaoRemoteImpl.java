@@ -142,7 +142,7 @@ public class AddressDaoRemoteImpl implements AddressDao {
     }
 
     @Override
-    public Set<String> getCompletionGuesses(String input, int limit) {
+    public List<String> getCompletionGuesses(String input, int limit) {
         return null;
     }
 
@@ -168,7 +168,7 @@ public class AddressDaoRemoteImpl implements AddressDao {
     }
 
     @Override
-    public List<Address> list(ResultProperties resultProperties) {
+    public List<Address> list(ResultSegment<AddressSortByEnum> resultProperties) {
 
         String addressString = null;
         try {
@@ -193,7 +193,7 @@ public class AddressDaoRemoteImpl implements AddressDao {
     }
 
     @Override
-    public List<Address> search(AddressSearchRequest addressSearchRequest, ResultProperties resultProperties) {
+    public List<Address> search(AddressSearchRequest addressSearchRequest, ResultSegment<AddressSortByEnum> resultProperties) {
         throw new UnsupportedOperationException();
     }
 
