@@ -5,8 +5,14 @@
  */
 package com.example.ateg.flooringmaster;
 
+import android.annotation.TargetApi;
+import android.os.Build;
+
+import com.google.common.base.Strings;
+
 import org.junit.*;
 
+import java.util.Comparator;
 import java.util.Random;
 import java.util.UUID;
 
@@ -173,20 +179,6 @@ public class AddressTest {
         assertTrue(instance.hashCode() > -1);
     }
 
-
-    public static Address addressBuilder(String city, String company, String firstName, String lastName, String state, String streetName, String streetNumber, String zip) {
-        Address address = new Address();
-        address.setCity(city);
-        address.setCompany(company);
-        address.setFirstName(firstName);
-        address.setLastName(lastName);
-        address.setState(state);
-        address.setStreetName(streetName);
-        address.setStreetNumber(streetNumber);
-        address.setZip(zip);
-        return address;
-    }
-
     public static Address addressGenerator() {
         String city = UUID.randomUUID().toString();
         String firstName = UUID.randomUUID().toString();
@@ -198,6 +190,39 @@ public class AddressTest {
         String streetName = UUID.randomUUID().toString();
 
         Address address = addressBuilder(city, company, firstName, lastName, state, streetName, streetNumber, zip);
+        return address;
+    }
+
+
+    public static Address addressCloner(Address address) {
+        Address address1 = addressBuilder(
+                address.getCity(),
+                address.getCompany(),
+                address.getFirstName(),
+                address.getLastName(),
+                address.getState(),
+                address.getStreetName(),
+                address.getStreetNumber(),
+                address.getZip()
+        );
+
+        if (address.getId() != null)
+            address1.setId(address.getId());
+
+        assertEquals(address, address1);
+        return address1;
+    }
+
+    public static Address addressBuilder(String city, String company, String firstName, String lastName, String state, String streetName, String streetNumber, String zip) {
+        Address address = new Address();
+        address.setCity(city);
+        address.setCompany(company);
+        address.setFirstName(firstName);
+        address.setLastName(lastName);
+        address.setState(state);
+        address.setStreetName(streetName);
+        address.setStreetNumber(streetNumber);
+        address.setZip(zip);
         return address;
     }
 }

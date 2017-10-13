@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import static com.example.ateg.flooringmaster.AddressTestUtilities.caseRandomizer;
+import static com.example.ateg.flooringmaster.AddressTestUtilities.sortByLastNameComparator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -81,7 +83,7 @@ public class AddressBufferedClientTest {
     @Test
     public void createTest() {
 
-        Address address = addressGenerator();
+        Address address = AddressTest.addressGenerator();
         Assert.assertNotNull(address);
         Assert.assertNull(address.getId());
 
@@ -119,11 +121,11 @@ public class AddressBufferedClientTest {
         String streetNumber = UUID.randomUUID().toString();
         String streetName = UUID.randomUUID().toString();
 
-        Address address = addressBuilder(city, company, firstName, lastName, state, streetName, streetNumber, zip);
+        Address address = AddressTest.addressBuilder(city, company, firstName, lastName, state, streetName, streetNumber, zip);
 
         int beforeCreation = addressDao.size(true);
 
-        Address result = addressCloner(addressDao.create(address));
+        Address result = AddressTest.addressCloner(addressDao.create(address));
         int afterCreation = addressDao.size(true);
 
         assertEquals(beforeCreation + 1, afterCreation);
@@ -173,38 +175,6 @@ public class AddressBufferedClientTest {
         assertEquals(blocked, postBlocked);
     }
 
-    private Address addressCloner(Address address) {
-        Address address1 = addressBuilder(
-                address.getCity(),
-                address.getCompany(),
-                address.getFirstName(),
-                address.getLastName(),
-                address.getState(),
-                address.getStreetName(),
-                address.getStreetNumber(),
-                address.getZip()
-        );
-
-        if (address.getId() != null)
-            address1.setId(address.getId());
-
-        assertEquals(address, address1);
-        return address1;
-    }
-
-    private Address addressBuilder(String city, String company, String firstName, String lastName, String state, String streetName, String streetNumber, String zip) {
-        Address address = new Address();
-        address.setCity(city);
-        address.setCompany(company);
-        address.setFirstName(firstName);
-        address.setLastName(lastName);
-        address.setState(state);
-        address.setStreetName(streetName);
-        address.setStreetNumber(streetNumber);
-        address.setZip(zip);
-        return address;
-    }
-
     /**
      * Test of list method, of class AddressDaoPostgresImpl.
      */
@@ -212,7 +182,7 @@ public class AddressBufferedClientTest {
     public void testList() {
         System.out.println("list");
 
-        Address address = addressGenerator();
+        Address address = AddressTest.addressGenerator();
         address = addressDao.create(address);
 
         List<Address> list = addressDao.list();
@@ -230,7 +200,7 @@ public class AddressBufferedClientTest {
         System.out.println("searchByLastName");
         String lastName = UUID.randomUUID().toString();
 
-        Address address = addressGenerator();
+        Address address = AddressTest.addressGenerator();
         address.setLastName(lastName);
         address = addressDao.create(address);
 
@@ -269,7 +239,7 @@ public class AddressBufferedClientTest {
 
         String firstName = UUID.randomUUID().toString();
 
-        Address address = addressGenerator();
+        Address address = AddressTest.addressGenerator();
         address.setFirstName(firstName);
         address = addressDao.create(address);
 
@@ -306,7 +276,7 @@ public class AddressBufferedClientTest {
 
         String company = UUID.randomUUID().toString();
 
-        Address address = addressGenerator();
+        Address address = AddressTest.addressGenerator();
         address.setCompany(company);
         address = addressDao.create(address);
 
@@ -342,7 +312,7 @@ public class AddressBufferedClientTest {
         System.out.println("searchByCity");
         String city = UUID.randomUUID().toString();
 
-        Address address = addressGenerator();
+        Address address = AddressTest.addressGenerator();
         address.setCity(city);
         address = addressDao.create(address);
 
@@ -379,7 +349,7 @@ public class AddressBufferedClientTest {
 
         String state = UUID.randomUUID().toString();
 
-        Address address = addressGenerator();
+        Address address = AddressTest.addressGenerator();
         address.setState(state);
         address = addressDao.create(address);
 
@@ -415,7 +385,7 @@ public class AddressBufferedClientTest {
 
         String zip = UUID.randomUUID().toString();
 
-        Address address = addressGenerator();
+        Address address = AddressTest.addressGenerator();
         address.setZip(zip);
         address = addressDao.create(address);
 
@@ -456,7 +426,7 @@ public class AddressBufferedClientTest {
                 randomStrings[i] = UUID.randomUUID().toString();
             }
 
-            Address address = addressBuilder(randomStrings[0],
+            Address address = AddressTest.addressBuilder(randomStrings[0],
                     randomStrings[1],
                     randomStrings[2],
                     randomStrings[3],
@@ -486,7 +456,7 @@ public class AddressBufferedClientTest {
                 randomStrings[i] = caseRandomizer(random, randomStrings[i]);
             }
 
-            Address address = addressBuilder(randomStrings[0],
+            Address address = AddressTest.addressBuilder(randomStrings[0],
                     randomStrings[1],
                     randomStrings[2],
                     randomStrings[3],
@@ -544,40 +514,6 @@ public class AddressBufferedClientTest {
         }
     }
 
-    private Comparator<Address> sortByLastNameComparator() {
-        return new Comparator<Address>() {
-            @SuppressWarnings("Since15")
-            @TargetApi(Build.VERSION_CODES.N)
-            @Override
-            public int compare(Address address1, Address address2) {
-                int result = Strings.nullToEmpty(address1.getLastName()).toLowerCase().compareTo(Strings.nullToEmpty(address2.getLastName()).toLowerCase());
-
-                if (result == 0) {
-                    result = Strings.nullToEmpty(address1.getFirstName()).toLowerCase().compareTo(Strings.nullToEmpty(address2.getFirstName()).toLowerCase());
-                }
-
-                if (result == 0) {
-                    if (Strings.isNullOrEmpty(address1.getCompany())
-                            && !Strings.isNullOrEmpty(address2.getCompany())) {
-                        return 1;
-                    } else if (!Strings.isNullOrEmpty(address1.getCompany())
-                            && Strings.isNullOrEmpty(address2.getCompany())) {
-                        return -1;
-                    }
-                }
-
-                if (result == 0) {
-                    result = Strings.nullToEmpty(address1.getCompany()).toLowerCase().compareTo(Strings.nullToEmpty(address2.getCompany()).toLowerCase());
-                }
-
-                if (result == 0) {
-                    result = Integer.compare(address1.getId(), address2.getId());
-                }
-
-                return result;
-            }
-        };
-    }
 
     @Test
     public void getSortedByIdUsingSortByParam() {
@@ -589,56 +525,5 @@ public class AddressBufferedClientTest {
             assertEquals(addresses.get(i), addressesFromDb.get(i));
 
         }
-    }
-
-    private String caseRandomizer(final Random random, String input) {
-        switch (random.nextInt(6)) {
-
-            case 0:
-                input = input;
-                break;
-            case 1:
-                input = input.toLowerCase();
-                break;
-            case 2:
-                input = input.toUpperCase();
-                break;
-            default:
-                char[] charArray = input.toCharArray();
-                for (int j = 0; j < charArray.length; j++) {
-                    switch (random.nextInt(4)) {
-                        case 1:
-                            charArray[j] = Character.toLowerCase(charArray[j]);
-                            break;
-                        case 2:
-                            charArray[j] = Character.toUpperCase(charArray[j]);
-                            break;
-                        case 3:
-                            charArray[j] = Character.toTitleCase(charArray[j]);
-                            break;
-                        default:
-                            charArray[j] = charArray[j];
-                            break;
-                    }
-
-                    input = new String(charArray);
-                }
-        }
-
-        return input;
-    }
-
-    private Address addressGenerator() {
-        String city = UUID.randomUUID().toString();
-        String firstName = UUID.randomUUID().toString();
-        String lastName = UUID.randomUUID().toString();
-        String state = UUID.randomUUID().toString();
-        String zip = UUID.randomUUID().toString();
-        String company = UUID.randomUUID().toString();
-        String streetNumber = UUID.randomUUID().toString();
-        String streetName = UUID.randomUUID().toString();
-
-        Address address = addressBuilder(city, company, firstName, lastName, state, streetName, streetNumber, zip);
-        return address;
     }
 }
