@@ -14,7 +14,7 @@ import java.util.Objects;
 public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
 
     private AddressClient addressDao;
-    private ResultProperties resultProperties;
+    //private ResultProperties resultProperties;
     private boolean loadingNextPage;
 
     //private AddressSearchRequest addressSearchRequest;
@@ -39,17 +39,18 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
 
     public void loadNextPage() {
         if (!loadingNextPage) {
-            int pageNum = resultProperties.getPageNumber() + 1;
-            ResultProperties incrementedResultProperties = new ResultProperties(resultProperties.getSortByEnum(),
+            int pageNum = AddressDataListSingleton.getResultProperties().getPageNumber() + 1;
+            ResultProperties incrementedResultProperties = new ResultProperties( AddressDataListSingleton.getResultProperties().getSortByEnum(),
                     pageNum,
-                    resultProperties.getResultsPerPage());
+                    AddressDataListSingleton.getResultProperties().getResultsPerPage());
 
             loadAddresses(incrementedResultProperties);
         }
     }
 
     public void loadAddresses(ResultProperties resultProperties) {
-        this.resultProperties = resultProperties;
+        AddressDataListSingleton.setResultProperties(resultProperties);
+
         if (loadingNextPage) return;
         loadingNextPage = true;
 
@@ -144,6 +145,8 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
     public void setAddressSearchRequest(AddressSearchRequest addressSearchRequest) {
         if (!Objects.equals(getAddressSearchRequest(), addressSearchRequest)){
             AddressDataListSingleton.clear();
+            loadingNextPage = false;
+            getView().resetList();
         }
 
         AddressDataListSingleton.setAddressSearchRequest(addressSearchRequest);
@@ -152,6 +155,6 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
 
     public void clearSearch(){
         setAddressSearchRequest(null);
-        getView().resetList();
+
     }
 }

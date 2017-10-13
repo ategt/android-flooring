@@ -103,8 +103,12 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
         ListAdapter listAdapter = listView.getAdapter();
 
         AddressAdapter addressAdapter = (AddressAdapter) listAdapter;
-        addressAdapter.notifyDataSetChanged();
+
+        if (addressAdapter != null)
+            addressAdapter.notifyDataSetChanged();
+
         evaluateVisibilityOfResetButton();
+        populate();
     }
 
     @Override
@@ -152,7 +156,7 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
 
     @Override
     protected void populate() {
-        mPresenter.loadAddresses(new ResultProperties(AddressSortByEnum.SORT_BY_COMPANY, 0, 25));
+        mPresenter.loadAddresses(AddressDataListSingleton.getResultProperties());
     }
 
     @Override
