@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import com.example.ateg.flooringmaster.errors.ValidationException;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by ATeg on 7/17/2017.
@@ -140,10 +141,14 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
     }
 
     public void setAddressSearchRequest(AddressSearchRequest addressSearchRequest) {
+        if (!Objects.equals(this.addressSearchRequest, addressSearchRequest)){
+            AddressDataListSingleton.clear();
+        }
+
         this.addressSearchRequest = addressSearchRequest;
     }
 
     public void clearSearch(){
-        this.addressSearchRequest = null;
+        setAddressSearchRequest(null);
     }
 }
