@@ -7,5 +7,5 @@ import java.util.List;
  */
 
 public interface AddressSearchView extends LEView {
-    public void searchResults(List<Address> addressList);
+    void launchSearch(AddressSearchRequest addressSearchRequest);
 }

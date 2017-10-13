@@ -1,10 +1,12 @@
 package com.example.ateg.flooringmaster;
 
+import java.io.Serializable;
+
 /**
  *
  * @author ATeg
  */
-public class AddressSearchRequest {
+public class AddressSearchRequest implements Serializable{
 
     private AddressSearchByOptionEnum searchBy;
     private String searchText;

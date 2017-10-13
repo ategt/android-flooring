@@ -25,6 +25,8 @@ import java.util.List;
 public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> implements AddressIndexView {
 
     public static final String ADDRESS_ID_TO_SHOW = "com.example.ateg.flooringmaster.ADDRESS_ID_TO_SHOW";
+    public static final String EXTRA_ADDRESS_SEARCH_OBJECT = "com.example.ateg.flooringmaster.AddressIndexFragment.EXTRA_ADDRESS_SEARCH_OBJECT";
+
     private static final String TAG = "AddressListMvpActivity";
     private ProgressDialog mLoadingDialog;
 
@@ -106,6 +108,13 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
 
     @Override
     protected void init() {
+
+        Intent intent = getActivity().getIntent();
+        if (intent.hasExtra(EXTRA_ADDRESS_SEARCH_OBJECT)){
+            mPresenter.setAddressSearchRequest(
+                    (AddressSearchRequest) intent.getSerializableExtra(EXTRA_ADDRESS_SEARCH_OBJECT));
+        }
+
         getActivity().setTitle(R.string.address_list);
 
         AddressIndexFragment.AddressAdapter addressAdapter

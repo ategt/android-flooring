@@ -106,7 +106,7 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
             return;
         }
 
-        registerNetworkCall(new AsyncTask<Integer, Void, Address>() {
+        AsyncTask<Integer, Void, Address> asyncTask = new AsyncTask<Integer, Void, Address>() {
 
             ValidationException validationException;
 
@@ -130,7 +130,9 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
                     getView().showError(new IllegalArgumentException("Invalid Address"));
                 }
             }
-        }).execute(resultProperties);
+        };
+        registerNetworkCall(asyncTask);
+        asyncTask.execute(id);
     }
 
     public AddressSearchRequest getAddressSearchRequest() {

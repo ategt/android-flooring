@@ -117,17 +117,11 @@ public class AddressSearchFragment extends BaseFragment<AddressSearchPresenter> 
         return new AddressSearchPresenter(this, AddressDaoSingleton.getAddressDao(getActivity()));
     }
 
-    private void buildSearch(String query, AddressSearchByOptionEnum addressSearchByOptionEnum) {
-        AddressSearchRequest addressSearchRequest = new AddressSearchRequest(query, addressSearchByOptionEnum);
-
-        addressSearchRequest
-    }
-
     @Override
-    public void searchResults(List<Address> addressList) {
+    public void launchSearch(AddressSearchRequest addressSearchRequest) {
         Intent intent = NavUtils.getParentActivityIntent(getActivity());
 
-        intent.
+        intent.putExtra(AddressIndexFragment.EXTRA_ADDRESS_SEARCH_OBJECT, addressSearchRequest);
 
         NavUtils.navigateUpTo(getActivity(), intent);
     }
