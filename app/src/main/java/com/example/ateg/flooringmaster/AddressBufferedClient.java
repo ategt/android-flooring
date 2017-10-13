@@ -169,11 +169,6 @@ public class AddressBufferedClient implements AddressDao, AddressClient {
     }
 
     @Override
-    public List<Address> list(Integer sortBy) {
-        return addressDao.list(sortBy);
-    }
-
-    @Override
     public List<Address> list(ResultSegment<AddressSortByEnum> resultProperties) {
         List<Address> addressList = addressDao.list(resultProperties);
         for (Address address : addressList) {

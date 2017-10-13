@@ -612,11 +612,6 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
     }
 
     @Override
-    public List<Address> list(Integer sortBy) {
-        return null;
-    }
-
-    @Override
     public List<Address> list(ResultSegment<AddressSortByEnum> resultProperties) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
 

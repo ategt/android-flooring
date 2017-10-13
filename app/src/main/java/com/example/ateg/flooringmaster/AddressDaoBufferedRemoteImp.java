@@ -85,18 +85,13 @@ public abstract class AddressDaoBufferedRemoteImp implements AddressDao, Address
     }
 
     @Override
-    public Set<String> getCompletionGuesses(String input, int limit) {
+    public List<String> getCompletionGuesses(String input, int limit) {
         return addressDao.getCompletionGuesses(input, limit);
     }
 
     @Override
     public List<Address> list() {
         return addressDao.list();
-    }
-
-    @Override
-    public List<Address> list(Integer sortBy) {
-        return addressDao.list(sortBy);
     }
 
     @Override

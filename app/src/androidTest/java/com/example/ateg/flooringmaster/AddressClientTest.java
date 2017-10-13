@@ -485,7 +485,7 @@ public class AddressClientTest {
     @Test
     public void getSortedByName() {
         List<Address> addresses = addressDao.list();
-        List<Address> addressesFromDb = addressDao.list(AddressDao.SORT_BY_LAST_NAME);
+        List<Address> addressesFromDb = addressDao.list(new AddressResultSegment(AddressSortByEnum.SORT_BY_LAST_NAME, 0, Integer.MAX_VALUE));
 
         Address[] addressArray = addresses.toArray(new Address[addresses.size()]);
         Arrays.sort(addressArray, sortByLastNameComparator());
@@ -547,7 +547,7 @@ public class AddressClientTest {
 
     @Test
     public void getSortedByIdUsingSortByParam() {
-        List<Address> addresses = addressDao.list(AddressDao.SORT_BY_ID);
+        List<Address> addresses = addressDao.list(new AddressResultSegment(AddressSortByEnum.SORT_BY_ID, 0, Integer.MAX_VALUE));
         List<Address> addressesFromDb = addressDao.getAddressesSortedByParameter("id");
 
         for (int i = 0; i < addresses.size(); i++) {

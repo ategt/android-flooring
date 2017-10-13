@@ -11,6 +11,8 @@ import org.junit.runner.RunWith;
 
 import java.util.UUID;
 
+import static com.example.ateg.flooringmaster.AddressTest.addressBuilder;
+import static com.example.ateg.flooringmaster.AddressTest.addressCloner;
 import static org.junit.Assert.*;
 
 /**

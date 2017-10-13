@@ -29,8 +29,7 @@ public interface AddressDao extends AddressClient {
     public List<String> getCompletionGuesses(String input, int limit);
     @Deprecated
     public List<Address> list();
-    @Deprecated
-    public List<Address> list(Integer sortBy);
+
     public List<Address> list(ResultSegment<AddressSortByEnum> resultProperties);
     public List<Address> searchByFirstName(String firstName);
     public List<Address> searchByLastName(String lastName);

@@ -153,13 +153,11 @@ public class AddressClientImpl implements AddressDao, AddressClient {
 
     @Override
     public List<Address> getAddressesSortedByParameter(String sortBy) {
-        Integer sortByInt = AddressSortByEnum.parse(sortBy).intValue();
-
-        return list(sortByInt);
+        return list(new AddressResultSegment(AddressSortByEnum.parse(sortBy), 0, Integer.MAX_VALUE));
     }
 
     @Override
-    public Set<String> getCompletionGuesses(String input, int limit) {
+    public List<String> getCompletionGuesses(String input, int limit) {
         return null;
     }
 
@@ -184,17 +182,17 @@ public class AddressClientImpl implements AddressDao, AddressClient {
         return Arrays.asList(addresses);
     }
 
-    private Uri.Builder appendResultProperties(Uri.Builder builder, ResultProperties resultProperties){
+    private Uri.Builder appendResultProperties(Uri.Builder builder, ResultSegment<AddressSortByEnum> resultProperties){
         return resultProperties == null ?
                 builder :
                 builder
                 .appendQueryParameter("page", resultProperties.getPageNumber() == null ? "0" : resultProperties.getPageNumber().toString())
                 .appendQueryParameter("results", resultProperties.getResultsPerPage() == null ? Integer.toString(Integer.MAX_VALUE) : resultProperties.getResultsPerPage().toString())
-                .appendQueryParameter("sort_by", resultProperties.getSortByEnum() == null ? "" : resultProperties.getSortByEnum().value());
+                .appendQueryParameter("sort_by", resultProperties.getSortByEnum() == null ? "" : resultProperties.getSortByEnum().toString());
     }
 
     @Override
-    public List<Address> list(ResultProperties resultProperties) {
+    public List<Address> list(ResultSegment<AddressSortByEnum> resultProperties) {
         String addressString = null;
         try {
             Uri uri = appendResultProperties(httpUtilities.getDataSourceRoot()
@@ -216,7 +214,7 @@ public class AddressClientImpl implements AddressDao, AddressClient {
     }
 
     @Override
-    public List<Address> search(AddressSearchRequest addressSearchRequest, ResultProperties resultProperties) {
+    public List<Address> search(AddressSearchRequest addressSearchRequest, ResultSegment<AddressSortByEnum> resultProperties) {
         Uri uri = appendResultProperties(httpUtilities.getDataSourceRoot()
                 .buildUpon()
                 .appendPath("address")
@@ -231,29 +229,6 @@ public class AddressClientImpl implements AddressDao, AddressClient {
 
         Address[] addresses = gson.fromJson(searchResult, Address[].class);
 
-        return Arrays.asList(addresses);
-    }
-
-    @Override
-    public List<Address> list(Integer sortBy) {
-
-        String addressString = null;
-        try {
-            Uri uri = httpUtilities.getDataSourceRoot()
-                    .buildUpon()
-                    .appendPath("address")
-                    .appendPath("")
-                    .appendQueryParameter("sort_by", AddressSortByEnum.parse(sortBy).value())
-                    .build();
-
-            addressString = httpUtilities.requestJSON(uri.toString());
-        } catch (IOException e) {
-            Log.e(TAG, "IO problem.", e);
-        }
-
-        Address[] addresses = gson.fromJson(addressString, Address[].class);
-
-        Log.d(TAG, "Addresses Recieved: " + Integer.toString(addresses.length));
         return Arrays.asList(addresses);
     }
 
