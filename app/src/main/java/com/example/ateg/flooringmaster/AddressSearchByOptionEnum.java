@@ -46,11 +46,12 @@ public enum AddressSearchByOptionEnum {
         }
 
         for (AddressSearchByOptionEnum option : values()) {
+            try {
             if (Integer.compare(option.ordinal(), Integer.parseInt(input)) == 0) {
                 return option;
             }
         }
 
-        return LAST_NAME;
+        return DEFAULT;
     }
 }
