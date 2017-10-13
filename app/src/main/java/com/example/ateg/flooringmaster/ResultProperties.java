@@ -4,7 +4,7 @@ package com.example.ateg.flooringmaster;
  *
  * @author ATeg
  */
-public class ResultProperties {
+public class ResultProperties implements ResultSegment<AddressSortByEnum>{
 
     private final Integer pageNumber;
     private final Integer resultsPerPage;

@@ -26,12 +26,12 @@ public interface AddressDao extends AddressClient {
     public int size(boolean block);
 
     public List<Address> getAddressesSortedByParameter(String sortBy);
-    public Set<String> getCompletionGuesses(String input, int limit);
+    public List<String> getCompletionGuesses(String input, int limit);
     @Deprecated
     public List<Address> list();
     @Deprecated
     public List<Address> list(Integer sortBy);
-    public List<Address> list(ResultProperties resultProperties);
+    public List<Address> list(ResultSegment<AddressSortByEnum> resultProperties);
     public List<Address> searchByFirstName(String firstName);
     public List<Address> searchByLastName(String lastName);
     public List<Address> searchByCity(String city);
