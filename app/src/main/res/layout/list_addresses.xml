@@ -43,6 +43,15 @@
             android:orientation="vertical">
 
             <android.support.design.widget.FloatingActionButton
+                android:id="@+id/addresss_index_clear_action_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|end"
+                android:layout_margin="@dimen/fab_margin"
+                android:scaleType="center"
+                app:srcCompat="@android:drawable/ic_notification_clear_all" />
+
+            <android.support.design.widget.FloatingActionButton
                 android:id="@+id/addresss_index_search_action_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

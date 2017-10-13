@@ -17,7 +17,7 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
     private ResultProperties resultProperties;
     private boolean loadingNextPage;
 
-    private AddressSearchRequest addressSearchRequest;
+    //private AddressSearchRequest addressSearchRequest;
 
     public final int DEFAULT_ITEMS_TO_LOAD = 50;
 
@@ -136,19 +136,22 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
         asyncTask.execute(id);
     }
 
-    public AddressSearchRequest getAddressSearchRequest() {
-        return addressSearchRequest;
+    private AddressSearchRequest getAddressSearchRequest() {
+        return AddressDataListSingleton.getAddressSearchRequest();
+        //return addressSearchRequest;
     }
 
     public void setAddressSearchRequest(AddressSearchRequest addressSearchRequest) {
-        if (!Objects.equals(this.addressSearchRequest, addressSearchRequest)){
+        if (!Objects.equals(getAddressSearchRequest(), addressSearchRequest)){
             AddressDataListSingleton.clear();
         }
 
-        this.addressSearchRequest = addressSearchRequest;
+        AddressDataListSingleton.setAddressSearchRequest(addressSearchRequest);
+        //this.addressSearchRequest = addressSearchRequest;
     }
 
     public void clearSearch(){
         setAddressSearchRequest(null);
+        getView().resetList();
     }
 }

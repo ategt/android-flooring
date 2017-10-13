@@ -3,11 +3,13 @@ package com.example.ateg.flooringmaster;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -42,7 +44,7 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
             ListAdapter listAdapter = listView.getAdapter();
 
             if (listAdapter != null) {
-               mPresenter.scrollToId(id);
+                mPresenter.scrollToId(id);
             }
         }
     }
@@ -96,6 +98,16 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
     }
 
     @Override
+    public void resetList() {
+        ListView listView = (ListView) getCreatedView().findViewById(R.id.address_index_listView);
+        ListAdapter listAdapter = listView.getAdapter();
+
+        AddressAdapter addressAdapter = (AddressAdapter) listAdapter;
+        addressAdapter.notifyDataSetChanged();
+        evaluateVisibilityOfResetButton();
+    }
+
+    @Override
     protected int layout() {
         return R.layout.list_addresses;
     }
@@ -104,13 +116,27 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
     protected void setUi(View v) {
         ListView listView = (ListView) v.findViewById(R.id.address_index_listView);
         listView.setEmptyView(v.findViewById(R.id.address_list_empty));
+
+        evaluateVisibilityOfResetButton(v);
+    }
+
+    private void evaluateVisibilityOfResetButton() {
+        evaluateVisibilityOfResetButton(getCreatedView());
+    }
+
+    private void evaluateVisibilityOfResetButton(View v) {
+        FloatingActionButton resetButton = (FloatingActionButton) v.findViewById(R.id.addresss_index_clear_action_button);
+
+        AddressSearchRequest addressSearchRequest = AddressDataListSingleton.getAddressSearchRequest();
+
+        resetButton.setVisibility(addressSearchRequest == null ? View.INVISIBLE : View.VISIBLE);
     }
 
     @Override
     protected void init() {
 
         Intent intent = getActivity().getIntent();
-        if (intent.hasExtra(EXTRA_ADDRESS_SEARCH_OBJECT)){
+        if (intent.hasExtra(EXTRA_ADDRESS_SEARCH_OBJECT)) {
             mPresenter.setAddressSearchRequest(
                     (AddressSearchRequest) intent.getSerializableExtra(EXTRA_ADDRESS_SEARCH_OBJECT));
         }
@@ -166,6 +192,14 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AddressSearchActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        View clearSearchButton = createdView.findViewById(R.id.addresss_index_clear_action_button);
+        clearSearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.clearSearch();
             }
         });
     }

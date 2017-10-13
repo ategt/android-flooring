@@ -9,4 +9,6 @@ import java.util.List;
 public interface AddressIndexView extends LEView {
     void appendAddresses(List<Address> addressList);
     void scrollToAddress(Address address);
+
+    void resetList();
 }

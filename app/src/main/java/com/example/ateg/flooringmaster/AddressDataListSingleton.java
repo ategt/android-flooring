@@ -15,6 +15,8 @@ import java.util.List;
 public class AddressDataListSingleton {
     private static List<Address> addressList;
 
+    private static AddressSearchRequest addressSearchRequest;
+
     public static List<Address> getDataList(Context context) {
         return respondWithAddressList();
     }
@@ -54,5 +56,13 @@ public class AddressDataListSingleton {
 
     public static void appendAll(Collection<? extends Address> addressCollection){
         respondWithAddressList().addAll(addressCollection);
+    }
+
+    public static AddressSearchRequest getAddressSearchRequest() {
+        return addressSearchRequest;
+    }
+
+    public static void setAddressSearchRequest(AddressSearchRequest addressSearchRequest) {
+        AddressDataListSingleton.addressSearchRequest = addressSearchRequest;
     }
 }
