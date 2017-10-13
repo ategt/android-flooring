@@ -84,20 +84,24 @@ public class AddressSearchFragment extends BaseFragment<AddressSearchPresenter> 
                                 "\nSpinner 2: " + String.valueOf(spinner2.getSelectedItem()),
                         Toast.LENGTH_LONG).show();
 
-//                int position = spinner2.getSelectedItemPosition();
-//
-//                AddressSearchByOptionEnum addressSearchByOptionEnum =
-//                        (AddressSearchByOptionEnum) AddressSearchByOptionEnum.values()[position];
+                AddressSearchByOptionEnum[] addressSearchByOptionEnumArray =
+                        new AddressSearchByOptionEnum[]{AddressSearchByOptionEnum.ALL,
+                                AddressSearchByOptionEnum.NAME,
+                                AddressSearchByOptionEnum.COMPANY,
+                                AddressSearchByOptionEnum.NAME_OR_COMPANY,
+                                AddressSearchByOptionEnum.STREET,
+                                AddressSearchByOptionEnum.CITY,
+                                AddressSearchByOptionEnum.STATE,
+                                AddressSearchByOptionEnum.ZIP
+                        };
 
-                String selectedText = String.valueOf(spinner.getSelectedItem());
+                int position = spinner.getSelectedItemPosition();
 
-                AddressSearchByOptionEnum addressSearchByOptionEnum = AddressSearchByOptionEnum.parse(selectedText);
-
-                EditText editText = (EditText) v.findViewById(R.id.search_query_input_editText);
+                EditText editText = (EditText) getView().findViewById(R.id.search_query_input_editText);
 
                 String query = editText.getText().toString();
 
-                mPresenter.launchSearch(query, addressSearchByOptionEnum);
+                mPresenter.launchSearch(query, addressSearchByOptionEnumArray[position]);
             }
         });
     }

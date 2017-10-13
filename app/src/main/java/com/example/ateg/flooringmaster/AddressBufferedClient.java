@@ -184,7 +184,7 @@ public class AddressBufferedClient implements AddressDao, AddressClient {
 
     @Override
     public List<Address> search(AddressSearchRequest addressSearchRequest, ResultProperties resultProperties) {
-        return search(addressSearchRequest, resultProperties);
+        return addressDao.search(addressSearchRequest, resultProperties);
     }
 
     @Override
