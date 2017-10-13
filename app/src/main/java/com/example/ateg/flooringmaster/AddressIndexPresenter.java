@@ -16,6 +16,8 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
     private ResultProperties resultProperties;
     private boolean loadingNextPage;
 
+    private AddressSearchRequest addressSearchRequest;
+
     public final int DEFAULT_ITEMS_TO_LOAD = 50;
 
     public AddressIndexPresenter(AddressIndexView viewInstance, AddressClient addressDao) {
@@ -52,9 +54,20 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
 
         AsyncTask<ResultProperties, Void, List<Address>> asyncTask = new AsyncTask<ResultProperties, Void, List<Address>>() {
 
+            AddressSearchRequest tempAddressSearchRequest = getAddressSearchRequest();
+            ValidationException validationException;
+
             @Override
             protected List<Address> doInBackground(ResultProperties... params) {
-                return addressDao.list(params[0]);
+                try {
+                    if (tempAddressSearchRequest != null) {
+                        return addressDao.search(tempAddressSearchRequest, params[0]);
+                    } else
+                        return addressDao.list(params[0]);
+                } catch (ValidationException validationException){
+                    this.validationException = validationException;
+                    return null;
+                }
             }
 
             @Override
@@ -64,7 +77,9 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
 
                 if (addresses != null) {
                     getView().appendAddresses(addresses);
-                } else {
+                } else if(validationException != null){
+                    getView().showError(validationException);
+                }else {
                     getView().showError(new IllegalArgumentException("Invalid Address"));
                 }
             }
@@ -109,12 +124,24 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
             protected void onPostExecute(Address address) {
                 if (address != null) {
                     getView().scrollToAddress(address);
-                } else if(validationException != null){
+                } else if (validationException != null) {
                     getView().showError(validationException);
                 } else {
                     getView().showError(new IllegalArgumentException("Invalid Address"));
                 }
             }
         }).execute(resultProperties);
+    }
+
+    public AddressSearchRequest getAddressSearchRequest() {
+        return addressSearchRequest;
+    }
+
+    public void setAddressSearchRequest(AddressSearchRequest addressSearchRequest) {
+        this.addressSearchRequest = addressSearchRequest;
+    }
+
+    public void clearSearch(){
+        this.addressSearchRequest = null;
     }
 }

@@ -1,5 +1,7 @@
 package com.example.ateg.flooringmaster;
 
+import android.content.Intent;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
@@ -45,15 +47,18 @@ public class AddressSearchFragment extends BaseFragment<AddressSearchPresenter> 
 
         //spinner.setAdapter(new SpinnerAdapter(getActivity()));
 
+//        List<String> list = new ArrayList<>();
+//
+//        for (AddressSearchByOptionEnum addressSearchByOptionEnum : AddressSearchByOptionEnum.values()) {
+//            list.add(addressSearchByOptionEnum.toString());
+//        }
 
-        List<String> list = new ArrayList<>();
+//        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
+//                R.layout.simple_spinner_starter, list);
 
-        for (AddressSearchByOptionEnum addressSearchByOptionEnum : AddressSearchByOptionEnum.values()) {
-            list.add(addressSearchByOptionEnum.toString());
-        }
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
-                R.layout.simple_spinner_item, list);
+        SpinnerAdapter dataAdapter = new SpinnerAdapter(getActivity(),
+                R.layout.simple_spinner_starter,
+                AddressSearchByOptionEnum.values());
 
         dataAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
@@ -77,6 +82,8 @@ public class AddressSearchFragment extends BaseFragment<AddressSearchPresenter> 
                                 "\nSpinner 1: " + String.valueOf(spinner.getSelectedItem()) +
                                 "\nSpinner 2: " + String.valueOf(spinner2.getSelectedItem()),
                         Toast.LENGTH_LONG).show();
+
+
             }
         });
     }
@@ -95,10 +102,33 @@ public class AddressSearchFragment extends BaseFragment<AddressSearchPresenter> 
     protected void setListeners() {
         addListenerOnSpinner();
         addListenerOnButton();
+
+        Button button = (Button) getCreatedView().findViewById(R.id.search_return_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
     }
 
     @Override
     protected AddressSearchPresenter createPresenter() {
-        return new AddressSearchPresenter(this);
+        return new AddressSearchPresenter(this, AddressDaoSingleton.getAddressDao(getActivity()));
+    }
+
+    private void buildSearch(String query, AddressSearchByOptionEnum addressSearchByOptionEnum) {
+        AddressSearchRequest addressSearchRequest = new AddressSearchRequest(query, addressSearchByOptionEnum);
+
+        addressSearchRequest
+    }
+
+    @Override
+    public void searchResults(List<Address> addressList) {
+        Intent intent = NavUtils.getParentActivityIntent(getActivity());
+
+        intent.
+
+        NavUtils.navigateUpTo(getActivity(), intent);
     }
 }

@@ -15,8 +15,11 @@ import android.widget.TextView;
 
 public class SpinnerAdapter extends ArrayAdapter<AddressSearchByOptionEnum> {
 
-    public SpinnerAdapter(@NonNull Context context) {
-        super(context, 0, AddressSearchByOptionEnum.values());
+    private AddressSearchByOptionEnum[] addressSearchByOptionEnum;
+
+    public SpinnerAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull AddressSearchByOptionEnum[] objects) {
+        super(context, resource, objects);
+        this.addressSearchByOptionEnum = objects;
     }
 
     @NonNull

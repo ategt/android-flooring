@@ -2,38 +2,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:isScrollContainer="true">
+
+    <TextView
+        android:id="@+id/search_option_spinner_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/search_by" />
 
     <Spinner
         android:id="@+id/search_option_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top|center_horizontal"
-        android:padding="10dp"
-        android:entries="@array/search_by_array"/>
-
-    <TextView
-        android:id="@+id/search_option_spinner_textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/search_by"
-        android:padding="5dp"
-        android:textAlignment="center"/>
+        android:entries="@array/search_by_array"
+        android:padding="10dp" />
 
     <Spinner
         android:id="@+id/search_option_spinner_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:textAlignment="center"
         android:gravity="center"
-        />
+        android:padding="10dp"
+        android:layout_margin="5dp"
+        android:textAlignment="center" />
 
     <EditText
         android:id="@+id/search_query_input_editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp" />
+        android:padding="10dp"
+        android:layout_margin="5dp"
+        android:outlineProvider="paddedBounds"/>
 
     <LinearLayout
         android:id="@+id/search_button_layout"
@@ -61,20 +63,20 @@
 
 
     <!--<RelativeLayout-->
-        <!--android:id="@+id/loadingPanel"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:gravity="center_horizontal"-->
-        <!--android:paddingBottom="40dp"-->
-        <!--android:paddingLeft="40dp"-->
-        <!--android:paddingRight="40dp"-->
-        <!--android:paddingTop="40dp">-->
+    <!--android:id="@+id/loadingPanel"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:gravity="center_horizontal"-->
+    <!--android:paddingBottom="40dp"-->
+    <!--android:paddingLeft="40dp"-->
+    <!--android:paddingRight="40dp"-->
+    <!--android:paddingTop="40dp">-->
 
-        <!--<ProgressBar-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:indeterminate="true"-->
-            <!--android:visibility="visible" />-->
+    <!--<ProgressBar-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:indeterminate="true"-->
+    <!--android:visibility="visible" />-->
     <!--</RelativeLayout>-->
 
 </LinearLayout>
