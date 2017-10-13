@@ -1,6 +1,7 @@
 package com.example.ateg.flooringmaster;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,13 +31,12 @@ public class SpinnerAdapter extends ArrayAdapter<AddressSearchByOptionEnum> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        TextView textView = (TextView) convertView;
+
         if (convertView == null){
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            inflater.
-            convertView = inflater.inflate(resource, parent);
+            textView = (TextView) inflater.inflate(resource, parent, false);
         }
-
-        TextView textView = (TextView) convertView;
 
 //        if (addressSearchByOptionEnum != null){
 //            AddressSearchByOptionEnum addressSearchByOptionEnum
@@ -51,8 +51,33 @@ public class SpinnerAdapter extends ArrayAdapter<AddressSearchByOptionEnum> {
                 //= addressSearchByOptionEnum[position];
 
 
+        //String content = addressSearchByOptionEnum.ordinal() + " - " + addressSearchByOptionEnum.toString();
+        String content = " - " + addressSearchByOptionEnum.toString() + " - ";
+        textView.setText(content);
+
+        return textView;
+    }
+
+    @Override
+    public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        TextView textView = (TextView) convertView;
+
+        if (convertView == null){
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            textView = (TextView) inflater.inflate(resource, parent, false);
+        }
+
+        AddressSearchByOptionEnum addressSearchByOptionEnum = AddressSearchByOptionEnum.values()[position];
+
         String content = addressSearchByOptionEnum.ordinal() + " - " + addressSearchByOptionEnum.toString();
         textView.setText(content);
+
+        textView.setPadding(10, 10, 10, 10);
+        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+
+        textView.setHighlightColor(Color.GREEN);
+        textView.setBackgroundColor(Color.MAGENTA);
+        textView.setTextColor(Color.RED);
 
         return textView;
     }
