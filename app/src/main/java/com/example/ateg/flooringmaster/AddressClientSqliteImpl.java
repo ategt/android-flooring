@@ -482,40 +482,6 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
         try {
             Address address = new Address();
 
-            String[] names = cursor.getColumnNames();
-            int columnCount = cursor.getColumnCount();
-            int position = cursor.getPosition();
-            Uri notficationUri = cursor.getNotificationUri();
-            Bundle bundle = cursor.getExtras();
-            int size = bundle.size();
-            Set<String> keys = bundle.keySet();
-
-            long longid = cursor.getLong(0);
-            int intid = cursor.getInt(0);
-            String idString = cursor.getString(0);
-            String zeroName = cursor.getColumnName(0);
-
-
-            int type = cursor.getType(0);
-            String typeString = cursorTypeToString(type);
-
-            String fieldAnanlysis = "";
-            for (String name : names) {
-
-                int index = cursor.getColumnIndex(name);
-                int indexType = cursor.getType(index);
-
-                fieldAnanlysis += name + " : " + cursorTypeToString(indexType) + "\n";
-            }
-
-
-
-
-
-            Log.e(TAG, "Results:\n" + fieldAnanlysis);
-
-            Integer forcedId = (int) longid;
-
             address.setId(cursor.getInt(cursor.getColumnIndex(ADDRESS_COLUMN_ADDRESS_ID)));
 
             address.setFirstName(cursor.getString(cursor.getColumnIndex(ADDRESS_COLUMN_ADDRESS_FIRST_NAME)));
