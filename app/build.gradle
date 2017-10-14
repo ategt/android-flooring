@@ -51,4 +51,6 @@ dependencies {
     provided 'javax.annotation:jsr250-api:1.0'
     compile 'javax.inject:javax.inject:1'
     compile 'com.google.guava:guava:20.0'
+
+    testCompile 'org.robolectric:robolectric:3.4.2'
 }
