@@ -4,11 +4,15 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.List;
 import java.util.UUID;
 
 import static com.example.ateg.flooringmaster.AddressTest.addressBuilder;
@@ -27,12 +31,19 @@ public class AddressClientSqliteImplTest {
     @Before
     public void setUp() throws Exception {
         appContext = InstrumentationRegistry.getTargetContext();
-        addressDao = new AddressClientSqliteImpl(appContext, "Test-Flooring-DB", 1);
+        addressDao = new AddressClientSqliteImpl(appContext, "Test-Flooring-DB", 2);
     }
 
     @After
     public void tearDown() throws Exception {
 
+    }
+
+    @Test
+    public void indexTest() {
+        List<Address> addressList = addressDao.list(null);
+
+        addressList.size();
     }
 
     @Test
@@ -62,8 +73,12 @@ public class AddressClientSqliteImplTest {
 
         assertTrue(result.getId() > 0);
 
+        Gson gson = new GsonBuilder().create();
+
         Address retrivedAddress = addressDao.get(result.getId());
-        assertEquals(retrivedAddress, result);
+        assertEquals("Addresses not equal:\n" +
+                "\tFrom Db:     " + gson.toJson(retrivedAddress) +
+                "\tFrom Create: " + gson.toJson(result), retrivedAddress, result);
 
         retrivedAddress.setCity(UUID.randomUUID().toString());
 

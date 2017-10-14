@@ -19,6 +19,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
+import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -45,14 +47,14 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
     private static final String ADDRESS_COLUMN_ADDRESS_ZIP = "zip";
 
     private static final String SQL_INSERT_ADDRESS = "INSERT INTO addresses (first_name, last_name, company, street_number, street_name, city, state, zip) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? ) RETURNING id";
-    private static final String SQL_UPDATE_ADDRESS = "UPDATE addresses SET first_name=?, last_name=?, company=?, street_number=?, street_name=?, city=?, state=?, zip=? WHERE id=? RETURNING *";
-    private static final String SQL_DELETE_ADDRESS = "DELETE FROM addresses WHERE id = ? RETURNING *";
-    private static final String SQL_GET_ADDRESS = "SELECT *, 1 AS rank FROM addresses WHERE id = ?";
+    private static final String SQL_UPDATE_ADDRESS = "UPDATE addresses SET first_name=?, last_name=?, company=?, street_number=?, street_name=?, city=?, state=?, zip=? WHERE KEY_ROWID=? RETURNING *";
+    private static final String SQL_DELETE_ADDRESS = "DELETE FROM addresses WHERE KEY_ROWID = ? RETURNING *";
+    private static final String SQL_GET_ADDRESS = "SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE ROWID = ?";
     private static final String SQL_GET_ADDRESS_BY_COMPANY = "SELECT *, 1 AS rank FROM addresses WHERE company = ?";
     private static final String SQL_GET_ADDRESS_LIST = "SELECT *, 1 AS rank FROM addresses";
     private static final String SQL_GET_ADDRESS_COUNT = "SELECT COUNT(*) FROM addresses";
 
-    private static final String SQL_CREATE_ADDRESS_TABLE = "CREATE TABLE IF NOT EXISTS addresses (id SERIAL PRIMARY KEY, first_name varchar(45), last_name varchar(45), company varchar(45), street_number varchar(45), street_name varchar(45), city varchar(45), state varchar(45), zip varchar(45))";
+    private static final String SQL_CREATE_ADDRESS_TABLE = "CREATE TABLE IF NOT EXISTS addresses (first_name varchar(45), last_name varchar(45), company varchar(45), street_number varchar(45), street_name varchar(45), city varchar(45), state varchar(45), zip varchar(45))";
     private static final String SQL_DROP_ADDRESS_TABLE = "DROP TABLE IF EXISTS addresses";
 
     private static final String SQL_SORT_ADDRESSES_BY_LAST_NAME_PARTIAL = " ORDER BY rank ASC, LOWER(last_name) ASC, LOWER(first_name) ASC, LOWER(company) ASC, id ASC";
@@ -478,6 +480,40 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
         try {
             Address address = new Address();
 
+            String[] names = cursor.getColumnNames();
+            int columnCount = cursor.getColumnCount();
+            int position = cursor.getPosition();
+            Uri notficationUri = cursor.getNotificationUri();
+            Bundle bundle = cursor.getExtras();
+            int size = bundle.size();
+            Set<String> keys = bundle.keySet();
+
+            long longid = cursor.getLong(0);
+            int intid = cursor.getInt(0);
+            String idString = cursor.getString(0);
+            String zeroName = cursor.getColumnName(0);
+
+
+            int type = cursor.getType(0);
+            String typeString = cursorTypeToString(type);
+
+            String fieldAnanlysis = "";
+            for (String name : names) {
+
+                int index = cursor.getColumnIndex(name);
+                int indexType = cursor.getType(index);
+
+                fieldAnanlysis += name + " : " + cursorTypeToString(indexType) + "\n";
+            }
+
+
+
+
+
+            Log.e(TAG, "Results:\n" + fieldAnanlysis);
+
+            Integer forcedId = (int) longid;
+
             address.setId(cursor.getInt(cursor.getColumnIndex(ADDRESS_COLUMN_ADDRESS_ID)));
 
             address.setFirstName(cursor.getString(cursor.getColumnIndex(ADDRESS_COLUMN_ADDRESS_FIRST_NAME)));
@@ -493,6 +529,31 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
         } catch (Resources.NotFoundException | NullPointerException ex) {
             return null;
         }
+    }
+
+    @NonNull
+    private String cursorTypeToString(int type) {
+        String typeString;
+        switch (type) {
+            case Cursor.FIELD_TYPE_NULL:
+                typeString = "Null";
+                break;
+            case Cursor.FIELD_TYPE_BLOB:
+                typeString = "Blob";
+                break;
+            case Cursor.FIELD_TYPE_FLOAT:
+                typeString = "Float";
+                break;
+            case Cursor.FIELD_TYPE_INTEGER:
+                typeString = "Integer";
+                break;
+            case Cursor.FIELD_TYPE_STRING:
+                typeString = "String";
+                break;
+            default:
+                typeString = "UNKOWN";
+        }
+        return typeString;
     }
 
     @Override
