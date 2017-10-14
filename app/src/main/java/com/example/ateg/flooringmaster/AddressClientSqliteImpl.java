@@ -57,6 +57,8 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
     private static final String SQL_CREATE_ADDRESS_TABLE = "CREATE TABLE IF NOT EXISTS addresses (first_name varchar(45), last_name varchar(45), company varchar(45), street_number varchar(45), street_name varchar(45), city varchar(45), state varchar(45), zip varchar(45))";
     private static final String SQL_DROP_ADDRESS_TABLE = "DROP TABLE IF EXISTS addresses";
 
+    private static final String SQL_ADDRESS_ID_WHERE_CLAUSE = "ROWID = ?";
+
     private static final String SQL_SORT_ADDRESSES_BY_LAST_NAME_PARTIAL = " ORDER BY rank ASC, LOWER(last_name) ASC, LOWER(first_name) ASC, LOWER(company) ASC, id ASC";
     private static final String SQL_SORT_ADDRESSES_BY_LAST_NAME_INVERSE_PARTIAL = " ORDER BY rank ASC, LOWER(last_name) DESC, LOWER(first_name) DESC, LOWER(company) DESC, id DESC";
     private static final String SQL_SORT_ADDRESSES_BY_FIRST_NAME_PARTIAL = " ORDER BY rank ASC, LOWER(first_name) ASC, LOWER(last_name) ASC, LOWER(company) ASC, id ASC";
@@ -79,7 +81,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
             + "	JOIN ("
-            + "		SELECT id, MIN(rank) min_rank"
+            + "		SELECT ROWID AS id, MIN(rank) min_rank"
             + "		FROM mainQuery"
             + "		GROUP BY id"
             + "	) t2 "
@@ -98,7 +100,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
             + "	JOIN ("
-            + "		SELECT id, MIN(rank) min_rank"
+            + "		SELECT ROWID AS id, MIN(rank) min_rank"
             + "		FROM mainQuery"
             + "		GROUP BY id"
             + "	) t2 "
@@ -117,7 +119,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
             + "	JOIN ("
-            + "		SELECT id, MIN(rank) min_rank"
+            + "		SELECT ROWID AS id, MIN(rank) min_rank"
             + "		FROM mainQuery"
             + "		GROUP BY id"
             + "	) t2 "
@@ -136,7 +138,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
             + "	JOIN ("
-            + "		SELECT id, MIN(rank) min_rank"
+            + "		SELECT ROWID AS id, MIN(rank) min_rank"
             + "		FROM mainQuery"
             + "		GROUP BY id"
             + "	) t2 "
@@ -155,7 +157,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
             + "	JOIN ("
-            + "		SELECT id, MIN(rank) min_rank"
+            + "		SELECT ROWID AS id, MIN(rank) min_rank"
             + "		FROM mainQuery"
             + "		GROUP BY id"
             + "	) t2 "
@@ -174,7 +176,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
             + "	JOIN ("
-            + "		SELECT id, MIN(rank) min_rank"
+            + "		SELECT ROWID AS id, MIN(rank) min_rank"
             + "		FROM mainQuery"
             + "		GROUP BY id"
             + "	) t2 "
@@ -193,7 +195,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
             + "	JOIN ("
-            + "		SELECT id, MIN(rank) min_rank"
+            + "		SELECT ROWID AS id, MIN(rank) min_rank"
             + "		FROM mainQuery"
             + "		GROUP BY id"
             + "	) t2 "
@@ -212,7 +214,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
             + "	JOIN ("
-            + "		SELECT id, MIN(rank) min_rank"
+            + "		SELECT ROWID AS id, MIN(rank) min_rank"
             + "		FROM mainQuery"
             + "		GROUP BY id"
             + "	) t2 "
@@ -231,7 +233,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
             + "	JOIN ("
-            + "		SELECT id, MIN(rank) min_rank"
+            + "		SELECT ROWID AS id, MIN(rank) min_rank"
             + "		FROM mainQuery"
             + "		GROUP BY id"
             + "	) t2 "
@@ -250,7 +252,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
             + "	JOIN ("
-            + "		SELECT id, MIN(rank) min_rank"
+            + "		SELECT ROWID AS id, MIN(rank) min_rank"
             + "		FROM mainQuery"
             + "		GROUP BY id"
             + "	) t2 "
@@ -269,7 +271,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
             + "	JOIN ("
-            + "		SELECT id, MIN(rank) min_rank"
+            + "		SELECT ROWID AS id, MIN(rank) min_rank"
             + "		FROM mainQuery"
             + "		GROUP BY id"
             + "	) t2 "
@@ -297,7 +299,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
             + "	JOIN ("
-            + "		SELECT id, MIN(rank) min_rank"
+            + "		SELECT ROWID AS id, MIN(rank) min_rank"
             + "		FROM mainQuery"
             + "		GROUP BY id"
             + "	) t2 "
@@ -334,7 +336,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
             + "	JOIN ("
-            + "		SELECT id, MIN(rank) min_rank"
+            + "		SELECT ROWID AS id, MIN(rank) min_rank"
             + "		FROM mainQuery"
             + "		GROUP BY id"
             + "	) t2 "
@@ -436,7 +438,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
             contentValues.put(ADDRESS_COLUMN_ADDRESS_STATE, address.getState());
             contentValues.put(ADDRESS_COLUMN_ADDRESS_ZIP, address.getZip());
 
-            int linesUpdated = db.update(ADDRESS_TABLE_NAME, contentValues, "id = ?", new String[]{Integer.toString(address.getId())});
+            int linesUpdated = db.update(ADDRESS_TABLE_NAME, contentValues, SQL_ADDRESS_ID_WHERE_CLAUSE, new String[]{Integer.toString(address.getId())});
 
             if (linesUpdated != 1) {
                 Log.d(TAG, "Database lines updated were outside of expectations. Lines Changed: " + linesUpdated);
