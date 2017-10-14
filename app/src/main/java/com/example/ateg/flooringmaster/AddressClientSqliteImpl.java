@@ -49,9 +49,9 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
     private static final String SQL_INSERT_ADDRESS = "INSERT INTO addresses (first_name, last_name, company, street_number, street_name, city, state, zip) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? ) RETURNING id";
     private static final String SQL_UPDATE_ADDRESS = "UPDATE addresses SET first_name=?, last_name=?, company=?, street_number=?, street_name=?, city=?, state=?, zip=? WHERE KEY_ROWID=? RETURNING *";
     private static final String SQL_DELETE_ADDRESS = "DELETE FROM addresses WHERE KEY_ROWID = ? RETURNING *";
-    private static final String SQL_GET_ADDRESS = "SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE ROWID = ?";
-    private static final String SQL_GET_ADDRESS_BY_COMPANY = "SELECT *, 1 AS rank FROM addresses WHERE company = ?";
-    private static final String SQL_GET_ADDRESS_LIST = "SELECT *, 1 AS rank FROM addresses";
+    private static final String SQL_GET_ADDRESS = "SELECT *, ROWID AS id, ROWID AS id, 1 AS rank FROM addresses WHERE ROWID = ?";
+    private static final String SQL_GET_ADDRESS_BY_COMPANY = "SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE company = ?";
+    private static final String SQL_GET_ADDRESS_LIST = "SELECT *, ROWID AS id, 1 AS rank FROM addresses";
     private static final String SQL_GET_ADDRESS_COUNT = "SELECT COUNT(*) FROM addresses";
 
     private static final String SQL_CREATE_ADDRESS_TABLE = "CREATE TABLE IF NOT EXISTS addresses (first_name varchar(45), last_name varchar(45), company varchar(45), street_number varchar(45), street_name varchar(45), city varchar(45), state varchar(45), zip varchar(45))";
@@ -70,13 +70,13 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
 
     private static final String SQL_SEARCH_ADDRESS_BY_FIRST_NAME = "WITH inputQuery(n) AS (SELECT ?),"
             + "	mainQuery AS ("
-            + "     SELECT *, 1 AS rank FROM addresses WHERE "
+            + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
             + "      	first_name = (SELECT n FROM inputQuery)"
-            + "     UNION ALL SELECT *, 2 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
             + "      	LOWER(first_name) = (SELECT LOWER(n) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 3 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
             + "      	LOWER(first_name) LIKE (SELECT LOWER(CONCAT(n, '%')) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 4 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
             + "      	LOWER(first_name) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
@@ -89,13 +89,13 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
 
     private static final String SQL_SEARCH_ADDRESS_BY_LAST_NAME = "WITH inputQuery(n) AS (SELECT ?),"
             + "	mainQuery AS ("
-            + "     SELECT *, 1 AS rank FROM addresses WHERE "
+            + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
             + "      	last_name = (SELECT n FROM inputQuery)"
-            + "     UNION ALL SELECT *, 2 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
             + "      	LOWER(last_name) = (SELECT LOWER(n) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 3 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
             + "      	LOWER(last_name) LIKE (SELECT LOWER(CONCAT(n, '%')) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 4 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
             + "      	LOWER(last_name) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
@@ -108,13 +108,13 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
 
     private static final String SQL_SEARCH_ADDRESS_BY_NAME = "WITH inputQuery(n) AS (SELECT ?),"
             + "	mainQuery AS ("
-            + "     SELECT *, 1 AS rank FROM addresses WHERE "
+            + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
             + "      	LOWER(' ' || first_name || ' ' || last_name || ' ' ) LIKE (SELECT CONCAT('% ', n, ' %') FROM inputQuery)"
-            + "     UNION ALL SELECT *, 2 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
             + "      	LOWER(' ' || first_name || ' ' || last_name || ' ' ) LIKE (SELECT LOWER(CONCAT('% ', n, ' %')) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 3 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
             + "      	LOWER(' ' || first_name || ' ' || last_name ) LIKE (SELECT LOWER(CONCAT('% ', n, '%')) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 4 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
             + "      	LOWER(' ' || first_name || ' ' || last_name ) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
@@ -127,14 +127,14 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
 
     private static final String SQL_SEARCH_ADDRESS_BY_COMPANY = "WITH inputQuery(n) AS (SELECT ?),"
             + "	mainQuery AS ("
-            + "     SELECT *, 1 AS rank FROM addresses WHERE "
+            + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
             + "      	company = (SELECT n FROM inputQuery)"
-            + "     UNION ALL SELECT *, 2 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
             + "      	LOWER(company) = (SELECT LOWER(n) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 3 AS rank FROM addresses WHERE "
-            + "      	LOWER(company) LIKE (SELECT LOWER(CONCAT(n, '%')) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 4 AS rank FROM addresses WHERE "
-            + "      	LOWER(company) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
+            + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
+            + "      	LOWER(company) LIKE (SELECT LOWER(n || '%') FROM inputQuery)"
+            + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
+            + "      	LOWER(company) LIKE (SELECT LOWER('%' || n || '%') FROM inputQuery)"
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
             + "	JOIN ("
@@ -146,13 +146,13 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
 
     private static final String SQL_SEARCH_ADDRESS_BY_NAME_OR_COMPANY = "WITH inputQuery(n) AS (SELECT ?),"
             + "	mainQuery AS ("
-            + "     SELECT *, 1 AS rank FROM addresses WHERE "
+            + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
             + "      	LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' ') LIKE (SELECT CONCAT('% ', n, ' %') FROM inputQuery)"
-            + "     UNION ALL SELECT *, 2 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
             + "      	LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' ') LIKE (SELECT LOWER(CONCAT('% ', n, ' %')) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 3 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
             + "      	LOWER(' ' || first_name || ' ' || last_name || ' ' || company) LIKE (SELECT LOWER(CONCAT('% ', n, '%')) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 4 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
             + "      	LOWER(' ' || first_name || ' ' || last_name || ' ' || company) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
@@ -165,13 +165,13 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
 
     private static final String SQL_SEARCH_ADDRESS_BY_CITY = "WITH inputQuery(n) AS (SELECT ?),"
             + "	mainQuery AS ("
-            + "     SELECT *, 1 AS rank FROM addresses WHERE "
+            + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
             + "      	city = (SELECT n FROM inputQuery)"
-            + "     UNION ALL SELECT *, 2 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
             + "      	LOWER(city) = (SELECT LOWER(n) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 3 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
             + "      	LOWER(city) LIKE (SELECT LOWER(CONCAT(n, '%')) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 4 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
             + "      	LOWER(city) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
@@ -184,13 +184,13 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
 
     private static final String SQL_SEARCH_ADDRESS_BY_STATE = "WITH inputQuery(n) AS (SELECT ?),"
             + "	mainQuery AS ("
-            + "     SELECT *, 1 AS rank FROM addresses WHERE "
+            + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
             + "      	state = (SELECT n FROM inputQuery)"
-            + "     UNION ALL SELECT *, 2 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
             + "      	LOWER(state) = (SELECT LOWER(n) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 3 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
             + "      	LOWER(state) LIKE (SELECT LOWER(CONCAT(n, '%')) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 4 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
             + "      	LOWER(state) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
@@ -203,13 +203,13 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
 
     private static final String SQL_SEARCH_ADDRESS_BY_ZIP = "WITH inputQuery(n) AS (SELECT ?),"
             + "	mainQuery AS ("
-            + "     SELECT *, 1 AS rank FROM addresses WHERE "
+            + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
             + "      	zip = (SELECT n FROM inputQuery)"
-            + "     UNION ALL SELECT *, 2 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
             + "      	LOWER(zip) = (SELECT LOWER(n) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 3 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
             + "      	LOWER(zip) LIKE (SELECT LOWER(CONCAT(n, '%')) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 4 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
             + "      	LOWER(zip) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
@@ -222,13 +222,13 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
 
     private static final String SQL_SEARCH_ADDRESS_BY_STREET_NUMBER = "WITH inputQuery(n) AS (SELECT ?),"
             + "	mainQuery AS ("
-            + "     SELECT *, 1 AS rank FROM addresses WHERE "
+            + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
             + "      	street_number = (SELECT n FROM inputQuery)"
-            + "     UNION ALL SELECT *, 2 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
             + "      	LOWER(street_number) = (SELECT LOWER(n) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 3 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
             + "      	LOWER(street_number) LIKE (SELECT LOWER(CONCAT(n, '%')) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 4 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
             + "      	LOWER(street_number) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
@@ -241,13 +241,13 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
 
     private static final String SQL_SEARCH_ADDRESS_BY_STREET_NAME = "WITH inputQuery(n) AS (SELECT ?),"
             + "	mainQuery AS ("
-            + "     SELECT *, 1 AS rank FROM addresses WHERE "
+            + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
             + "      	street_name = (SELECT n FROM inputQuery)"
-            + "     UNION ALL SELECT *, 2 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
             + "      	LOWER(street_name) = (SELECT LOWER(n) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 3 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
             + "      	LOWER(street_name) LIKE (SELECT LOWER(CONCAT(n, '%')) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 4 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
             + "      	LOWER(street_name) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
@@ -260,13 +260,13 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
 
     private static final String SQL_SEARCH_ADDRESS_BY_STREET = "WITH inputQuery(n) AS (SELECT ?),"
             + "	mainQuery AS ("
-            + "     SELECT *, 1 AS rank FROM addresses WHERE "
+            + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
             + "      	' ' || street_number || ' ' || street_name LIKE (SELECT CONCAT('% ', n, ' %') FROM inputQuery)"
-            + "     UNION ALL SELECT *, 2 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
             + "      	LOWER(' ' || street_number || ' ' || street_name) LIKE (SELECT LOWER(CONCAT('% ', n, ' %')) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 3 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
             + "      	LOWER(' ' || street_number || ' ' || street_name) LIKE (SELECT LOWER(CONCAT('% ', n, '%')) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 4 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
             + "      	LOWER(' ' || street_number || ' ' || street_name) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
@@ -279,15 +279,15 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
 
     private static final String SQL_SEARCH_ADDRESS_BY_ALL = "WITH inputQuery(n) AS (SELECT ?),"
             + "	mainQuery AS ("
-            + "     SELECT *, 1 AS rank FROM addresses WHERE "
+            + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
             + "      	' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip LIKE (SELECT CONCAT('% ', n, ' %') FROM inputQuery)"
-            + "     UNION ALL SELECT *, 2 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
             + "      	LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip) LIKE (SELECT LOWER(CONCAT('% ', n, ' %')) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 3 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
             + "      	LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip) LIKE (SELECT LOWER(CONCAT('% ', n, '%')) FROM inputQuery)"
-            + "     UNION ALL SELECT *, 4 AS rank FROM addresses WHERE "
+            + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
             + "      	LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
-            + "      UNION ALL SELECT *, 5 AS rank FROM addresses WHERE "
+            + "      UNION ALL SELECT *, ROWID AS id, 5 AS rank FROM addresses WHERE "
             + "		LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip || ' ') LIKE "
             + "             ALL( "
             + "                 ARRAY("
@@ -307,15 +307,15 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
 
     private static final String SQL_SEARCH_ADDRESS_BY_ANY = "WITH inputQuery(n) AS (SELECT ?),"
             + "	mainQuery AS ("
-            + "      SELECT *, 1 AS rank FROM addresses WHERE "
+            + "      SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
             + "       	' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip || ' ' LIKE (SELECT CONCAT('% ', n, ' %') FROM inputQuery) "
-            + "      UNION ALL SELECT *, 2 AS rank FROM addresses WHERE  "
+            + "      UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE  "
             + "       	LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip || ' ') LIKE (SELECT LOWER(CONCAT('% ', n, ' %')) FROM inputQuery) "
-            + "      UNION ALL SELECT *, 3 AS rank FROM addresses WHERE  "
+            + "      UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE  "
             + "       	LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip || ' ') LIKE (SELECT LOWER(CONCAT('% ', n, '%')) FROM inputQuery) "
-            + "      UNION ALL SELECT *, 4 AS rank FROM addresses WHERE  "
+            + "      UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE  "
             + "       	LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip || ' ') LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery) "
-            + "      UNION ALL SELECT *, 5 AS rank FROM addresses WHERE "
+            + "      UNION ALL SELECT *, ROWID AS id, 5 AS rank FROM addresses WHERE "
             + "		LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip || ' ') LIKE "
             + "             ALL( "
             + "                 ARRAY("
@@ -324,7 +324,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
             + "                     ) AS augmented_input_table "
             + "                 ) "
             + "             ) "
-            + "      UNION ALL SELECT *, 6 AS rank FROM addresses WHERE "
+            + "      UNION ALL SELECT *, ROWID AS id, 6 AS rank FROM addresses WHERE "
             + "		LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip) LIKE "
             + "             ANY( "
             + "                 ARRAY("
@@ -570,6 +570,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
     }
 
     @NonNull
+    @ClosesCursor
     private List<Address> mapToList(Cursor cursor) {
         List<Address> list = new LinkedList<>();
 
@@ -578,6 +579,9 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
                 list.add(rowMapper(cursor));
             } while (cursor.moveToNext());
         }
+
+        if (cursor != null && !cursor.isClosed())
+            cursor.close();
 
         return list;
     }
@@ -745,7 +749,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
         long offset = (long) resultsPerPage * (long) page;
 
         StringBuilder stringBuffer = new StringBuilder();
-        stringBuffer.append("SELECT * FROM (");
+        stringBuffer.append("SELECT *, ROWID AS id FROM (");
         stringBuffer.append(query);
         stringBuffer.append(") AS innerQuery OFFSET ");
         stringBuffer.append(offset);
@@ -765,7 +769,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
         }
 
         StringBuilder stringBuffer = new StringBuilder();
-        stringBuffer.append("SELECT * FROM (");
+        stringBuffer.append("SELECT *, ROWID AS id FROM (");
         stringBuffer.append(query);
         stringBuffer.append(") AS preSortedQuery");
 

@@ -104,5 +104,4 @@ public class AddressClientSqliteImplTest {
         Address alsoDeleted2 = addressDao.get(company);
         assertNull(alsoDeleted2);
     }
-
 }
