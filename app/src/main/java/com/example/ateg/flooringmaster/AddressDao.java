@@ -24,6 +24,8 @@ public interface AddressDao extends AddressClient {
 
     public int size();
     public int size(boolean block);
+    public int size(AddressSearchRequest addressSearchRequest);
+    public int size(boolean block, AddressSearchRequest addressSearchRequest);
 
     public List<Address> getAddressesSortedByParameter(String sortBy);
     public List<String> getCompletionGuesses(String input, int limit);
