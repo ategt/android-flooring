@@ -35,7 +35,7 @@ import static org.junit.Assert.assertTrue;
  * Created by ATeg on 10/13/2017.
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
+@Config(constants = BuildConfig.class, sdk = 21)
 public class AddressClientSqliteImplTest {
 
     AddressDao addressDao;
