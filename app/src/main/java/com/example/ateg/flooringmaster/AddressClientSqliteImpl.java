@@ -536,84 +536,9 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
 
         String query = sortAndPaginateQuery(sqlQueryToUse, addressResultSegment);
 
-        try {
-//            sqLiteDatabase.compileStatement("SELECT * FROM addresses");
-//
-//            sqLiteDatabase.compileStatement("SELECT * FROM addresses WHERE company = \"asdfasdfasdfc\"");
-//
-//
-//            sqLiteDatabase.compileStatement("SELECT * FROM addresses " +
-//                    "WHERE company = (SELECT \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\")");
-//
-//            sqLiteDatabase.compileStatement("SELECT * FROM addresses " +
-//                    "WHERE company = (SELECT \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\" AS n)");
-//
-//            Cursor c = sqLiteDatabase.rawQuery("WITH averyrandomquery AS (SELECT \"asdf\") SELECT * FROM addresses", null);
-//
-//            sqLiteDatabase.compileStatement("WITH main AS (SELECT \"random\") " +
-//                    "SELECT * FROM addresses WHERE company = \"asfasdf\"");
-//
-//            sqLiteDatabase.compileStatement("WITH inputQuery AS" +
-//                    " (SELECT \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\" AS n)" +
-//                    " SELECT * FROM addresses WHERE company = \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\"");
-//
-//            sqLiteDatabase.compileStatement("WITH inputQuery AS" +
-//                    " (SELECT \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\" AS n)" +
-//                    " SELECT * FROM addresses WHERE company = (SELECT n FROM inputQuery)");
-//
-//            sqLiteDatabase.compileStatement("WITH inputQuery AS" +
-//                    " (SELECT \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\" AS n)," +
-//                    " mainQuery AS (" +
-//                    " SELECT * FROM addresses" +
-//                    " WHERE company = (SELECT n FROM inputQuery))" +
-//                    " SELECT * FROM mainQuery");
-//
-//            sqLiteDatabase.compileStatement("WITH inputQuery AS" +
-//                    " (SELECT \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\" AS n)," +
-//                    " mainQuery AS (" +
-//                    " SELECT * FROM addresses" +
-//                    " WHERE company = (SELECT n FROM inputQuery))" +
-//                    " SELECT t1.* FROM mainQuery t1");
-//
-//            sqLiteDatabase.compileStatement("WITH inputQuery AS" +
-//                    " (SELECT \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\" AS n)," +
-//                    " mainQuery AS (" +
-//                    " SELECT * FROM addresses" +
-//                    " WHERE company = (SELECT n FROM inputQuery))" +
-//                    " SELECT t1.* FROM mainQuery t1");
-//
-//            sqLiteDatabase.compileStatement("WITH inputQuery AS (SELECT \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\" AS n)," +
-//                    " mainQuery AS (" +
-//                    "   SELECT *, ROWID AS id, 1 AS rank FROM addresses" +
-//                    "   WHERE company = (SELECT n FROM inputQuery) )" +
-//                    " SELECT t1.* FROM mainQuery t1 ");
-//
-//            sqLiteDatabase.compileStatement("WITH inputQuery AS (SELECT \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\" AS n), mainQuery AS ( SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE company = (SELECT n FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE LOWER(company) = (SELECT LOWER(n) FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE LOWER(company) LIKE (SELECT LOWER(n || '%') FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE LOWER(company) LIKE (SELECT LOWER('%' || n || '%') FROM inputQuery) )  SELECT t1.* FROM mainQuery t1 ");
-//            sqLiteDatabase.compileStatement("WITH inputQuery(n) AS (SELECT \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\"), mainQuery AS ( SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE company = (SELECT n FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE LOWER(company) = (SELECT LOWER(n) FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE LOWER(company) LIKE (SELECT LOWER(n || '%') FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE LOWER(company) LIKE (SELECT LOWER('%' || n || '%') FROM inputQuery) )  SELECT t1.* FROM mainQuery t1 JOIN ( SELECT id, MIN(rank) min_rank FROM mainQue");
-//
-//
-//            sqLiteDatabase.compileStatement("WITH inputQuery(n) AS (SELECT \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\"), mainQuery AS ( SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE company = (SELECT n FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE LOWER(company) = (SELECT LOWER(n) FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE LOWER(company) LIKE (SELECT LOWER(n || '%') FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE LOWER(company) LIKE (SELECT LOWER('%' || n || '%') FROM inputQuery) )  SELECT t1.* FROM mainQuery t1 JOIN ( SELECT id, MIN(rank) min_rank FROM mainQuery GROUP BY id ) t2 ON t1.id = t2.id AND t1.rank = t2.min_rank");
-//
-//            String bill = query.replace("?", "\"" + stringToSearchFor + "\"");
-//            SQLiteStatement sqLiteStatement = sqLiteDatabase.compileStatement(bill);
-//            sqLiteStatement.bindString(0, stringToSearchFor);
+        Cursor cursor = sqLiteDatabase.rawQuery(query, new String[]{stringToSearchFor});
 
-
-            //sqLiteDatabase.validateSql(query, null)
-            //sqLiteStatement
-
-            Cursor cursor = sqLiteDatabase.rawQuery(query, new String[]{stringToSearchFor});
-
-            return mapToList(cursor);
-        } catch (android.database.sqlite.SQLiteException ex) {
-
-//            Throwable throwable = ex.getCause().getCause();
-//
-//            String message = throwable.getMessage();
-            throw ex;
-
-            //com.almworks.sqlite4java.SQLiteException ex
-        }
+        return mapToList(cursor);
     }
 
     @NonNull
