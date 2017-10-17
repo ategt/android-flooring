@@ -282,23 +282,14 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
     private static final String SQL_SEARCH_ADDRESS_BY_ALL = "WITH inputQuery(n) AS (SELECT ?),"
             + " mainQuery AS ("
             + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
-            + "         ' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip LIKE (SELECT CONCAT('% ', n, ' %') FROM inputQuery)"
+            + "         ' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip LIKE (SELECT '% ' || n || ' %' FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
-            + "         LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip) LIKE (SELECT LOWER(CONCAT('% ', n, ' %')) FROM inputQuery)"
+            + "         LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip) LIKE (SELECT LOWER('% ' || n || ' %') FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
-            + "         LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip) LIKE (SELECT LOWER(CONCAT('% ', n, '%')) FROM inputQuery)"
+            + "         LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip) LIKE (SELECT LOWER('% ' || n || '%') FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
-            + "         LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
-            + "      UNION ALL SELECT *, ROWID AS id, 5 AS rank FROM addresses WHERE "
-            + "     LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip || ' ') LIKE "
-            + "             ALL( "
-            + "                 ARRAY("
-            + "                     SELECT LOWER(CONCAT('%', input_column, '%')) FROM ( "
-            + "                         SELECT LOWER(unnest(string_to_array(n, ' '))) AS input_column FROM inputQuery "
-            + "                     ) AS augmented_input_table "
-            + "                 ) "
-            + "             ) "
-            + ") "
+            + "         LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip) LIKE (SELECT LOWER('%' || n || '%') FROM inputQuery)"
+            + "      ) "
             + "SELECT t1.* FROM mainQuery t1"
             + " JOIN ("
             + "     SELECT id, MIN(rank) min_rank"
@@ -310,32 +301,14 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
     private static final String SQL_SEARCH_ADDRESS_BY_ANY = "WITH inputQuery(n) AS (SELECT ?),"
             + " mainQuery AS ("
             + "      SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
-            + "       	' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip || ' ' LIKE (SELECT CONCAT('% ', n, ' %') FROM inputQuery) "
+            + "       	' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip || ' ' LIKE (SELECT '% ' || n || ' %' FROM inputQuery) "
             + "      UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE  "
-            + "       	LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip || ' ') LIKE (SELECT LOWER(CONCAT('% ', n, ' %')) FROM inputQuery) "
+            + "       	LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip || ' ') LIKE (SELECT LOWER('% ' || n || ' %') FROM inputQuery) "
             + "      UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE  "
-            + "       	LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip || ' ') LIKE (SELECT LOWER(CONCAT('% ', n, '%')) FROM inputQuery) "
+            + "       	LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip || ' ') LIKE (SELECT LOWER('% ' || n || '%') FROM inputQuery) "
             + "      UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE  "
-            + "       	LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip || ' ') LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery) "
-            + "      UNION ALL SELECT *, ROWID AS id, 5 AS rank FROM addresses WHERE "
-            + "     LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip || ' ') LIKE "
-            + "             ALL( "
-            + "                 ARRAY("
-            + "                     SELECT CONCAT('%', input_column, '%') FROM ( "
-            + "                         SELECT unnest(string_to_array(n, ' ')) AS input_column FROM inputQuery "
-            + "                     ) AS augmented_input_table "
-            + "                 ) "
-            + "             ) "
-            + "      UNION ALL SELECT *, ROWID AS id, 6 AS rank FROM addresses WHERE "
-            + "     LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip) LIKE "
-            + "             ANY( "
-            + "                 ARRAY("
-            + "                     SELECT CONCAT('%', input_column, '%') FROM ( "
-            + "                         SELECT unnest(string_to_array(n, ' ')) AS input_column FROM inputQuery "
-            + "                     ) AS augmented_input_table "
-            + "                 ) "
-            + "             ) "
-            + ") "
+            + "       	LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip || ' ') LIKE (SELECT LOWER('%' || n || '%') FROM inputQuery) "
+            + " ) "
             + "SELECT t1.* FROM mainQuery t1"
             + " JOIN ("
             + "     SELECT id, MIN(rank) min_rank"
@@ -346,19 +319,15 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
 
     private static final String SQL_ADDRESS_NAME_COMPLETION_QUERY = "WITH inputQuery(n) AS (SELECT ?), " +
             " nameOrCompany(col) AS ( " +
-            " SELECT CONCAT(' ' || first_name || ' ' || last_name || ' ') col FROM addresses  " +
+            " SELECT (' ' || first_name || ' ' || last_name || ' ') col FROM addresses  " +
             " UNION SELECT ' ' || company || ' ' col FROM addresses ), " +
             " " +
             "  fullQuery AS ( " +
             "  " +
-            " SELECT col, 1 rank FROM nameOrCompany WHERE col LIKE (SELECT CONCAT('% ', n, ' %') FROM inputQuery)   " +
-            "             UNION ALL SELECT col, 2 rank FROM nameOrCompany WHERE LOWER(col) LIKE (SELECT LOWER(CONCAT('% ', n, ' %')) FROM inputQuery)   " +
-            "             UNION ALL SELECT col, 3 rank FROM nameOrCompany WHERE LOWER(col) LIKE (SELECT LOWER(CONCAT('% ', n, '%')) FROM inputQuery)   " +
-            "             UNION ALL SELECT col, 4 rank FROM nameOrCompany WHERE LOWER(col) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)   " +
-            "             UNION ALL SELECT col, 5 rank FROM nameOrCompany WHERE LOWER(col) LIKE   " +
-            "              ALL( ARRAY( SELECT LOWER(CONCAT('%', input_column, '%')) FROM   " +
-            "               ( SELECT LOWER(unnest(string_to_array(n, ' '))) AS input_column FROM inputQuery ) AS augmented_input_table ) ) " +
-            "              ) " +
+            " SELECT col, 1 rank FROM nameOrCompany WHERE col LIKE (SELECT '% ' || n || ' %' FROM inputQuery)   " +
+            "             UNION ALL SELECT col, 2 rank FROM nameOrCompany WHERE LOWER(col) LIKE (SELECT LOWER('% ' || n || ' %') FROM inputQuery)   " +
+            "             UNION ALL SELECT col, 3 rank FROM nameOrCompany WHERE LOWER(col) LIKE (SELECT LOWER('% ' || n || '%') FROM inputQuery)   " +
+            "             UNION ALL SELECT col, 4 rank FROM nameOrCompany WHERE LOWER(col) LIKE (SELECT LOWER('%' || n || '%') FROM inputQuery)   " +
             "   " +
             "  SELECT TRIM(t1.col) col FROM fullQuery t1 " +
             "         JOIN ( " +
@@ -467,7 +436,8 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
 
                 return rowMapper(cursor);
             } else {
-                throw new Resources.NotFoundException("Address with ID " + id + " does not exist");
+                //throw new Resources.NotFoundException("Address with ID " + id + " does not exist");
+                return null;
             }
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -672,10 +642,12 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
     @Override
     public Address delete(Integer id) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        Cursor cursor = sqLiteDatabase.rawQuery(SQL_DELETE_ADDRESS, new String[]{String.valueOf(id)});
 
-        if (cursor.moveToFirst())
-            return rowMapper(cursor);
+        Address result = get(id);
+        int rowsAffected = sqLiteDatabase.delete(ADDRESS_TABLE_NAME, SQL_ADDRESS_ID_WHERE_CLAUSE, new String[]{String.valueOf(id)});
+
+        if (rowsAffected == 1)
+            return result;
         else
             return null;
     }
@@ -856,10 +828,10 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
         StringBuilder stringBuffer = new StringBuilder();
         stringBuffer.append("SELECT *, ROWID AS id FROM (");
         stringBuffer.append(query);
-        stringBuffer.append(") AS innerQuery OFFSET ");
-        stringBuffer.append(offset);
-        stringBuffer.append(" LIMIT ");
+        stringBuffer.append(") AS innerQuery LIMIT ");
         stringBuffer.append(resultsPerPage);
+        stringBuffer.append(" OFFSET ");
+        stringBuffer.append(offset);
 
         return stringBuffer.toString();
     }
