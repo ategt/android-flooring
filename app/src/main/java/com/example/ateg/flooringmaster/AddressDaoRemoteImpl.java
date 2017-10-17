@@ -135,6 +135,16 @@ public class AddressDaoRemoteImpl implements AddressDao {
     }
 
     @Override
+    public int size(AddressSearchRequest addressSearchRequest) {
+        throw new UnsupportedOperationException("This method is not supported yet.");
+    }
+
+    @Override
+    public int size(boolean block, AddressSearchRequest addressSearchRequest) {
+        throw new UnsupportedOperationException("This method is not supported yet.");
+    }
+
+    @Override
     public List<Address> getAddressesSortedByParameter(String sortBy) {
         return list(new AddressResultSegment(AddressSortByEnum.parse(sortBy), 0, Integer.MAX_VALUE));
     }

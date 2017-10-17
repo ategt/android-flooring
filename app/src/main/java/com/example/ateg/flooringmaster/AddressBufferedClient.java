@@ -154,6 +154,16 @@ public class AddressBufferedClient implements AddressDao, AddressClient {
     }
 
     @Override
+    public int size(AddressSearchRequest addressSearchRequest) {
+        throw new UnsupportedOperationException("This method is not implemented yet.");
+    }
+
+    @Override
+    public int size(boolean block, AddressSearchRequest addressSearchRequest) {
+        throw new UnsupportedOperationException("This method is not implemented yet.");
+    }
+
+    @Override
     public List<Address> getAddressesSortedByParameter(String sortBy) {
         return addressDao.getAddressesSortedByParameter(sortBy);
     }

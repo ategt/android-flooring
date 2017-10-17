@@ -53,4 +53,5 @@ dependencies {
     compile 'com.google.guava:guava:20.0'
 
     testCompile 'org.robolectric:robolectric:3.4.2'
+    compile 'com.almworks.sqlite4java:sqlite4java:0.282'
 }

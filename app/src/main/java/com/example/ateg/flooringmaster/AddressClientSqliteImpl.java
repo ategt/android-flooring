@@ -69,226 +69,228 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
     private static final String SQL_SORT_ADDRESSES_BY_ID_INVERSE_PARTIAL = " ORDER BY rank ASC, id DESC";
 
     private static final String SQL_SEARCH_ADDRESS_BY_FIRST_NAME = "WITH inputQuery(n) AS (SELECT ?),"
-            + "	mainQuery AS ("
+            + " mainQuery AS ("
             + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
-            + "      	first_name = (SELECT n FROM inputQuery)"
+            + "         first_name = (SELECT n FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
-            + "      	LOWER(first_name) = (SELECT LOWER(n) FROM inputQuery)"
+            + "         LOWER(first_name) = (SELECT LOWER(n) FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
-            + "      	LOWER(first_name) LIKE (SELECT LOWER(CONCAT(n, '%')) FROM inputQuery)"
+            + "         LOWER(first_name) LIKE (SELECT LOWER(CONCAT(n, '%')) FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
-            + "      	LOWER(first_name) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
+            + "         LOWER(first_name) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
-            + "	JOIN ("
-            + "		SELECT ROWID AS id, MIN(rank) min_rank"
-            + "		FROM mainQuery"
-            + "		GROUP BY id"
-            + "	) t2 "
+            + " JOIN ("
+            + "     SELECT id, MIN(rank) min_rank"
+            + "     FROM mainQuery"
+            + "     GROUP BY id"
+            + " ) t2 "
             + "ON t1.id = t2.id AND t1.rank = t2.min_rank";
 
     private static final String SQL_SEARCH_ADDRESS_BY_LAST_NAME = "WITH inputQuery(n) AS (SELECT ?),"
-            + "	mainQuery AS ("
+            + " mainQuery AS ("
             + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
-            + "      	last_name = (SELECT n FROM inputQuery)"
+            + "         last_name = (SELECT n FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
-            + "      	LOWER(last_name) = (SELECT LOWER(n) FROM inputQuery)"
+            + "         LOWER(last_name) = (SELECT LOWER(n) FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
-            + "      	LOWER(last_name) LIKE (SELECT LOWER(CONCAT(n, '%')) FROM inputQuery)"
+            + "         LOWER(last_name) LIKE (SELECT LOWER(CONCAT(n, '%')) FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
-            + "      	LOWER(last_name) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
+            + "         LOWER(last_name) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
-            + "	JOIN ("
-            + "		SELECT ROWID AS id, MIN(rank) min_rank"
-            + "		FROM mainQuery"
-            + "		GROUP BY id"
-            + "	) t2 "
+            + " JOIN ("
+            + "     SELECT id, MIN(rank) min_rank"
+            + "     FROM mainQuery"
+            + "     GROUP BY id"
+            + " ) t2 "
             + "ON t1.id = t2.id AND t1.rank = t2.min_rank";
 
     private static final String SQL_SEARCH_ADDRESS_BY_NAME = "WITH inputQuery(n) AS (SELECT ?),"
-            + "	mainQuery AS ("
+            + " mainQuery AS ("
             + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
-            + "      	LOWER(' ' || first_name || ' ' || last_name || ' ' ) LIKE (SELECT CONCAT('% ', n, ' %') FROM inputQuery)"
+            + "         LOWER(' ' || first_name || ' ' || last_name || ' ' ) LIKE (SELECT CONCAT('% ', n, ' %') FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
-            + "      	LOWER(' ' || first_name || ' ' || last_name || ' ' ) LIKE (SELECT LOWER(CONCAT('% ', n, ' %')) FROM inputQuery)"
+            + "         LOWER(' ' || first_name || ' ' || last_name || ' ' ) LIKE (SELECT LOWER(CONCAT('% ', n, ' %')) FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
-            + "      	LOWER(' ' || first_name || ' ' || last_name ) LIKE (SELECT LOWER(CONCAT('% ', n, '%')) FROM inputQuery)"
+            + "         LOWER(' ' || first_name || ' ' || last_name ) LIKE (SELECT LOWER(CONCAT('% ', n, '%')) FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
-            + "      	LOWER(' ' || first_name || ' ' || last_name ) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
+            + "         LOWER(' ' || first_name || ' ' || last_name ) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
-            + "	JOIN ("
-            + "		SELECT ROWID AS id, MIN(rank) min_rank"
-            + "		FROM mainQuery"
-            + "		GROUP BY id"
-            + "	) t2 "
+            + " JOIN ("
+            + "     SELECT id, MIN(rank) min_rank"
+            + "     FROM mainQuery"
+            + "     GROUP BY id"
+            + " ) t2 "
             + "ON t1.id = t2.id AND t1.rank = t2.min_rank";
 
-    private static final String SQL_SEARCH_ADDRESS_BY_COMPANY = "WITH inputQuery(n) AS (SELECT ?),"
-            + "	mainQuery AS ("
-            + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
-            + "      	company = (SELECT n FROM inputQuery)"
-            + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
-            + "      	LOWER(company) = (SELECT LOWER(n) FROM inputQuery)"
-            + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
-            + "      	LOWER(company) LIKE (SELECT LOWER(n || '%') FROM inputQuery)"
-            + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
-            + "      	LOWER(company) LIKE (SELECT LOWER('%' || n || '%') FROM inputQuery)"
+    private static final String SQL_SEARCH_ADDRESS_BY_COMPANYz = "WITH inputQuery(n) AS (SELECT ?), "
+            + "mainQuery AS ( "
+            + "SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
+            + "company = (SELECT n FROM inputQuery) "
+            + "UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
+            + "LOWER(company) = (SELECT LOWER(n) FROM inputQuery) "
+            + "UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
+            + "LOWER(company) LIKE (SELECT LOWER(n || '%') FROM inputQuery) "
+            + "UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
+            + "LOWER(company) LIKE (SELECT LOWER('%' || n || '%') FROM inputQuery) "
             + ") "
-            + "SELECT t1.* FROM mainQuery t1"
-            + "	JOIN ("
-            + "		SELECT ROWID AS id, MIN(rank) min_rank"
-            + "		FROM mainQuery"
-            + "		GROUP BY id"
-            + "	) t2 "
-            + "ON t1.id = t2.id AND t1.rank = t2.min_rank";
+            + " SELECT t1.* FROM mainQuery t1 "
+            + " JOIN ( "
+            + " SELECT id, MIN(rank) min_rank "
+            + " FROM mainQuery "
+            + " GROUP BY id "
+            + " ) t2 "
+            + " ON t1.id = t2.id AND t1.rank = t2.min_rank";
+
+    private static final String SQL_SEARCH_ADDRESS_BY_COMPANY = "WITH inputQuery(n) AS (SELECT ?), mainQuery AS ( SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE company = (SELECT n FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE LOWER(company) = (SELECT LOWER(n) FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE LOWER(company) LIKE (SELECT LOWER(n || '%') FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE LOWER(company) LIKE (SELECT LOWER('%' || n || '%') FROM inputQuery) )  SELECT t1.* FROM mainQuery t1 JOIN ( SELECT id, MIN(rank) min_rank FROM mainQuery GROUP BY id ) t2 ON t1.id = t2.id AND t1.rank = t2.min_rank";
 
     private static final String SQL_SEARCH_ADDRESS_BY_NAME_OR_COMPANY = "WITH inputQuery(n) AS (SELECT ?),"
-            + "	mainQuery AS ("
+            + " mainQuery AS ("
             + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
-            + "      	LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' ') LIKE (SELECT CONCAT('% ', n, ' %') FROM inputQuery)"
+            + "         LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' ') LIKE (SELECT CONCAT('% ', n, ' %') FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
-            + "      	LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' ') LIKE (SELECT LOWER(CONCAT('% ', n, ' %')) FROM inputQuery)"
+            + "         LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' ') LIKE (SELECT LOWER(CONCAT('% ', n, ' %')) FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
-            + "      	LOWER(' ' || first_name || ' ' || last_name || ' ' || company) LIKE (SELECT LOWER(CONCAT('% ', n, '%')) FROM inputQuery)"
+            + "         LOWER(' ' || first_name || ' ' || last_name || ' ' || company) LIKE (SELECT LOWER(CONCAT('% ', n, '%')) FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
-            + "      	LOWER(' ' || first_name || ' ' || last_name || ' ' || company) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
+            + "         LOWER(' ' || first_name || ' ' || last_name || ' ' || company) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
-            + "	JOIN ("
-            + "		SELECT ROWID AS id, MIN(rank) min_rank"
-            + "		FROM mainQuery"
-            + "		GROUP BY id"
-            + "	) t2 "
+            + " JOIN ("
+            + "     SELECT id, MIN(rank) min_rank"
+            + "     FROM mainQuery"
+            + "     GROUP BY id"
+            + " ) t2 "
             + "ON t1.id = t2.id AND t1.rank = t2.min_rank";
 
     private static final String SQL_SEARCH_ADDRESS_BY_CITY = "WITH inputQuery(n) AS (SELECT ?),"
-            + "	mainQuery AS ("
+            + " mainQuery AS ("
             + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
-            + "      	city = (SELECT n FROM inputQuery)"
+            + "         city = (SELECT n FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
-            + "      	LOWER(city) = (SELECT LOWER(n) FROM inputQuery)"
+            + "         LOWER(city) = (SELECT LOWER(n) FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
-            + "      	LOWER(city) LIKE (SELECT LOWER(CONCAT(n, '%')) FROM inputQuery)"
+            + "         LOWER(city) LIKE (SELECT LOWER(CONCAT(n, '%')) FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
-            + "      	LOWER(city) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
+            + "         LOWER(city) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
-            + "	JOIN ("
-            + "		SELECT ROWID AS id, MIN(rank) min_rank"
-            + "		FROM mainQuery"
-            + "		GROUP BY id"
-            + "	) t2 "
+            + " JOIN ("
+            + "     SELECT id, MIN(rank) min_rank"
+            + "     FROM mainQuery"
+            + "     GROUP BY id"
+            + " ) t2 "
             + "ON t1.id = t2.id AND t1.rank = t2.min_rank";
 
     private static final String SQL_SEARCH_ADDRESS_BY_STATE = "WITH inputQuery(n) AS (SELECT ?),"
-            + "	mainQuery AS ("
+            + " mainQuery AS ("
             + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
-            + "      	state = (SELECT n FROM inputQuery)"
+            + "         state = (SELECT n FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
-            + "      	LOWER(state) = (SELECT LOWER(n) FROM inputQuery)"
+            + "         LOWER(state) = (SELECT LOWER(n) FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
-            + "      	LOWER(state) LIKE (SELECT LOWER(CONCAT(n, '%')) FROM inputQuery)"
+            + "         LOWER(state) LIKE (SELECT LOWER(CONCAT(n, '%')) FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
-            + "      	LOWER(state) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
+            + "         LOWER(state) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
-            + "	JOIN ("
-            + "		SELECT ROWID AS id, MIN(rank) min_rank"
-            + "		FROM mainQuery"
-            + "		GROUP BY id"
-            + "	) t2 "
+            + " JOIN ("
+            + "     SELECT id, MIN(rank) min_rank"
+            + "     FROM mainQuery"
+            + "     GROUP BY id"
+            + " ) t2 "
             + "ON t1.id = t2.id AND t1.rank = t2.min_rank";
 
     private static final String SQL_SEARCH_ADDRESS_BY_ZIP = "WITH inputQuery(n) AS (SELECT ?),"
-            + "	mainQuery AS ("
+            + " mainQuery AS ("
             + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
-            + "      	zip = (SELECT n FROM inputQuery)"
+            + "         zip = (SELECT n FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
-            + "      	LOWER(zip) = (SELECT LOWER(n) FROM inputQuery)"
+            + "         LOWER(zip) = (SELECT LOWER(n) FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
-            + "      	LOWER(zip) LIKE (SELECT LOWER(CONCAT(n, '%')) FROM inputQuery)"
+            + "         LOWER(zip) LIKE (SELECT LOWER(CONCAT(n, '%')) FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
-            + "      	LOWER(zip) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
+            + "         LOWER(zip) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
-            + "	JOIN ("
-            + "		SELECT ROWID AS id, MIN(rank) min_rank"
-            + "		FROM mainQuery"
-            + "		GROUP BY id"
-            + "	) t2 "
+            + " JOIN ("
+            + "     SELECT id, MIN(rank) min_rank"
+            + "     FROM mainQuery"
+            + "     GROUP BY id"
+            + " ) t2 "
             + "ON t1.id = t2.id AND t1.rank = t2.min_rank";
 
     private static final String SQL_SEARCH_ADDRESS_BY_STREET_NUMBER = "WITH inputQuery(n) AS (SELECT ?),"
-            + "	mainQuery AS ("
+            + " mainQuery AS ("
             + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
-            + "      	street_number = (SELECT n FROM inputQuery)"
+            + "         street_number = (SELECT n FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
-            + "      	LOWER(street_number) = (SELECT LOWER(n) FROM inputQuery)"
+            + "         LOWER(street_number) = (SELECT LOWER(n) FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
-            + "      	LOWER(street_number) LIKE (SELECT LOWER(CONCAT(n, '%')) FROM inputQuery)"
+            + "         LOWER(street_number) LIKE (SELECT LOWER(CONCAT(n, '%')) FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
-            + "      	LOWER(street_number) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
+            + "         LOWER(street_number) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
-            + "	JOIN ("
-            + "		SELECT ROWID AS id, MIN(rank) min_rank"
-            + "		FROM mainQuery"
-            + "		GROUP BY id"
-            + "	) t2 "
+            + " JOIN ("
+            + "     SELECT id, MIN(rank) min_rank"
+            + "     FROM mainQuery"
+            + "     GROUP BY id"
+            + " ) t2 "
             + "ON t1.id = t2.id AND t1.rank = t2.min_rank";
 
     private static final String SQL_SEARCH_ADDRESS_BY_STREET_NAME = "WITH inputQuery(n) AS (SELECT ?),"
-            + "	mainQuery AS ("
+            + " mainQuery AS ("
             + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
-            + "      	street_name = (SELECT n FROM inputQuery)"
+            + "         street_name = (SELECT n FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
-            + "      	LOWER(street_name) = (SELECT LOWER(n) FROM inputQuery)"
+            + "         LOWER(street_name) = (SELECT LOWER(n) FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
-            + "      	LOWER(street_name) LIKE (SELECT LOWER(CONCAT(n, '%')) FROM inputQuery)"
+            + "         LOWER(street_name) LIKE (SELECT LOWER(CONCAT(n, '%')) FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
-            + "      	LOWER(street_name) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
+            + "         LOWER(street_name) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
-            + "	JOIN ("
-            + "		SELECT ROWID AS id, MIN(rank) min_rank"
-            + "		FROM mainQuery"
-            + "		GROUP BY id"
-            + "	) t2 "
+            + " JOIN ("
+            + "     SELECT id, MIN(rank) min_rank"
+            + "     FROM mainQuery"
+            + "     GROUP BY id"
+            + " ) t2 "
             + "ON t1.id = t2.id AND t1.rank = t2.min_rank";
 
     private static final String SQL_SEARCH_ADDRESS_BY_STREET = "WITH inputQuery(n) AS (SELECT ?),"
-            + "	mainQuery AS ("
+            + " mainQuery AS ("
             + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
-            + "      	' ' || street_number || ' ' || street_name LIKE (SELECT CONCAT('% ', n, ' %') FROM inputQuery)"
+            + "         ' ' || street_number || ' ' || street_name LIKE (SELECT CONCAT('% ', n, ' %') FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
-            + "      	LOWER(' ' || street_number || ' ' || street_name) LIKE (SELECT LOWER(CONCAT('% ', n, ' %')) FROM inputQuery)"
+            + "         LOWER(' ' || street_number || ' ' || street_name) LIKE (SELECT LOWER(CONCAT('% ', n, ' %')) FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
-            + "      	LOWER(' ' || street_number || ' ' || street_name) LIKE (SELECT LOWER(CONCAT('% ', n, '%')) FROM inputQuery)"
+            + "         LOWER(' ' || street_number || ' ' || street_name) LIKE (SELECT LOWER(CONCAT('% ', n, '%')) FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
-            + "      	LOWER(' ' || street_number || ' ' || street_name) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
+            + "         LOWER(' ' || street_number || ' ' || street_name) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
-            + "	JOIN ("
-            + "		SELECT ROWID AS id, MIN(rank) min_rank"
-            + "		FROM mainQuery"
-            + "		GROUP BY id"
-            + "	) t2 "
+            + " JOIN ("
+            + "     SELECT id, MIN(rank) min_rank"
+            + "     FROM mainQuery"
+            + "     GROUP BY id"
+            + " ) t2 "
             + "ON t1.id = t2.id AND t1.rank = t2.min_rank";
 
     private static final String SQL_SEARCH_ADDRESS_BY_ALL = "WITH inputQuery(n) AS (SELECT ?),"
-            + "	mainQuery AS ("
+            + " mainQuery AS ("
             + "     SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
-            + "      	' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip LIKE (SELECT CONCAT('% ', n, ' %') FROM inputQuery)"
+            + "         ' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip LIKE (SELECT CONCAT('% ', n, ' %') FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE "
-            + "      	LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip) LIKE (SELECT LOWER(CONCAT('% ', n, ' %')) FROM inputQuery)"
+            + "         LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip) LIKE (SELECT LOWER(CONCAT('% ', n, ' %')) FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE "
-            + "      	LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip) LIKE (SELECT LOWER(CONCAT('% ', n, '%')) FROM inputQuery)"
+            + "         LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip) LIKE (SELECT LOWER(CONCAT('% ', n, '%')) FROM inputQuery)"
             + "     UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE "
-            + "      	LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
+            + "         LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip) LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery)"
             + "      UNION ALL SELECT *, ROWID AS id, 5 AS rank FROM addresses WHERE "
-            + "		LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip || ' ') LIKE "
+            + "     LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip || ' ') LIKE "
             + "             ALL( "
             + "                 ARRAY("
             + "                     SELECT LOWER(CONCAT('%', input_column, '%')) FROM ( "
@@ -298,15 +300,15 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
             + "             ) "
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
-            + "	JOIN ("
-            + "		SELECT ROWID AS id, MIN(rank) min_rank"
-            + "		FROM mainQuery"
-            + "		GROUP BY id"
-            + "	) t2 "
+            + " JOIN ("
+            + "     SELECT id, MIN(rank) min_rank"
+            + "     FROM mainQuery"
+            + "     GROUP BY id"
+            + " ) t2 "
             + "ON t1.id = t2.id AND t1.rank = t2.min_rank";
 
     private static final String SQL_SEARCH_ADDRESS_BY_ANY = "WITH inputQuery(n) AS (SELECT ?),"
-            + "	mainQuery AS ("
+            + " mainQuery AS ("
             + "      SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE "
             + "       	' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip || ' ' LIKE (SELECT CONCAT('% ', n, ' %') FROM inputQuery) "
             + "      UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE  "
@@ -316,7 +318,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
             + "      UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE  "
             + "       	LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip || ' ') LIKE (SELECT LOWER(CONCAT('%', n, '%')) FROM inputQuery) "
             + "      UNION ALL SELECT *, ROWID AS id, 5 AS rank FROM addresses WHERE "
-            + "		LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip || ' ') LIKE "
+            + "     LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip || ' ') LIKE "
             + "             ALL( "
             + "                 ARRAY("
             + "                     SELECT CONCAT('%', input_column, '%') FROM ( "
@@ -325,7 +327,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
             + "                 ) "
             + "             ) "
             + "      UNION ALL SELECT *, ROWID AS id, 6 AS rank FROM addresses WHERE "
-            + "		LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip) LIKE "
+            + "     LOWER(' ' || first_name || ' ' || last_name || ' ' || company || ' '  || street_number || ' ' || street_name || ' ' || city || ' ' || state || ' ' || zip) LIKE "
             + "             ANY( "
             + "                 ARRAY("
             + "                     SELECT CONCAT('%', input_column, '%') FROM ( "
@@ -335,11 +337,11 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
             + "             ) "
             + ") "
             + "SELECT t1.* FROM mainQuery t1"
-            + "	JOIN ("
-            + "		SELECT ROWID AS id, MIN(rank) min_rank"
-            + "		FROM mainQuery"
-            + "		GROUP BY id"
-            + "	) t2 "
+            + " JOIN ("
+            + "     SELECT id, MIN(rank) min_rank"
+            + "     FROM mainQuery"
+            + "     GROUP BY id"
+            + " ) t2 "
             + "ON t1.id = t2.id AND t1.rank = t2.min_rank";
 
     private static final String SQL_ADDRESS_NAME_COMPLETION_QUERY = "WITH inputQuery(n) AS (SELECT ?), " +
@@ -564,9 +566,84 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
 
         String query = sortAndPaginateQuery(sqlQueryToUse, addressResultSegment);
 
-        Cursor cursor = sqLiteDatabase.rawQuery(query, new String[]{stringToSearchFor});
+        try {
+//            sqLiteDatabase.compileStatement("SELECT * FROM addresses");
+//
+//            sqLiteDatabase.compileStatement("SELECT * FROM addresses WHERE company = \"asdfasdfasdfc\"");
+//
+//
+//            sqLiteDatabase.compileStatement("SELECT * FROM addresses " +
+//                    "WHERE company = (SELECT \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\")");
+//
+//            sqLiteDatabase.compileStatement("SELECT * FROM addresses " +
+//                    "WHERE company = (SELECT \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\" AS n)");
+//
+//            Cursor c = sqLiteDatabase.rawQuery("WITH averyrandomquery AS (SELECT \"asdf\") SELECT * FROM addresses", null);
+//
+//            sqLiteDatabase.compileStatement("WITH main AS (SELECT \"random\") " +
+//                    "SELECT * FROM addresses WHERE company = \"asfasdf\"");
+//
+//            sqLiteDatabase.compileStatement("WITH inputQuery AS" +
+//                    " (SELECT \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\" AS n)" +
+//                    " SELECT * FROM addresses WHERE company = \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\"");
+//
+//            sqLiteDatabase.compileStatement("WITH inputQuery AS" +
+//                    " (SELECT \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\" AS n)" +
+//                    " SELECT * FROM addresses WHERE company = (SELECT n FROM inputQuery)");
+//
+//            sqLiteDatabase.compileStatement("WITH inputQuery AS" +
+//                    " (SELECT \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\" AS n)," +
+//                    " mainQuery AS (" +
+//                    " SELECT * FROM addresses" +
+//                    " WHERE company = (SELECT n FROM inputQuery))" +
+//                    " SELECT * FROM mainQuery");
+//
+//            sqLiteDatabase.compileStatement("WITH inputQuery AS" +
+//                    " (SELECT \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\" AS n)," +
+//                    " mainQuery AS (" +
+//                    " SELECT * FROM addresses" +
+//                    " WHERE company = (SELECT n FROM inputQuery))" +
+//                    " SELECT t1.* FROM mainQuery t1");
+//
+//            sqLiteDatabase.compileStatement("WITH inputQuery AS" +
+//                    " (SELECT \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\" AS n)," +
+//                    " mainQuery AS (" +
+//                    " SELECT * FROM addresses" +
+//                    " WHERE company = (SELECT n FROM inputQuery))" +
+//                    " SELECT t1.* FROM mainQuery t1");
+//
+//            sqLiteDatabase.compileStatement("WITH inputQuery AS (SELECT \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\" AS n)," +
+//                    " mainQuery AS (" +
+//                    "   SELECT *, ROWID AS id, 1 AS rank FROM addresses" +
+//                    "   WHERE company = (SELECT n FROM inputQuery) )" +
+//                    " SELECT t1.* FROM mainQuery t1 ");
+//
+//            sqLiteDatabase.compileStatement("WITH inputQuery AS (SELECT \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\" AS n), mainQuery AS ( SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE company = (SELECT n FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE LOWER(company) = (SELECT LOWER(n) FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE LOWER(company) LIKE (SELECT LOWER(n || '%') FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE LOWER(company) LIKE (SELECT LOWER('%' || n || '%') FROM inputQuery) )  SELECT t1.* FROM mainQuery t1 ");
+//            sqLiteDatabase.compileStatement("WITH inputQuery(n) AS (SELECT \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\"), mainQuery AS ( SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE company = (SELECT n FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE LOWER(company) = (SELECT LOWER(n) FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE LOWER(company) LIKE (SELECT LOWER(n || '%') FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE LOWER(company) LIKE (SELECT LOWER('%' || n || '%') FROM inputQuery) )  SELECT t1.* FROM mainQuery t1 JOIN ( SELECT id, MIN(rank) min_rank FROM mainQue");
+//
+//
+//            sqLiteDatabase.compileStatement("WITH inputQuery(n) AS (SELECT \"35e069d0-86f6-4206-bb5e-50b22f79eb9b\"), mainQuery AS ( SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE company = (SELECT n FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE LOWER(company) = (SELECT LOWER(n) FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE LOWER(company) LIKE (SELECT LOWER(n || '%') FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE LOWER(company) LIKE (SELECT LOWER('%' || n || '%') FROM inputQuery) )  SELECT t1.* FROM mainQuery t1 JOIN ( SELECT id, MIN(rank) min_rank FROM mainQuery GROUP BY id ) t2 ON t1.id = t2.id AND t1.rank = t2.min_rank");
+//
+//            String bill = query.replace("?", "\"" + stringToSearchFor + "\"");
+//            SQLiteStatement sqLiteStatement = sqLiteDatabase.compileStatement(bill);
+//            sqLiteStatement.bindString(0, stringToSearchFor);
 
-        return mapToList(cursor);
+
+            //sqLiteDatabase.validateSql(query, null)
+            //sqLiteStatement
+
+            Cursor cursor = sqLiteDatabase.rawQuery(query, new String[]{stringToSearchFor});
+
+            return mapToList(cursor);
+        } catch (android.database.sqlite.SQLiteException ex) {
+
+//            Throwable throwable = ex.getCause().getCause();
+//
+//            String message = throwable.getMessage();
+            throw ex;
+
+            //com.almworks.sqlite4java.SQLiteException ex
+        }
     }
 
     @NonNull
@@ -611,6 +688,34 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
     @Override
     public int size(boolean block) {
         return size();
+    }
+
+    @Override
+    public int size(AddressSearchRequest addressSearchRequest) {
+        if (addressSearchRequest == null) {
+            return size();
+        }
+
+        String sqlQuery = determineSqlSearchQuery(addressSearchRequest.searchBy());
+
+        final String SQL_ADDRESS_SEARCH_COUNT = new StringBuffer().append("SELECT COUNT(*) AS result FROM (")
+                .append(sqlQuery)
+                .append(") AS countingQuery")
+                .toString();
+
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery(SQL_ADDRESS_SEARCH_COUNT, new String[]{addressSearchRequest.getSearchText()});
+
+        if (cursor.moveToFirst()) {
+            return cursor.getInt(cursor.getColumnIndex("result"));
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public int size(boolean block, AddressSearchRequest addressSearchRequest) {
+        return size(addressSearchRequest);
     }
 
     @Override
