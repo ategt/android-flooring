@@ -29,8 +29,9 @@ import static org.junit.Assert.*;
  * Created by ATeg on 10/13/2017.
  */
 @RunWith(AndroidJUnit4.class)
-public class AddressClientSqliteImplTest {
+public class AddressClientSqliteImplAndroidTest {
 
+    Gson gson;
     AddressDao addressDao;
     Context appContext;
 
@@ -38,6 +39,7 @@ public class AddressClientSqliteImplTest {
     public void setUp() throws Exception {
         appContext = InstrumentationRegistry.getTargetContext();
         addressDao = new AddressClientSqliteImpl(appContext, "Test-Flooring-DB", 2);
+        gson = new GsonBuilder().create();
     }
 
     @After
@@ -266,7 +268,9 @@ public class AddressClientSqliteImplTest {
         List<Address> result = addressDao.search(new AddressSearchRequest(queryString, searchOption),
                 new AddressResultSegment(AddressSortByEnum.SORT_BY_ID, page, resultsPerPage));
 
-        assertTrue(result.contains(address));
+        assertTrue("Address: " + gson.toJson(address) +
+                 "\nresults: " + gson.toJson(result)
+                , result.contains(address));
         assertEquals(result.size(), 1);
 
         List<Address> resultEmpty = addressDao.search(new AddressSearchRequest(queryString, wrongSearchOption),

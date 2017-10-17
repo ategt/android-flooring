@@ -537,10 +537,29 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
         String query = sortAndPaginateQuery(sqlQueryToUse, addressResultSegment);
 
         try {
+//
+//            sqLiteDatabase.compileStatement("SELECT 'bill'");
+//
+//            sqLiteDatabase.compileStatement("WITH mainQuery AS ( SELECT ? ) SELECT * FROM mainQuery");
+//
+//            sqLiteDatabase.compileStatement("WITH mainQuery AS ( SELECT 'asdf' AS r ) SELECT * FROM mainQuery");
+//
+//            sqLiteDatabase.compileStatement("WITH inputQuery(n) AS (SELECT ?), mainQuery AS ( SELECT 'asdf' AS r ) SELECT * FROM mainQuery");
+//
+//            sqLiteDatabase.compileStatement("WITH inputQuery(n) AS (SELECT ?), mainQuery AS ( SELECT 'asdf' AS r ) SELECT t1.* FROM mainQuery t1");
+//
+//            sqLiteDatabase.compileStatement("WITH inputQuery(n) AS (SELECT ?), mainQuery AS ( SELECT 2 AS id, 1 AS rank ) SELECT t1.* FROM mainQuery t1 JOIN ( SELECT id, MIN(rank) min_rank FROM mainQuery GROUP BY id ) AS t2 ON t1.id = t2.id AND t1.rank = t2.min_rank");
+//
+//            sqLiteDatabase.compileStatement("WITH inputQuery(n) AS (SELECT ?), mainQuery AS ( SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE company = (SELECT n FROM inputQuery) )  SELECT t1.* FROM mainQuery t1 JOIN ( SELECT id, MIN(rank) min_rank FROM mainQuery GROUP BY id ) t2 ON t1.id = t2.id AND t1.rank = t2.min_rank");
+//
+//            sqLiteDatabase.compileStatement("WITH inputQuery(n) AS (SELECT ?), mainQuery AS ( SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE company = (SELECT n FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE LOWER(company) = (SELECT LOWER(n) FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE LOWER(company) LIKE (SELECT LOWER(n || '%') FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE LOWER(company) LIKE (SELECT LOWER('%' || n || '%') FROM inputQuery) )  SELECT 'bill'");
+
+            //sqLiteDatabase.compileStatement("WITH inputQuery(n) AS (SELECT ?), mainQuery AS ( SELECT *, ROWID AS id, 1 AS rank FROM addresses WHERE company = (SELECT n FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 2 AS rank FROM addresses WHERE LOWER(company) = (SELECT LOWER(n) FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 3 AS rank FROM addresses WHERE LOWER(company) LIKE (SELECT LOWER(n || '%') FROM inputQuery) UNION ALL SELECT *, ROWID AS id, 4 AS rank FROM addresses WHERE LOWER(company) LIKE (SELECT LOWER('%' || n || '%') FROM inputQuery) )  SELECT t1.* FROM mainQuery t1 JOIN ( SELECT id, MIN(rank) min_rank FROM mainQuery GROUP BY id ) t2 ON t1.id = t2.id AND t1.rank = t2.min_rank");
+
             Cursor cursor = sqLiteDatabase.rawQuery(query, new String[]{stringToSearchFor});
 
             return mapToList(cursor);
-        } catch (android.database.sqlite.SQLiteException ex){
+        } catch (android.database.sqlite.SQLiteException ex) {
             System.out.print("\tQuery: " + query + "\n\tParam: " + stringToSearchFor);
             Log.e(TAG, "Query: " + query + "\nParam: " + stringToSearchFor, ex);
             throw ex;
@@ -695,6 +714,8 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
 
 
     private String determineSqlSearchQuery(AddressSearchByOptionEnum searchOption) {
+        System.out.println("Using: " + searchOption);
+
         String sqlSearchQuery;
         switch (searchOption) {
             case LAST_NAME:
@@ -757,7 +778,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
         long offset = (long) resultsPerPage * (long) page;
 
         StringBuilder stringBuffer = new StringBuilder();
-        stringBuffer.append("SELECT *, ROWID AS id FROM (");
+        stringBuffer.append("SELECT * FROM (");
         stringBuffer.append(query);
         stringBuffer.append(") AS innerQuery LIMIT ");
         stringBuffer.append(resultsPerPage);
@@ -777,7 +798,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
         }
 
         StringBuilder stringBuffer = new StringBuilder();
-        stringBuffer.append("SELECT *, ROWID AS id FROM (");
+        stringBuffer.append("SELECT * FROM (");
         stringBuffer.append(query);
         stringBuffer.append(") AS preSortedQuery");
 
