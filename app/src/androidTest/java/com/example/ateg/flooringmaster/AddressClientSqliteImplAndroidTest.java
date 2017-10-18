@@ -269,7 +269,7 @@ public class AddressClientSqliteImplAndroidTest {
                 new AddressResultSegment(AddressSortByEnum.SORT_BY_ID, page, resultsPerPage));
 
         assertTrue("Address: " + gson.toJson(address) +
-                 "\nresults: " + gson.toJson(result)
+                        "\nresults: " + gson.toJson(result)
                 , result.contains(address));
         assertEquals(result.size(), 1);
 
@@ -876,6 +876,11 @@ public class AddressClientSqliteImplAndroidTest {
     public void getSortedByNameUsingSortByParamAndPaginationWithRandomNumbers() {
         Random random = new Random();
 
+        if (addressDao.size() < 20) {
+            for (int i = 0; i < 20; i++)
+                addressDao.create(AddressTest.addressGenerator());
+        }
+
         for (int testPass = 0; testPass < 150; testPass++) {
             int pageNumber = random.nextInt();
             int resultsPerPage = random.nextInt();
@@ -903,12 +908,12 @@ public class AddressClientSqliteImplAndroidTest {
             removeAddressesWithNullOrEmptyFields(addressesSortedWithComparator, addressesSortedWithComparator, addressesSortedWithDatabase);
 
             if ((long) pageNumber * (long) resultsPerPage > addressesSortedWithComparator.size() && (pageNumber >= 0 && resultsPerPage >= 0)) {
-                assertTrue(addressesSortedWithDatabase.isEmpty());
+                assertTrue("Address Sorted by Database is empty.", addressesSortedWithDatabase.isEmpty());
             } else {
-                assertTrue(addressesSortedWithDatabase.size() > 50);
+                assertTrue("Address Sorted by Database: " + addressesSortedWithDatabase.size(), addressesSortedWithDatabase.size() > 50);
             }
 
-            assertTrue(addressesSortedWithComparator.size() > 50);
+            assertTrue("Addresses Size: " + addressesSortedWithComparator.size(), addressesSortedWithComparator.size() > 50);
 
             Collections.sort(addressesSortedWithComparator, sortByLastName());
 
@@ -927,18 +932,17 @@ public class AddressClientSqliteImplAndroidTest {
     private void removeAddressesWithNullOrEmptyFields(List<Address> processAddressList, List<Address>... clearableAddressList) {
 
         List<Address> removableObjects = new ArrayList<>();
-        removableObjects.addAll(processAddressList);
 
         for (Address address : processAddressList) {
 
             if (
-                    Strings.nullToEmpty(address.getFirstName()).trim().isEmpty() &&
-                            Strings.nullToEmpty(address.getLastName()).trim().isEmpty() &&
-                            Strings.nullToEmpty(address.getCompany()).trim().isEmpty() &&
-                            Strings.nullToEmpty(address.getState()).trim().isEmpty() &&
-                            Strings.nullToEmpty(address.getCity()).trim().isEmpty() &&
-                            Strings.nullToEmpty(address.getStreetName()).trim().isEmpty() &&
-                            Strings.nullToEmpty(address.getStreetNumber()).trim().isEmpty() &&
+                    Strings.nullToEmpty(address.getFirstName()).trim().isEmpty() ||
+                            Strings.nullToEmpty(address.getLastName()).trim().isEmpty() ||
+                            Strings.nullToEmpty(address.getCompany()).trim().isEmpty() ||
+                            Strings.nullToEmpty(address.getState()).trim().isEmpty() ||
+                            Strings.nullToEmpty(address.getCity()).trim().isEmpty() ||
+                            Strings.nullToEmpty(address.getStreetName()).trim().isEmpty() ||
+                            Strings.nullToEmpty(address.getStreetNumber()).trim().isEmpty() ||
                             Strings.nullToEmpty(address.getZip()).trim().isEmpty()) {
                 removableObjects.add(address);
             }
