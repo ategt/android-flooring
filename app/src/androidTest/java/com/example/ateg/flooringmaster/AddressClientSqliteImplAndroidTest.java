@@ -1064,4 +1064,102 @@ public class AddressClientSqliteImplAndroidTest {
         return input;
     }
 
+    @Test
+    public void nameCompletionByCompanyTest(){
+
+        Random random = new Random();
+        List<Address> list = addressDao.list(new AddressResultSegment(AddressSortByEnum.SORT_BY_ID, 0, Integer.MAX_VALUE));
+
+        Address address = list.get(random.nextInt(list.size()));
+
+        assertNotNull(address);
+
+        String guess = address.getCompany();
+
+        int passes = 0;
+
+        while (guess.length() > 5) {
+            List<String> guesses = addressDao.getCompletionGuesses(guess, 5);
+
+            assertTrue(guesses.contains(address.getCompany()));
+            assertEquals(guesses.size(), 1);
+
+            if (random.nextBoolean()){
+                guess = guess.substring(0, guess.length() -1);
+            } else {
+                guess = guess.substring(2);
+            }
+
+            guess = AddressTestUtilities.caseRandomizer(random, guess);
+            passes++;
+        }
+
+        assertTrue(passes > 5);
+    }
+
+    @Test
+    public void nameCompletionByFullNameTest(){
+
+        Random random = new Random();
+        List<Address> list = addressDao.list(new AddressResultSegment(AddressSortByEnum.SORT_BY_ID, 0, Integer.MAX_VALUE));
+
+        Address address = list.get(random.nextInt(list.size()));
+
+        assertNotNull(address);
+
+        String guess = address.getFullName();
+
+        int passes = 0;
+
+        while (guess.length() > 5) {
+            List<String> guesses = addressDao.getCompletionGuesses(guess, 5);
+
+            assertTrue(guesses.contains(address.getFullName()));
+            assertEquals(guesses.size(), 1);
+
+            if (random.nextBoolean()){
+                guess = guess.substring(0, guess.length() -1);
+            } else {
+                guess = guess.substring(2);
+            }
+
+            guess = AddressTestUtilities.caseRandomizer(random, guess);
+            passes++;
+        }
+
+        assertTrue(passes > 5);
+    }
+
+    @Test
+    public void nameCompletionByProperNameTest(){
+
+        Random random = new Random();
+        List<Address> list = addressDao.list(new AddressResultSegment(AddressSortByEnum.SORT_BY_ID, 0, Integer.MAX_VALUE));
+
+        Address address = list.get(random.nextInt(list.size()));
+
+        assertNotNull(address);
+
+        String guess = address.getLastName() +", "+ address.getFirstName();
+
+        int passes = 0;
+
+        while (guess.length() > 5) {
+            List<String> guesses = addressDao.getCompletionGuesses(guess, 5);
+
+            assertTrue(guesses.contains(address.getFullName()));
+            assertEquals(guesses.size(), 1);
+
+            if (random.nextBoolean()){
+                guess = guess.substring(0, guess.length() -1);
+            } else {
+                guess = guess.substring(2);
+            }
+
+            guess = AddressTestUtilities.caseRandomizer(random, guess);
+            passes++;
+        }
+
+        assertTrue(passes > 5);
+    }
 }

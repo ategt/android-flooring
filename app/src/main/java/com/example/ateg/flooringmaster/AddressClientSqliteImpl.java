@@ -372,7 +372,7 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
             "              ) t2   " +
             "             ON t1.id = t2.id AND t1.rank = t2.min_rank";
 
-    private static final String SQL_ADDRESS_NAME_COMPLETION_QUERY = "WITH inputQuery(n) AS (SELECT ?),    " +
+    private static final String SQL_ADDRESS_NAME_COMPLETION_QUERY = "WITH inputQuery(n) AS (SELECT TRIM(REPLACE(?, ',', ''))),    " +
             "    delim(d) AS (SELECT ' '),  " +
             "  split(word, str, hascomma) AS (  " +
             "  values('', (SELECT n FROM inputQuery), 1)  " +
