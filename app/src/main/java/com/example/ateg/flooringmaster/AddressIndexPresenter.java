@@ -37,34 +37,37 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
     public void loadAddresses(Integer page, int resultsPerPage) {
         if (page == null)
             page = 0;
-        loadAddresses(new ResultProperties(AddressSortByEnum.SORT_BY_LAST_NAME, page, resultsPerPage));
+        loadAddresses(new AddressResultSegment(AddressSortByEnum.SORT_BY_LAST_NAME, page, resultsPerPage));
     }
 
     public void loadNextPage() {
         if (!loadingNextPage) {
-            int pageNum = AddressDataListSingleton.getResultProperties().getPageNumber() + 1;
-            ResultProperties incrementedResultProperties = new ResultProperties( AddressDataListSingleton.getResultProperties().getSortByEnum(),
+            int pageNum = AddressResultSegmentSingleton.getAddressResultSegment().getPageNumber() + 1;
+            AddressResultSegment incrementedResultProperties = new AddressResultSegment( AddressResultSegmentSingleton.getAddressResultSegment().getSortByEnum(),
                     pageNum,
-                    AddressDataListSingleton.getResultProperties().getResultsPerPage());
+                    AddressResultSegmentSingleton.getAddressResultSegment().getResultsPerPage());
 
             loadAddresses(incrementedResultProperties);
         }
     }
 
-    public void loadAddresses(ResultProperties resultProperties) {
-        AddressDataListSingleton.setResultProperties(resultProperties);
+    public void loadAddresses(AddressResultSegment resultProperties) {
+        AddressResultSegmentSingleton.setAddressResultSegment(resultProperties);
+        //AddressDataListSingleton.setResultProperties(resultProperties);
 
         if (loadingNextPage) return;
         loadingNextPage = true;
 
-        AsyncTask<ResultProperties, Void, List<Address>> asyncTask
-                = new AsyncTask<ResultProperties, Void, List<Address>>() {
+        final AddressSearchRequest tempAddressSearchRequest = getAddressSearchRequest();
 
-            final AddressSearchRequest tempAddressSearchRequest = getAddressSearchRequest();
+        AsyncTask<AddressResultSegment, Void, List<Address>> asyncTask
+                = new AsyncTask<AddressResultSegment, Void, List<Address>>() {
+
+
             ValidationException validationException;
 
             @Override
-            protected List<Address> doInBackground(ResultProperties... params) {
+            protected List<Address> doInBackground(AddressResultSegment... params) {
                 try {
                     if (tempAddressSearchRequest != null) {
                         return addressDao.search(tempAddressSearchRequest, params[0]);
@@ -173,7 +176,7 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
     }
 
     public void initialAddressLoad() {
-        this.loadAddresses(new ResultProperties(AddressSortByEnum.SORT_BY_ID, 0, 100));
+        this.loadAddresses(AddressResultSegmentSingleton.getDefaultAddressResultSegment(DEFAULT_ITEMS_TO_LOAD));
     }
 
     public void addAddressesAppenededListener(AddressAppendListener addressAppendListener) {

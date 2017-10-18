@@ -16,7 +16,7 @@ public class AddressDataListSingleton {
     private static List<Address> addressList;
 
     //private static AddressSearchRequest addressSearchRequest;
-    private static ResultProperties resultProperties;
+    //private static ResultProperties resultProperties;
 
     public static List<Address> getDataList(Context context) {
         return respondWithAddressList();
@@ -67,18 +67,18 @@ public class AddressDataListSingleton {
 //        AddressDataListSingleton.addressSearchRequest = addressSearchRequest;
 //    }
 
-    public static ResultProperties getResultProperties() {
-        if (resultProperties == null) {
-            AddressDataListSingleton.resultProperties = getDefaultProperties();
-        }
-        return resultProperties;
-    }
+//    public static ResultProperties getResultProperties() {
+//        if (resultProperties == null) {
+//            AddressDataListSingleton.resultProperties = getDefaultProperties();
+//        }
+//        return resultProperties;
+//    }
 
-    private static ResultProperties getDefaultProperties() {
-        return new ResultProperties(AddressSortByEnum.SORT_BY_COMPANY, 0, 25);
-    }
-
-    public static void setResultProperties(ResultProperties resultProperties) {
-        AddressDataListSingleton.resultProperties = resultProperties;
-    }
+//    private static ResultProperties getDefaultProperties() {
+//        return new ResultProperties(AddressSortByEnum.SORT_BY_COMPANY, 0, 25);
+//    }
+//
+//    public static void setResultProperties(ResultProperties resultProperties) {
+//        AddressDataListSingleton.resultProperties = resultProperties;
+//    }
 }
