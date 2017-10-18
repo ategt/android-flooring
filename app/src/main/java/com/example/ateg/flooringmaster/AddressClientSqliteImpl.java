@@ -372,27 +372,51 @@ public class AddressClientSqliteImpl extends SQLiteOpenHelper implements Address
             "              ) t2   " +
             "             ON t1.id = t2.id AND t1.rank = t2.min_rank";
 
-    private static final String SQL_ADDRESS_NAME_COMPLETION_QUERY = "WITH inputQuery(n) AS (SELECT ?), " +
-            " nameOrCompany(col) AS ( " +
-            " SELECT (' ' || first_name || ' ' || last_name || ' ') col FROM addresses  " +
-            " UNION SELECT ' ' || company || ' ' col FROM addresses ), " +
-            " " +
-            "  fullQuery AS ( " +
-            "  " +
-            " SELECT col, 1 rank FROM nameOrCompany WHERE col LIKE (SELECT '% ' || n || ' %' FROM inputQuery)   " +
-            "             UNION ALL SELECT col, 2 rank FROM nameOrCompany WHERE LOWER(col) LIKE (SELECT LOWER('% ' || n || ' %') FROM inputQuery)   " +
-            "             UNION ALL SELECT col, 3 rank FROM nameOrCompany WHERE LOWER(col) LIKE (SELECT LOWER('% ' || n || '%') FROM inputQuery)   " +
-            "             UNION ALL SELECT col, 4 rank FROM nameOrCompany WHERE LOWER(col) LIKE (SELECT LOWER('%' || n || '%') FROM inputQuery)   " +
-            "   " +
-            "  SELECT TRIM(t1.col) col FROM fullQuery t1 " +
-            "         JOIN ( " +
-            "            SELECT col, MIN(rank) min_rank " +
-            "            FROM fullQuery " +
-            "            GROUP BY col " +
-            "         ) t2  " +
-            "   ON t1.col = t2.col AND t1.rank = t2.min_rank " +
-            "   ORDER BY t1.rank ASC, t1.col ASC" +
-            "   LIMIT ?";
+    private static final String SQL_ADDRESS_NAME_COMPLETION_QUERY = "WITH inputQuery(n) AS (SELECT ?),    " +
+            "    delim(d) AS (SELECT ' '),  " +
+            "  split(word, str, hascomma) AS (  " +
+            "  values('', (SELECT n FROM inputQuery), 1)  " +
+            "  UNION ALL SELECT  " +
+            "  substr(str, 0,   " +
+            "    case when instr(str, (SELECT d FROM delim))  " +
+            "    then instr(str, (SELECT d FROM delim))  " +
+            "    else length(str)+1 end),  " +
+            "  ltrim(substr(str, instr(str, (SELECT d FROM delim))), (SELECT d FROM delim)),   " +
+            "  instr(str, (SELECT d FROM delim))  " +
+            "  FROM split  " +
+            "  WHERE hascomma  " +
+            "),  " +
+            "innerQuery AS (SELECT trim(word) AS word FROM split WHERE word <> ''),  " +
+            "             nameOrCompany(col) AS (    " +
+            "             SELECT (' ' || first_name || ' ' || last_name || ' ') col FROM addresses     " +
+            "             UNION SELECT ' ' || company || ' ' col FROM addresses ),    " +
+            "                " +
+            "              fullQuery AS (    " +
+            "                 " +
+            "             SELECT col, 1 rank FROM nameOrCompany WHERE col LIKE (SELECT '% ' || n || ' %' FROM inputQuery)      " +
+            "             UNION ALL SELECT col, 2 rank FROM nameOrCompany WHERE LOWER(col) LIKE (SELECT LOWER('% ' || n || ' %') FROM inputQuery)      " +
+            "             UNION ALL SELECT col, 3 rank FROM nameOrCompany WHERE LOWER(col) LIKE (SELECT LOWER('% ' || n || '%') FROM inputQuery)      " +
+            "             UNION ALL SELECT col, 4 rank FROM nameOrCompany WHERE LOWER(col) LIKE (SELECT LOWER('%' || n || '%') FROM inputQuery)      " +
+            "             UNION ALL SELECT col, 5 rank FROM nameOrCompany WHERE LOWER(col) IN(  " +
+            "         SELECT col FROM (  " +
+            "              SELECT *, COUNT(t.col) AS dix FROM nameOrCompany t  " +
+            "              JOIN innerQuery p  " +
+            "              ON t.col  " +
+            "              LIKE '%' || p.word || '%'  " +
+            "              GROUP BY t.col  " +
+            "              HAVING dix = (SELECT COUNT(*) FROM innerQuery)  " +
+            "            )  " +
+            "          )  " +
+            "      )  " +
+            "              SELECT TRIM(t1.col) col FROM fullQuery t1    " +
+            "                     JOIN (    " +
+            "                        SELECT col, MIN(rank) min_rank    " +
+            "                        FROM fullQuery    " +
+            "                        GROUP BY col    " +
+            "                     ) t2     " +
+            "               ON t1.col = t2.col AND t1.rank = t2.min_rank    " +
+            "               ORDER BY t1.rank ASC, t1.col ASC   " +
+            "               LIMIT ?";
 
     public AddressClientSqliteImpl(@ApplicationContext Context context,
                                    @DatabaseInfo String dbName,
