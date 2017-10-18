@@ -17,9 +17,10 @@ public class AddressDaoSingleton {
     private static AddressDao addressDao;
 
     private AddressDaoSingleton(Context context) {
-        Uri baseUri = Uri.parse(context.getString(R.string.starting_root_url));
-        AddressDao tempAddressDao = new AddressClientImpl(context, new HttpUtilities(context, baseUri));
-        addressDao = new AddressBufferedClient(tempAddressDao, 20);
+        //Uri baseUri = Uri.parse(context.getString(R.string.starting_root_url));
+        //AddressDao tempAddressDao = new AddressClientImpl(context, new HttpUtilities(context, baseUri));
+        //addressDao = new AddressBufferedClient(tempAddressDao, 20);
+        addressDao = new AddressClientSqliteImpl(context, "Test-Flooring-DB", 2);
     }
 
     public static AddressDao getAddressDao(Context context) {

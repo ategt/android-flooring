@@ -54,7 +54,8 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
         if (loadingNextPage) return;
         loadingNextPage = true;
 
-        AsyncTask<ResultProperties, Void, List<Address>> asyncTask = new AsyncTask<ResultProperties, Void, List<Address>>() {
+        AsyncTask<ResultProperties, Void, List<Address>> asyncTask
+                = new AsyncTask<ResultProperties, Void, List<Address>>() {
 
             AddressSearchRequest tempAddressSearchRequest = getAddressSearchRequest();
             ValidationException validationException;

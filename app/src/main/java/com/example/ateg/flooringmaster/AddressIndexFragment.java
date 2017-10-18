@@ -148,7 +148,11 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
         getActivity().setTitle(R.string.address_list);
 
         AddressIndexFragment.AddressAdapter addressAdapter
-                = new AddressIndexFragment.AddressAdapter(getActivity(), 0, AddressDataListSingleton.getDataList(getActivity()));
+                = new AddressIndexFragment.AddressAdapter(
+                                                getActivity(),
+                                                0,
+                                                AddressDataListSingleton.getDataList(getActivity())
+                                            );
 
         ListView listView = (ListView) getCreatedView().findViewById(R.id.address_index_listView);
         listView.setAdapter(addressAdapter);
@@ -156,7 +160,9 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
 
     @Override
     protected void populate() {
-        mPresenter.loadAddresses(AddressDataListSingleton.getResultProperties());
+        //mPresenter.loadAddresses(AddressDataListSingleton.getResultProperties());
+        //mPresenter.loadAddresses(new AddressResultSegment(AddressSortByEnum.SORT_BY_ID, 0 , 100));
+        mPresenter.loadAddresses(new ResultProperties(AddressSortByEnum.SORT_BY_ID, 0, 100));
     }
 
     @Override
