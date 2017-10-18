@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import com.example.ateg.flooringmaster.errors.ValidationException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,6 +17,7 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
     private AddressClient addressDao;
     //private ResultProperties resultProperties;
     private boolean loadingNextPage;
+    private List<AddressAppendListener> addressAppendListeners;
 
     //private AddressSearchRequest addressSearchRequest;
 
@@ -25,6 +27,7 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
         super(viewInstance);
         this.addressDao = addressDao;
         this.loadingNextPage = false;
+        addressAppendListeners = new ArrayList<>();
     }
 
     public void loadAddresses(Integer page) {
@@ -57,7 +60,7 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
         AsyncTask<ResultProperties, Void, List<Address>> asyncTask
                 = new AsyncTask<ResultProperties, Void, List<Address>>() {
 
-            AddressSearchRequest tempAddressSearchRequest = getAddressSearchRequest();
+            final AddressSearchRequest tempAddressSearchRequest = getAddressSearchRequest();
             ValidationException validationException;
 
             @Override
@@ -80,6 +83,7 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
 
                 if (addresses != null) {
                     getView().appendAddresses(addresses);
+                    notifyAddressesAppended();
                 } else if(validationException != null){
                     getView().showError(validationException);
                 }else {
@@ -89,6 +93,14 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
         };
         registerNetworkCall(asyncTask);
         asyncTask.execute(resultProperties);
+    }
+
+    private void notifyAddressesAppended() {
+        for (AddressAppendListener addressAppendListener : addressAppendListeners){
+            addressAppendListener.onAddressesAppended();
+        }
+
+        addressAppendListeners.clear();
     }
 
     public boolean considerLoadingNextPage(int positionInList, int listSize) {
@@ -139,7 +151,7 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
     }
 
     private AddressSearchRequest getAddressSearchRequest() {
-        return AddressDataListSingleton.getAddressSearchRequest();
+        return AddressSearchRequestSingleton.getAddressSearchRequest();
         //return addressSearchRequest;
     }
 
@@ -150,12 +162,21 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
             getView().resetList();
         }
 
-        AddressDataListSingleton.setAddressSearchRequest(addressSearchRequest);
+        AddressSearchRequestSingleton.setAddressSearchRequest(addressSearchRequest);
+        //AddressDataListSingleton.setAddressSearchRequest(addressSearchRequest);
         //this.addressSearchRequest = addressSearchRequest;
     }
 
     public void clearSearch(){
         setAddressSearchRequest(null);
 
+    }
+
+    public void initialAddressLoad() {
+        this.loadAddresses(new ResultProperties(AddressSortByEnum.SORT_BY_ID, 0, 100));
+    }
+
+    public void addAddressesAppenededListener(AddressAppendListener addressAppendListener) {
+        addressAppendListeners.add(addressAppendListener);
     }
 }

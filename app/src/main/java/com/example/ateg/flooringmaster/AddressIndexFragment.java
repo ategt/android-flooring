@@ -24,7 +24,7 @@ import java.util.List;
  * Created by ATeg on 7/17/2017.
  */
 
-public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> implements AddressIndexView {
+public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> implements AddressIndexView, AddressAppendListener {
 
     public static final String ADDRESS_ID_TO_SHOW = "com.example.ateg.flooringmaster.ADDRESS_ID_TO_SHOW";
     public static final String EXTRA_ADDRESS_SEARCH_OBJECT = "com.example.ateg.flooringmaster.AddressIndexFragment.EXTRA_ADDRESS_SEARCH_OBJECT";
@@ -36,6 +36,12 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
     public void onResume() {
         super.onResume();
         //((AddressIndexFragment.AddressAdapter) getListAdapter()).notifyDataSetChanged();
+        scrollToId();
+
+        evaluateVisibilityOfResetButton();
+    }
+
+    private void scrollToId() {
         Intent intent = getActivity().getIntent();
 
         if (intent.hasExtra(ADDRESS_ID_TO_SHOW)) {
@@ -94,6 +100,16 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
             ListView listView = (ListView) getCreatedView().findViewById(R.id.address_index_listView);
             listView.setSelection(position);
             listView.smoothScrollToPosition(position);
+
+            Intent intent = getActivity().getIntent();
+
+            if (intent.hasExtra(ADDRESS_ID_TO_SHOW)) {
+                intent.removeExtra(ADDRESS_ID_TO_SHOW);
+            }
+        } else {
+            mPresenter.loadNextPage();
+            mPresenter.addAddressesAppenededListener(this);
+            //mPresenter.scrollToId(address.getId());
         }
     }
 
@@ -121,7 +137,7 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
         ListView listView = (ListView) v.findViewById(R.id.address_index_listView);
         listView.setEmptyView(v.findViewById(R.id.address_list_empty));
 
-        evaluateVisibilityOfResetButton(v);
+        //evaluateVisibilityOfResetButton(v);
     }
 
     private void evaluateVisibilityOfResetButton() {
@@ -131,7 +147,7 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
     private void evaluateVisibilityOfResetButton(View v) {
         FloatingActionButton resetButton = (FloatingActionButton) v.findViewById(R.id.addresss_index_clear_action_button);
 
-        AddressSearchRequest addressSearchRequest = AddressDataListSingleton.getAddressSearchRequest();
+        AddressSearchRequest addressSearchRequest = AddressSearchRequestSingleton.getAddressSearchRequest();
 
         resetButton.setVisibility(addressSearchRequest == null ? View.INVISIBLE : View.VISIBLE);
     }
@@ -162,7 +178,8 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
     protected void populate() {
         //mPresenter.loadAddresses(AddressDataListSingleton.getResultProperties());
         //mPresenter.loadAddresses(new AddressResultSegment(AddressSortByEnum.SORT_BY_ID, 0 , 100));
-        mPresenter.loadAddresses(new ResultProperties(AddressSortByEnum.SORT_BY_ID, 0, 100));
+        //mPresenter.loadAddresses(new ResultProperties(AddressSortByEnum.SORT_BY_ID, 0, 100));
+        mPresenter.initialAddressLoad();
     }
 
     @Override
@@ -217,6 +234,11 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
     @Override
     protected AddressIndexPresenter createPresenter() {
         return new AddressIndexPresenter(this, AddressDaoSingleton.getAddressDao(getActivity()));
+    }
+
+    @Override
+    public void onAddressesAppended() {
+        scrollToId();
     }
 
     private class AddressAdapter extends ArrayAdapter<Address> {
