@@ -135,14 +135,22 @@ public class AddressDaoRemoteImpl implements AddressDao {
     }
 
     @Override
-    public List<Address> getAddressesSortedByParameter(String sortBy) {
-        Integer sortByInt = AddressSortByEnum.parse(sortBy).intValue();
-
-        return list(sortByInt);
+    public int size(AddressSearchRequest addressSearchRequest) {
+        throw new UnsupportedOperationException("This method is not supported yet.");
     }
 
     @Override
-    public Set<String> getCompletionGuesses(String input, int limit) {
+    public int size(boolean block, AddressSearchRequest addressSearchRequest) {
+        throw new UnsupportedOperationException("This method is not supported yet.");
+    }
+
+    @Override
+    public List<Address> getAddressesSortedByParameter(String sortBy) {
+        return list(new AddressResultSegment(AddressSortByEnum.parse(sortBy), 0, Integer.MAX_VALUE));
+    }
+
+    @Override
+    public List<String> getCompletionGuesses(String input, int limit) {
         return null;
     }
 
@@ -168,7 +176,7 @@ public class AddressDaoRemoteImpl implements AddressDao {
     }
 
     @Override
-    public List<Address> list(ResultProperties resultProperties) {
+    public List<Address> list(ResultSegment<AddressSortByEnum> resultProperties) {
 
         String addressString = null;
         try {
@@ -178,7 +186,7 @@ public class AddressDaoRemoteImpl implements AddressDao {
                     .appendPath("")
                     .appendQueryParameter("page", resultProperties.getPageNumber() == null ? "0" : resultProperties.getPageNumber().toString())
                     .appendQueryParameter("results", resultProperties.getResultsPerPage() == null ? Integer.toString(Integer.MAX_VALUE) : resultProperties.getResultsPerPage().toString())
-                    .appendQueryParameter("sort_by", resultProperties.getSortByEnum() == null ? "" : resultProperties.getSortByEnum().value())
+                    .appendQueryParameter("sort_by", resultProperties.getSortByEnum() == null ? "" : resultProperties.getSortByEnum().toString())
                     .build();
 
             addressString = httpUtilities.requestJSON(uri.toString());
@@ -193,13 +201,8 @@ public class AddressDaoRemoteImpl implements AddressDao {
     }
 
     @Override
-    public List<Address> search(AddressSearchRequest addressSearchRequest, ResultProperties resultProperties) {
+    public List<Address> search(AddressSearchRequest addressSearchRequest, ResultSegment<AddressSortByEnum> resultProperties) {
         throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public List<Address> list(Integer sortBy) {
-        return list(new ResultProperties(AddressSortByEnum.parse(sortBy), null, null));
     }
 
     @Override

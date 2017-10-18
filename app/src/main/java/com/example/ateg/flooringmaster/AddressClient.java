@@ -19,6 +19,6 @@ public interface AddressClient {
     public int size();
     public int size(boolean block);
 
-    public Set<String> getCompletionGuesses(String input, int limit);
-    public List<Address> list(ResultProperties resultProperties);
-    public List<Address> search(AddressSearchRequest addressSearchRequest, ResultProperties resultProperties);}
+    public List<String> getCompletionGuesses(String input, int limit);
+    public List<Address> list(ResultSegment<AddressSortByEnum> resultProperties);
+    public List<Address> search(AddressSearchRequest addressSearchRequest, ResultSegment<AddressSortByEnum> resultProperties);}
