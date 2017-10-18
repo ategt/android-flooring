@@ -9,9 +9,9 @@ public class AddressSearchRequestSingleton {
     private static AddressSearchRequest addressSearchRequest;
 
     public static AddressSearchRequest getAddressSearchRequest() {
-        if (addressSearchRequest == null) {
-            addressSearchRequest = getDefaultAddressSearchRequest();
-        }
+//        if (addressSearchRequest == null) {
+//            addressSearchRequest = getDefaultAddressSearchRequest();
+//        }
         return addressSearchRequest;
     }
 
