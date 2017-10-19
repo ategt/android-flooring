@@ -215,6 +215,7 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
     }
 
     public void initialAddressLoad() {
+        AddressDataListSingleton.clear();
         this.loadAddresses(AddressResultSegmentSingleton.getDefaultAddressResultSegment(DEFAULT_ITEMS_TO_LOAD));
     }
 
