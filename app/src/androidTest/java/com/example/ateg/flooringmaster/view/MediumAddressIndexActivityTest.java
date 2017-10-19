@@ -24,8 +24,9 @@ import com.example.ateg.flooringmaster.AddressDao;
 import com.example.ateg.flooringmaster.AddressDaoSingleton;
 import com.example.ateg.flooringmaster.AddressDataListSingleton;
 import com.example.ateg.flooringmaster.AddressIndexActivity;
+import com.example.ateg.flooringmaster.AddressSortByEnum;
 import com.example.ateg.flooringmaster.R;
-import com.example.ateg.flooringmaster.ResultProperties;
+import com.example.ateg.flooringmaster.ResultSegment;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -107,11 +108,11 @@ public class MediumAddressIndexActivityTest {
 
             AddressDao addressDao = mock(AddressDao.class);
 
-            when(addressDao.list(argThat(evalResultPropertiesPageNumber(0)))).thenReturn(resultsFromList);
-            when(addressDao.list(argThat(evalResultPropertiesPageNumber(1)))).thenReturn(resultsFromListPage1);
-            when(addressDao.list(argThat(evalResultPropertiesPageNumber(2)))).thenReturn(resultsFromListPage2);
+            when(addressDao.list(argThat(evalevalResultSegmentPageNumber(0)))).thenReturn(resultsFromList);
+            when(addressDao.list(argThat(evalevalResultSegmentPageNumber(1)))).thenReturn(resultsFromListPage1);
+            when(addressDao.list(argThat(evalevalResultSegmentPageNumber(2)))).thenReturn(resultsFromListPage2);
 
-            when(addressDao.list(argThat(evalResultPropertiesPageNumberNotInArray(0, 1, 2))))
+            when(addressDao.list(argThat(evalevalResultSegmentPageNumberNotInArray(0, 1, 2))))
                     .thenReturn(new ArrayList<Address>());
 
             when(addressDao.size()).thenReturn(resultsFromList.size()
@@ -132,13 +133,13 @@ public class MediumAddressIndexActivityTest {
     };
 
     @NonNull
-    private ArgumentMatcher<ResultProperties> evalResultPropertiesPageNumberNotInArray(final int... pagesExpected) {
-        return new ArgumentMatcher<ResultProperties>() {
+    private ArgumentMatcher<ResultSegment<AddressSortByEnum>> evalevalResultSegmentPageNumberNotInArray(final int... pagesExpected) {
+        return new ArgumentMatcher<ResultSegment<AddressSortByEnum>>() {
             @Override
-            public boolean matches(ResultProperties argument) {
+            public boolean matches(ResultSegment<AddressSortByEnum> argument) {
                 if (argument == null)
                     return false;
-                if (argument instanceof ResultProperties) {
+                if (argument instanceof ResultSegment) {
                     for (int i : pagesExpected) {
                         if (argument.getPageNumber() == i) {
                             return false;
@@ -152,13 +153,13 @@ public class MediumAddressIndexActivityTest {
     }
 
     @NonNull
-    private ArgumentMatcher<ResultProperties> evalResultPropertiesPageNumber(final int pageNumber) {
-        return new ArgumentMatcher<ResultProperties>() {
+    private ArgumentMatcher<ResultSegment<AddressSortByEnum>> evalevalResultSegmentPageNumber(final int pageNumber) {
+        return new ArgumentMatcher<ResultSegment<AddressSortByEnum>>() {
             @Override
-            public boolean matches(ResultProperties argument) {
+            public boolean matches(ResultSegment<AddressSortByEnum> argument) {
                 if (argument == null)
                     return false;
-                if (argument instanceof ResultProperties) {
+                if (argument instanceof ResultSegment) {
                     return argument.getPageNumber() == pageNumber;
                 }
                 return false;
