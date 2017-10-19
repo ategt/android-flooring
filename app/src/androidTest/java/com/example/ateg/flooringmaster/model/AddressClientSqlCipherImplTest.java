@@ -33,6 +33,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Created by ATeg on 10/13/2017.
@@ -47,7 +48,7 @@ public class AddressClientSqlCipherImplTest {
     @Before
     public void setUp() throws Exception {
         appContext = InstrumentationRegistry.getTargetContext();
-        addressDao = new AddressClientSqlCipherImpl(appContext,  "this is my pass phrase", "Encrypted-Test-Flooring-DB", 2);
+        addressDao = new AddressClientSqlCipherImpl(appContext, "this is my pass phrase", "Encrypted-Test-Flooring-DB", 2);
         gson = new GsonBuilder().create();
     }
 
@@ -1074,7 +1075,7 @@ public class AddressClientSqlCipherImplTest {
     }
 
     @Test
-    public void nameCompletionByCompanyTest(){
+    public void nameCompletionByCompanyTest() {
 
         Random random = new Random();
         List<Address> list = addressDao.list(new AddressResultSegment(AddressSortByEnum.SORT_BY_ID, 0, Integer.MAX_VALUE));
@@ -1093,8 +1094,8 @@ public class AddressClientSqlCipherImplTest {
             assertTrue(guesses.contains(address.getCompany()));
             assertEquals(guesses.size(), 1);
 
-            if (random.nextBoolean()){
-                guess = guess.substring(0, guess.length() -1);
+            if (random.nextBoolean()) {
+                guess = guess.substring(0, guess.length() - 1);
             } else {
                 guess = guess.substring(2);
             }
@@ -1107,7 +1108,7 @@ public class AddressClientSqlCipherImplTest {
     }
 
     @Test
-    public void nameCompletionByFullNameTest(){
+    public void nameCompletionByFullNameTest() {
 
         Random random = new Random();
         List<Address> list = addressDao.list(new AddressResultSegment(AddressSortByEnum.SORT_BY_ID, 0, Integer.MAX_VALUE));
@@ -1126,8 +1127,8 @@ public class AddressClientSqlCipherImplTest {
             assertTrue(guesses.contains(address.getFullName()));
             assertEquals(guesses.size(), 1);
 
-            if (random.nextBoolean()){
-                guess = guess.substring(0, guess.length() -1);
+            if (random.nextBoolean()) {
+                guess = guess.substring(0, guess.length() - 1);
             } else {
                 guess = guess.substring(2);
             }
@@ -1140,7 +1141,7 @@ public class AddressClientSqlCipherImplTest {
     }
 
     @Test
-    public void nameCompletionByProperNameTest(){
+    public void nameCompletionByProperNameTest() {
 
         Random random = new Random();
         List<Address> list = addressDao.list(new AddressResultSegment(AddressSortByEnum.SORT_BY_ID, 0, Integer.MAX_VALUE));
@@ -1149,7 +1150,7 @@ public class AddressClientSqlCipherImplTest {
 
         assertNotNull(address);
 
-        String guess = address.getLastName() +", "+ address.getFirstName();
+        String guess = address.getLastName() + ", " + address.getFirstName();
 
         int passes = 0;
 
@@ -1159,8 +1160,8 @@ public class AddressClientSqlCipherImplTest {
             assertTrue(guesses.contains(address.getFullName()));
             assertEquals(guesses.size(), 1);
 
-            if (random.nextBoolean()){
-                guess = guess.substring(0, guess.length() -1);
+            if (random.nextBoolean()) {
+                guess = guess.substring(0, guess.length() - 1);
             } else {
                 guess = guess.substring(2);
             }
@@ -1170,5 +1171,39 @@ public class AddressClientSqlCipherImplTest {
         }
 
         assertTrue(passes > 5);
+    }
+
+    @Test
+    public void testEncryptionWithWrongPassword() {
+
+        addressDao = new AddressClientSqlCipherImpl(appContext, "a", "Encrypted-Test-Small-DB", 2);
+
+        if (addressDao.size() < 1)
+            addressDao.create(AddressTest.addressGenerator());
+
+        int size = addressDao.size();
+        assertTrue(addressDao.size() > 0);
+
+        try {
+            addressDao = new AddressClientSqlCipherImpl(appContext, "", "Encrypted-Test-Small-DB", 2);
+            assertTrue(addressDao.size() > 0);
+            fail("This should have thrown an error.");
+        } catch (net.sqlcipher.database.SQLiteException ex) {}
+
+        try {
+            addressDao = new AddressClientSqlCipherImpl(appContext, null, "Encrypted-Test-Small-DB", 2);
+            assertTrue(addressDao.size() > 0);
+            fail("This should have thrown an error.");
+        } catch (net.sqlcipher.database.SQLiteException ex) {}
+
+        try {
+        addressDao = new AddressClientSqlCipherImpl(appContext, "b", "Encrypted-Test-Small-DB", 2);
+        assertTrue(addressDao.size() > 0);
+            fail("This should have thrown an error.");
+        } catch (net.sqlcipher.database.SQLiteException ex) {}
+
+        addressDao = new AddressClientSqlCipherImpl(appContext, "a", "Encrypted-Test-Small-DB", 2);
+        assertTrue(addressDao.size() > 0);
+        assertEquals(size, addressDao.size());
     }
 }

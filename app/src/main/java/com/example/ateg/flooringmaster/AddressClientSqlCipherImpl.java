@@ -14,6 +14,7 @@ import android.util.Log;
 
 import com.example.ateg.flooringmaster.annotations.ApplicationContext;
 import com.example.ateg.flooringmaster.annotations.DatabaseInfo;
+import com.google.common.base.Strings;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -416,7 +417,7 @@ public class AddressClientSqlCipherImpl extends SQLiteOpenHelper implements Addr
                                       @DatabaseInfo String dbName,
                                       @DatabaseInfo Integer version) {
         super(context, dbName, null, version);
-        this.passPhrase = passPhrase;
+        this.passPhrase = Strings.nullToEmpty(passPhrase);
 
         SQLiteDatabase.loadLibs(context);
     }
