@@ -1,10 +1,17 @@
-package com.example.ateg.flooringmaster;
+package com.example.ateg.flooringmaster.model;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.example.ateg.flooringmaster.Address;
+import com.example.ateg.flooringmaster.AddressClientSqlCipherImpl;
+import com.example.ateg.flooringmaster.AddressDao;
+import com.example.ateg.flooringmaster.AddressResultSegment;
+import com.example.ateg.flooringmaster.AddressSearchByOptionEnum;
+import com.example.ateg.flooringmaster.AddressSearchRequest;
+import com.example.ateg.flooringmaster.AddressSortByEnum;
 import com.google.common.base.Strings;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,8 +28,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-import static com.example.ateg.flooringmaster.AddressTest.addressBuilder;
-import static com.example.ateg.flooringmaster.AddressTest.addressCloner;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -71,11 +76,11 @@ public class AddressClientSqlCipherImplTest {
         String streetNumber = UUID.randomUUID().toString();
         String streetName = UUID.randomUUID().toString();
 
-        Address address = addressBuilder(city, company, firstName, lastName, state, streetName, streetNumber, zip);
+        Address address = AddressTest.addressBuilder(city, company, firstName, lastName, state, streetName, streetNumber, zip);
 
         int beforeCreation = addressDao.size(true);
 
-        Address result = addressCloner(addressDao.create(address));
+        Address result = AddressTest.addressCloner(addressDao.create(address));
         int afterCreation = addressDao.size(true);
 
         assertEquals(beforeCreation + 1, afterCreation);
@@ -131,11 +136,11 @@ public class AddressClientSqlCipherImplTest {
         String streetNumber = UUID.randomUUID().toString();
         String streetName = UUID.randomUUID().toString();
 
-        Address address = addressBuilder(city, company, firstName, lastName, state, streetName, streetNumber, zip);
+        Address address = AddressTest.addressBuilder(city, company, firstName, lastName, state, streetName, streetNumber, zip);
 
         int beforeCreation = addressDao.size(true);
 
-        Address result = addressCloner(addressDao.create(address));
+        Address result = AddressTest.addressCloner(addressDao.create(address));
         int afterCreation = addressDao.size(true);
 
         assertEquals(beforeCreation + 1, afterCreation);

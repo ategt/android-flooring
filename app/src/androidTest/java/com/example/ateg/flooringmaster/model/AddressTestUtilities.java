@@ -1,8 +1,9 @@
-package com.example.ateg.flooringmaster;
+package com.example.ateg.flooringmaster.model;
 
 import android.annotation.TargetApi;
 import android.os.Build;
 
+import com.example.ateg.flooringmaster.Address;
 import com.google.common.base.Strings;
 
 import java.util.Comparator;

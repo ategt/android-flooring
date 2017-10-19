@@ -1,4 +1,4 @@
-package com.example.ateg.flooringmaster;
+package com.example.ateg.flooringmaster.view;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -19,6 +19,14 @@ import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import com.example.ateg.flooringmaster.Address;
+import com.example.ateg.flooringmaster.AddressDao;
+import com.example.ateg.flooringmaster.AddressDaoSingleton;
+import com.example.ateg.flooringmaster.AddressDataListSingleton;
+import com.example.ateg.flooringmaster.AddressIndexActivity;
+import com.example.ateg.flooringmaster.R;
+import com.example.ateg.flooringmaster.ResultProperties;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -205,7 +213,7 @@ public class SmallAddressIndexActivityTest {
 
         onRow(firstAddress).check(matches(isCompletelyDisplayed()));
 
-        onRow(firstAddress).onChildView(withId(R.id.address_list_item_nameTextView)).perform(click());
+        onRow(firstAddress).onChildView(ViewMatchers.withId(R.id.address_list_item_nameTextView)).perform(click());
 
         onView(Matchers.allOf(ViewMatchers.withId(R.id.address_show_fullName_textView),
                 ViewMatchers.isDisplayed()))

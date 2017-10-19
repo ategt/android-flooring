@@ -1,4 +1,4 @@
-package com.example.ateg.flooringmaster;
+package com.example.ateg.flooringmaster.view;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,6 +18,14 @@ import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import com.example.ateg.flooringmaster.Address;
+import com.example.ateg.flooringmaster.AddressDao;
+import com.example.ateg.flooringmaster.AddressDaoSingleton;
+import com.example.ateg.flooringmaster.AddressDataListSingleton;
+import com.example.ateg.flooringmaster.AddressIndexActivity;
+import com.example.ateg.flooringmaster.R;
+import com.example.ateg.flooringmaster.ResultProperties;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;

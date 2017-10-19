@@ -1,4 +1,4 @@
-package com.example.ateg.flooringmaster;
+package com.example.ateg.flooringmaster.model;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -7,6 +7,16 @@ import android.os.Build;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.core.deps.guava.base.Strings;
 import android.support.test.runner.AndroidJUnit4;
+
+import com.example.ateg.flooringmaster.Address;
+import com.example.ateg.flooringmaster.AddressClientImpl;
+import com.example.ateg.flooringmaster.AddressDao;
+import com.example.ateg.flooringmaster.AddressResultSegment;
+import com.example.ateg.flooringmaster.AddressSortByEnum;
+import com.example.ateg.flooringmaster.HttpUtilities;
+import com.example.ateg.flooringmaster.R;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import junit.framework.Assert;
 
@@ -497,6 +507,7 @@ public class AddressClientTest {
 
     @Test
     public void getSortedByNameUsingSortByParam() {
+        Gson gson = new GsonBuilder().create();
         List<Address> addresses = addressDao.list();
         List<Address> addressesFromDb = addressDao.getAddressesSortedByParameter("last_name");
 
@@ -504,9 +515,12 @@ public class AddressClientTest {
         Arrays.sort(addressArray, sortByLastNameComparator());
 
         for (int i = 0; i < addressArray.length; i++) {
-
-            assertEquals(" First Incongruency at : " + i + " compared: " + addressArray[i].getId() + " \t Db: " + addressesFromDb.get(i).getId(), addressArray[i], addressesFromDb.get(i));
-
+            assertEquals("\nFirst Incongruency at : " + i + " compared: " + addressArray[i].getId()
+                            + " \t Db: " + addressesFromDb.get(i).getId()
+                            + "\naddressArray[i]:       \t" + gson.toJson(addressArray[i])
+                            + "\naddressesFromDb.get(i):\t" + gson.toJson(addressesFromDb.get(i)) + "\n",
+                    addressArray[i],
+                    addressesFromDb.get(i));
         }
     }
 
@@ -558,7 +572,7 @@ public class AddressClientTest {
     }
 
     @Test
-    public void sizesAllReturnSameValue(){
+    public void sizesAllReturnSameValue() {
         int preBuffer = addressDao.size();
 
         int blocked = addressDao.size(true);
