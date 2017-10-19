@@ -135,7 +135,7 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
 
         Snackbar.make(getView(), R.string.delete_success, Snackbar.LENGTH_LONG).show();
 
-        if (AddressDataListSingleton.getDataList().remove(address)){
+        if (AddressDataListSingleton.getDataList().remove(address)) {
             notifyAdapterDataChanged();
         }
     }
@@ -290,7 +290,12 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
 
             Log.d(TAG, "Position: " + position);
 
-            Address address = getItem(position);
+            Address address;
+
+            if (AddressDataListSingleton.size() < position)
+                address = new Address();
+            else
+                address = getItem(position);
 
             int positionInList = AddressDataListSingleton.indexOf(address);
             int listSize = AddressDataListSingleton.size();

@@ -108,11 +108,11 @@ public class MediumAddressIndexActivityTest {
 
             AddressDao addressDao = mock(AddressDao.class);
 
-            when(addressDao.list(argThat(evalevalResultSegmentPageNumber(0)))).thenReturn(resultsFromList);
-            when(addressDao.list(argThat(evalevalResultSegmentPageNumber(1)))).thenReturn(resultsFromListPage1);
-            when(addressDao.list(argThat(evalevalResultSegmentPageNumber(2)))).thenReturn(resultsFromListPage2);
+            when(addressDao.list(argThat(evalResultSegmentPageNumber(0)))).thenReturn(resultsFromList);
+            when(addressDao.list(argThat(evalResultSegmentPageNumber(1)))).thenReturn(resultsFromListPage1);
+            when(addressDao.list(argThat(evalResultSegmentPageNumber(2)))).thenReturn(resultsFromListPage2);
 
-            when(addressDao.list(argThat(evalevalResultSegmentPageNumberNotInArray(0, 1, 2))))
+            when(addressDao.list(argThat(evalResultSegmentPageNumberNotInArray(0, 1, 2))))
                     .thenReturn(new ArrayList<Address>());
 
             when(addressDao.size()).thenReturn(resultsFromList.size()
@@ -133,7 +133,7 @@ public class MediumAddressIndexActivityTest {
     };
 
     @NonNull
-    private ArgumentMatcher<ResultSegment<AddressSortByEnum>> evalevalResultSegmentPageNumberNotInArray(final int... pagesExpected) {
+    private ArgumentMatcher<ResultSegment<AddressSortByEnum>> evalResultSegmentPageNumberNotInArray(final int... pagesExpected) {
         return new ArgumentMatcher<ResultSegment<AddressSortByEnum>>() {
             @Override
             public boolean matches(ResultSegment<AddressSortByEnum> argument) {
@@ -153,7 +153,7 @@ public class MediumAddressIndexActivityTest {
     }
 
     @NonNull
-    private ArgumentMatcher<ResultSegment<AddressSortByEnum>> evalevalResultSegmentPageNumber(final int pageNumber) {
+    private ArgumentMatcher<ResultSegment<AddressSortByEnum>> evalResultSegmentPageNumber(final int pageNumber) {
         return new ArgumentMatcher<ResultSegment<AddressSortByEnum>>() {
             @Override
             public boolean matches(ResultSegment<AddressSortByEnum> argument) {
