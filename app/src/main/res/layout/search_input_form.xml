@@ -18,22 +18,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|center_horizontal"
         android:entries="@array/search_by_array"
-        android:padding="10dp" />
-
-    <Spinner
-        android:id="@+id/search_option_spinner_2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="10dp"
-        android:layout_margin="5dp"
-        android:textAlignment="center" />
+        android:padding="15dp" />
 
     <EditText
         android:id="@+id/search_query_input_editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:padding="15dp"
         android:layout_margin="5dp"
         android:outlineProvider="paddedBounds"/>
 

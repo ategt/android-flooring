@@ -1,6 +1,7 @@
 package com.example.ateg.flooringmaster;
 
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 
 import com.example.ateg.flooringmaster.errors.ValidationException;
 
@@ -43,7 +44,7 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
     public void loadNextPage() {
         if (!loadingNextPage) {
             int pageNum = AddressResultSegmentSingleton.getAddressResultSegment().getPageNumber() + 1;
-            AddressResultSegment incrementedResultProperties = new AddressResultSegment( AddressResultSegmentSingleton.getAddressResultSegment().getSortByEnum(),
+            AddressResultSegment incrementedResultProperties = new AddressResultSegment(AddressResultSegmentSingleton.getAddressResultSegment().getSortByEnum(),
                     pageNum,
                     AddressResultSegmentSingleton.getAddressResultSegment().getResultsPerPage());
 
@@ -60,20 +61,29 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
 
         final AddressSearchRequest tempAddressSearchRequest = getAddressSearchRequest();
 
-        AsyncTask<AddressResultSegment, Void, List<Address>> asyncTask
-                = new AsyncTask<AddressResultSegment, Void, List<Address>>() {
+        AsyncTask<AddressResultSegment, Void, List<Address>> asyncTask;
 
+        if (tempAddressSearchRequest != null) {
+            asyncTask = searchAsyncTask(tempAddressSearchRequest);
+        } else {
+            asyncTask = listAsyncTask();
+        }
+
+        registerNetworkCall(asyncTask);
+        asyncTask.execute(resultProperties);
+    }
+
+    @NonNull
+    private AsyncTask<AddressResultSegment, Void, List<Address>> listAsyncTask() {
+        return new AsyncTask<AddressResultSegment, Void, List<Address>>() {
 
             ValidationException validationException;
 
             @Override
             protected List<Address> doInBackground(AddressResultSegment... params) {
                 try {
-                    if (tempAddressSearchRequest != null) {
-                        return addressDao.search(tempAddressSearchRequest, params[0]);
-                    } else
-                        return addressDao.list(params[0]);
-                } catch (ValidationException validationException){
+                    return addressDao.list(params[0]);
+                } catch (ValidationException validationException) {
                     this.validationException = validationException;
                     return null;
                 }
@@ -81,25 +91,50 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
 
             @Override
             protected void onPostExecute(List<Address> addresses) {
-                if (!addresses.isEmpty())
-                    loadingNextPage = false;
-
-                if (addresses != null) {
-                    getView().appendAddresses(addresses);
-                    notifyAddressesAppended();
-                } else if(validationException != null){
-                    getView().showError(validationException);
-                }else {
-                    getView().showError(new IllegalArgumentException("Invalid Address"));
-                }
+                addressesRecieved(addresses, validationException);
             }
         };
-        registerNetworkCall(asyncTask);
-        asyncTask.execute(resultProperties);
+    }
+
+    @NonNull
+    private AsyncTask<AddressResultSegment, Void, List<Address>> searchAsyncTask(final AddressSearchRequest tempAddressSearchRequest) {
+        return new AsyncTask<AddressResultSegment, Void, List<Address>>() {
+
+            ValidationException validationException;
+
+            @Override
+            protected List<Address> doInBackground(AddressResultSegment... params) {
+                try {
+                    return addressDao.search(tempAddressSearchRequest, params[0]);
+                } catch (ValidationException validationException) {
+                    this.validationException = validationException;
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(List<Address> addresses) {
+                addressesRecieved(addresses, validationException);
+            }
+        };
+    }
+
+    private void addressesRecieved(List<Address> addresses, ValidationException validationException) {
+        if (!addresses.isEmpty())
+            loadingNextPage = false;
+
+        if (addresses != null) {
+            getView().appendAddresses(addresses);
+            notifyAddressesAppended();
+        } else if (validationException != null) {
+            getView().showError(validationException);
+        } else {
+            getView().showError(new IllegalArgumentException("Invalid Address"));
+        }
     }
 
     private void notifyAddressesAppended() {
-        for (AddressAppendListener addressAppendListener : addressAppendListeners){
+        for (AddressAppendListener addressAppendListener : addressAppendListeners) {
             addressAppendListener.onAddressesAppended();
         }
 
@@ -159,18 +194,22 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
     }
 
     public void setAddressSearchRequest(AddressSearchRequest addressSearchRequest) {
-        if (!Objects.equals(getAddressSearchRequest(), addressSearchRequest)){
+        AddressSearchRequest oldAddressSearchRequest = getAddressSearchRequest();
+
+        boolean hasAddressRequestChanged = !Objects.equals(oldAddressSearchRequest, addressSearchRequest);
+        AddressSearchRequestSingleton.setAddressSearchRequest(addressSearchRequest);
+
+        if (hasAddressRequestChanged) {
             AddressDataListSingleton.clear();
             loadingNextPage = false;
             getView().resetList();
         }
 
-        AddressSearchRequestSingleton.setAddressSearchRequest(addressSearchRequest);
         //AddressDataListSingleton.setAddressSearchRequest(addressSearchRequest);
         //this.addressSearchRequest = addressSearchRequest;
     }
 
-    public void clearSearch(){
+    public void clearSearch() {
         setAddressSearchRequest(null);
 
     }

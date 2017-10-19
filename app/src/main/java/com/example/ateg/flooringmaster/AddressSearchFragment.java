@@ -32,9 +32,7 @@ public class AddressSearchFragment extends BaseFragment<AddressSearchPresenter> 
     }
 
     @Override
-    public void showLoading(Integer id) {
-
-    }
+    public void showLoading(Integer id) {}
 
     @Override
     protected int layout() {
@@ -43,26 +41,6 @@ public class AddressSearchFragment extends BaseFragment<AddressSearchPresenter> 
 
     @Override
     protected void setUi(View v) {
-        Spinner spinner = (Spinner) v.findViewById(R.id.search_option_spinner_2);
-
-        //spinner.setAdapter(new SpinnerAdapter(getActivity()));
-
-//        List<String> list = new ArrayList<>();
-//
-//        for (AddressSearchByOptionEnum addressSearchByOptionEnum : AddressSearchByOptionEnum.values()) {
-//            list.add(addressSearchByOptionEnum.toString());
-//        }
-
-//        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
-//                R.layout.simple_spinner_starter, list);
-
-        SpinnerAdapter dataAdapter = new SpinnerAdapter(getActivity(),
-                R.layout.simple_spinner_starter,
-                AddressSearchByOptionEnum.values());
-
-        dataAdapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
-
-        spinner.setAdapter(dataAdapter);
     }
 
     public void addListenerOnSpinner() {
@@ -72,17 +50,12 @@ public class AddressSearchFragment extends BaseFragment<AddressSearchPresenter> 
 
     public void addListenerOnButton() {
         final Spinner spinner = (Spinner) getCreatedView().findViewById(R.id.search_option_spinner);
-        final Spinner spinner2 = (Spinner) getCreatedView().findViewById(R.id.search_option_spinner_2);
 
         Button button = (Button) getCreatedView().findViewById(R.id.search_submit_button);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "OnClickListener: " +
-                                "\nSpinner 1: " + String.valueOf(spinner.getSelectedItem()) +
-                                "\nSpinner 2: " + String.valueOf(spinner2.getSelectedItem()),
-                        Toast.LENGTH_LONG).show();
 
                 AddressSearchByOptionEnum[] addressSearchByOptionEnumArray =
                         new AddressSearchByOptionEnum[]{AddressSearchByOptionEnum.ALL,
@@ -102,6 +75,11 @@ public class AddressSearchFragment extends BaseFragment<AddressSearchPresenter> 
                 String query = editText.getText().toString();
 
                 mPresenter.launchSearch(query, addressSearchByOptionEnumArray[position]);
+
+                Toast.makeText(getActivity(), "OnClickListener: " +
+                        "\nSpinner: " + String.valueOf(spinner.getSelectedItem()) +
+                        "\nValue  : " + addressSearchByOptionEnumArray[position].toString(),
+                        Toast.LENGTH_LONG).show();
             }
         });
     }
