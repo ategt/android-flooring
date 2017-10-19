@@ -417,6 +417,8 @@ public class AddressClientSqlCipherImpl extends SQLiteOpenHelper implements Addr
                                       @DatabaseInfo Integer version) {
         super(context, dbName, null, version);
         this.passPhrase = passPhrase;
+
+        SQLiteDatabase.loadLibs(context);
     }
 
     @Override

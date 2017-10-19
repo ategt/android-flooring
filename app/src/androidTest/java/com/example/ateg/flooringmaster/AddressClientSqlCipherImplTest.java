@@ -880,8 +880,8 @@ public class AddressClientSqlCipherImplTest {
     public void getSortedByNameUsingSortByParamAndPaginationWithRandomNumbers() {
         Random random = new Random();
 
-        if (addressDao.size() < 20) {
-            for (int i = 0; i < 20; i++)
+        if (addressDao.size() < 60) {
+            for (int i = 0; i < 60; i++)
                 addressDao.create(AddressTest.addressGenerator());
         }
 
