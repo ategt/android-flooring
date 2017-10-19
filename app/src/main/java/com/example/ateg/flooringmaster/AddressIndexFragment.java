@@ -265,12 +265,16 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
 
             TextView nameTextView =
                     (TextView) convertView.findViewById(R.id.address_list_item_nameTextView);
-            nameTextView.setText(address.getLastName() + ", " + address.getFirstName());
+            nameTextView.setText(trim(address.getLastName()) + ", " + trim(address.getFirstName()));
             TextView companyTextView =
                     (TextView) convertView.findViewById(R.id.address_list_item_companyTextView);
-            companyTextView.setText(address.getCompany());
+            companyTextView.setText(address.getId() + " - " + trim(address.getCompany()));
 
             return convertView;
         }
+    }
+
+    private static String trim(String s){
+        return s.length() > 15 ? s.substring(0, 14) : s;
     }
 }
