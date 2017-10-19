@@ -262,8 +262,13 @@ public class SmallAddressIndexActivityTest {
                 .perform(ViewActions.swipeDown())
                 .perform(ViewActions.swipeDown())
                 .perform(ViewActions.swipeDown())
-                .check(ViewAssertions.matches(ViewMatchers.withId(R.id.address_index_listView)))
-                .check(ViewAssertions.matches(ViewMatchers.hasSibling(ViewMatchers.withId(R.id.create_addresss_action_button))));
+                .check(ViewAssertions.matches(ViewMatchers.withId(R.id.address_index_listView)));
+
+        Espresso.onView(withId(R.id.address_list_coordiator_layout))
+                .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withId(R.id.create_addresss_action_button))));
+
+        Espresso.onView(withId(R.id.create_addresss_action_button))
+                .check(matches(isCompletelyDisplayed()));
 
         scrollToFirstRow();
 
