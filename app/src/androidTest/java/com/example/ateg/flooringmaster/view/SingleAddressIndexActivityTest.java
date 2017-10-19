@@ -23,8 +23,9 @@ import com.example.ateg.flooringmaster.AddressDao;
 import com.example.ateg.flooringmaster.AddressDaoSingleton;
 import com.example.ateg.flooringmaster.AddressDataListSingleton;
 import com.example.ateg.flooringmaster.AddressIndexActivity;
+import com.example.ateg.flooringmaster.AddressSortByEnum;
 import com.example.ateg.flooringmaster.R;
-import com.example.ateg.flooringmaster.ResultProperties;
+import com.example.ateg.flooringmaster.ResultSegment;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -85,9 +86,9 @@ public class SingleAddressIndexActivityTest {
 
             AddressDao addressDao = mock(AddressDao.class);
 
-            when(addressDao.list(argThat(evalResultPropertiesPageNumber(0)))).thenReturn(resultsFromList);
+            when(addressDao.list(argThat(evalResultSegmentPageNumber(0)))).thenReturn(resultsFromList);
 
-            when(addressDao.list(argThat(evalResultPropertiesPageNumberNotInArray(0))))
+            when(addressDao.list(argThat(evalResultSegmentPageNumberNotInArray(0))))
                     .thenReturn(new ArrayList<Address>());
 
             when(addressDao.size()).thenReturn(resultsFromList.size());
@@ -106,13 +107,13 @@ public class SingleAddressIndexActivityTest {
     };
 
     @NonNull
-    private ArgumentMatcher<ResultProperties> evalResultPropertiesPageNumberNotInArray(final int... pagesExpected) {
-        return new ArgumentMatcher<ResultProperties>() {
+    private ArgumentMatcher<ResultSegment<AddressSortByEnum>> evalResultSegmentPageNumberNotInArray(final int... pagesExpected) {
+        return new ArgumentMatcher<ResultSegment<AddressSortByEnum>>() {
             @Override
-            public boolean matches(ResultProperties argument) {
+            public boolean matches(ResultSegment<AddressSortByEnum> argument) {
                 if (argument == null)
                     return false;
-                if (argument instanceof ResultProperties) {
+                if (argument instanceof ResultSegment) {
                     for (int i : pagesExpected) {
                         if (argument.getPageNumber() == i) {
                             return false;
@@ -126,13 +127,13 @@ public class SingleAddressIndexActivityTest {
     }
 
     @NonNull
-    private ArgumentMatcher<ResultProperties> evalResultPropertiesPageNumber(final int pageNumber) {
-        return new ArgumentMatcher<ResultProperties>() {
+    private ArgumentMatcher<ResultSegment<AddressSortByEnum>> evalResultSegmentPageNumber(final int pageNumber) {
+        return new ArgumentMatcher<ResultSegment<AddressSortByEnum>>() {
             @Override
-            public boolean matches(ResultProperties argument) {
+            public boolean matches(ResultSegment<AddressSortByEnum> argument) {
                 if (argument == null)
                     return false;
-                if (argument instanceof ResultProperties) {
+                if (argument instanceof ResultSegment) {
                     return argument.getPageNumber() == pageNumber;
                 }
                 return false;
@@ -255,8 +256,10 @@ public class SingleAddressIndexActivityTest {
                 .perform(ViewActions.swipeDown())
                 .perform(ViewActions.swipeDown())
                 .perform(ViewActions.swipeDown())
-                .check(ViewAssertions.matches(ViewMatchers.withId(R.id.address_index_listView)))
-                .check(ViewAssertions.matches(ViewMatchers.hasSibling(ViewMatchers.withId(R.id.create_addresss_action_button))));
+                .check(ViewAssertions.matches(ViewMatchers.withId(R.id.address_index_listView)));
+
+        Espresso.onView(withId(R.id.create_addresss_action_button))
+                .check(matches(isCompletelyDisplayed()));
 
         scrollToFirstRow();
 
