@@ -91,8 +91,6 @@ public class SmallAddressIndexActivityTest {
 
             AddressDao addressDao = mock(AddressDao.class);
 
-            when(addressDao.list(ArgumentMatchers.any(ResultSegment.class))).thenThrow(new RuntimeException("ResultSegment Failure."));
-
             when(addressDao.list(argThat(evalResultPropertiesPageNumber(0)))).thenReturn(resultsFromList);
 
             when(addressDao.list(argThat(evalResultPropertiesPageNumberNotInArray(0, 1, 2))))
