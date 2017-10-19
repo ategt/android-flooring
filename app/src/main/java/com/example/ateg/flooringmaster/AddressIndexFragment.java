@@ -137,6 +137,16 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
             mLoadingDialog.dismiss();
 
         Snackbar.make(getView(), R.string.delete_success, Snackbar.LENGTH_LONG).show();
+
+        if (AddressDataListSingleton.getDataList().remove(address)){
+            ListView listView = (ListView) getCreatedView().findViewById(R.id.address_index_listView);
+            ListAdapter listAdapter = listView.getAdapter();
+
+            AddressAdapter addressAdapter = (AddressAdapter) listAdapter;
+
+            if (addressAdapter != null)
+                addressAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
