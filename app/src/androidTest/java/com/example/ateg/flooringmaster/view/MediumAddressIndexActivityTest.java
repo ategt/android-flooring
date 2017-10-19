@@ -282,8 +282,10 @@ public class MediumAddressIndexActivityTest {
                 .perform(ViewActions.swipeDown())
                 .perform(ViewActions.swipeDown())
                 .perform(ViewActions.swipeDown())
-                .check(ViewAssertions.matches(ViewMatchers.withId(R.id.address_index_listView)))
-                .check(ViewAssertions.matches(ViewMatchers.hasSibling(ViewMatchers.withId(R.id.create_addresss_action_button))));
+                .check(ViewAssertions.matches(ViewMatchers.withId(R.id.address_index_listView)));
+
+                Espresso.onView(withId(R.id.create_addresss_action_button))
+                        .check(matches(isCompletelyDisplayed()));
 
         scrollToFirstRow();
 
@@ -480,7 +482,7 @@ public class MediumAddressIndexActivityTest {
     private Address getAddressById(Integer value) {
         Address foundAddress = null;
         for (Address address : addressesExpected) {
-            if (address != null && Integer.compare(address.getId(), value) == 0) {
+            if (address != null && address.getId() != null && Integer.compare(address.getId(), value) == 0) {
                 foundAddress = address;
                 break;
             }
