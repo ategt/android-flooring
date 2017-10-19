@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ateg.flooringmaster.Address;
+import com.example.ateg.flooringmaster.DeleteableAction;
 import com.example.ateg.flooringmaster.R;
 
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class ConfirmationDialog {
 
-    public Dialog BuildDialog(Context context, Address address, A) {
+    public Dialog BuildDialog(Context context,final Address address, final DeleteableAction deleteable) {
         String message = generateMessage(context, address);
 
         final Dialog confirmDialog = new Dialog(context, R.style.ConfirmDeleteDialog);
@@ -34,7 +35,7 @@ public class ConfirmationDialog {
             @Override
             public void onClick(View v) {
                 confirmDialog.cancel();
-                mPresenter.delete(address.getId());
+                deleteable.delete(address.getId());
             }
         });
 
@@ -43,7 +44,6 @@ public class ConfirmationDialog {
             @Override
             public void onClick(View v) {
                 confirmDialog.cancel();
-                confirm = false;
             }
         });
 
@@ -55,9 +55,5 @@ public class ConfirmationDialog {
         return context.getString(R.string.confirm_delete_dialog,
                 address.getFullName(),
                 address.getCompany());
-    }
-
-    public boolean isConfirm() {
-        return confirm;
     }
 }

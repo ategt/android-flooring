@@ -221,7 +221,7 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
                 Address address = (Address) parent.getItemAtPosition(position);
 
                 ConfirmationDialog confirmationDialog = new ConfirmationDialog();
-                confirmationDialog.BuildDialog(getActivity(), address).show();
+                confirmationDialog.BuildDialog(getActivity(), address, mPresenter).show();
                 return true;
             }
         });

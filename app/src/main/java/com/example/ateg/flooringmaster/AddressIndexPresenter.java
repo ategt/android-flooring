@@ -13,7 +13,7 @@ import java.util.Objects;
  * Created by ATeg on 7/17/2017.
  */
 
-public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
+public class AddressIndexPresenter extends BasePresenter<AddressIndexView> implements DeleteableAction{
 
     private AddressClient addressDao;
     //private ResultProperties resultProperties;
@@ -246,7 +246,9 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
                         getView().showError(validationException);
                     }
                 }
-            }
+            };
+            registerNetworkCall(asyncTask);
+            asyncTask.execute(id);
         }
     }
 }
