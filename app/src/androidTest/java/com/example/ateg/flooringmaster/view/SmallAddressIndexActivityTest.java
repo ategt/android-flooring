@@ -25,8 +25,9 @@ import com.example.ateg.flooringmaster.AddressDao;
 import com.example.ateg.flooringmaster.AddressDaoSingleton;
 import com.example.ateg.flooringmaster.AddressDataListSingleton;
 import com.example.ateg.flooringmaster.AddressIndexActivity;
+import com.example.ateg.flooringmaster.AddressSortByEnum;
 import com.example.ateg.flooringmaster.R;
-import com.example.ateg.flooringmaster.ResultProperties;
+import com.example.ateg.flooringmaster.ResultSegment;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -38,6 +39,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
+import org.mockito.ArgumentMatchers;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -89,10 +91,13 @@ public class SmallAddressIndexActivityTest {
 
             AddressDao addressDao = mock(AddressDao.class);
 
+            when(addressDao.list(ArgumentMatchers.any(ResultSegment.class))).thenThrow(new RuntimeException("ResultSegment Failure."));
+
             when(addressDao.list(argThat(evalResultPropertiesPageNumber(0)))).thenReturn(resultsFromList);
 
             when(addressDao.list(argThat(evalResultPropertiesPageNumberNotInArray(0, 1, 2))))
                     .thenReturn(new ArrayList<Address>());
+
 
             when(addressDao.size()).thenReturn(resultsFromList.size());
 
@@ -110,13 +115,13 @@ public class SmallAddressIndexActivityTest {
     };
 
     @NonNull
-    private ArgumentMatcher<ResultProperties> evalResultPropertiesPageNumberNotInArray(final int... pagesExpected) {
-        return new ArgumentMatcher<ResultProperties>() {
+    private ArgumentMatcher<ResultSegment<AddressSortByEnum>> evalResultPropertiesPageNumberNotInArray(final int... pagesExpected) {
+        return new ArgumentMatcher<ResultSegment<AddressSortByEnum>>() {
             @Override
-            public boolean matches(ResultProperties argument) {
+            public boolean matches(ResultSegment<AddressSortByEnum> argument) {
                 if (argument == null)
                     return false;
-                if (argument instanceof ResultProperties) {
+                if (argument instanceof ResultSegment) {
                     for (int i : pagesExpected) {
                         if (argument.getPageNumber() == i) {
                             return false;
@@ -130,13 +135,13 @@ public class SmallAddressIndexActivityTest {
     }
 
     @NonNull
-    private ArgumentMatcher<ResultProperties> evalResultPropertiesPageNumber(final int pageNumber) {
-        return new ArgumentMatcher<ResultProperties>() {
+    private ArgumentMatcher<ResultSegment<AddressSortByEnum>> evalResultPropertiesPageNumber(final int pageNumber) {
+        return new ArgumentMatcher<ResultSegment<AddressSortByEnum>>() {
             @Override
-            public boolean matches(ResultProperties argument) {
+            public boolean matches(ResultSegment<AddressSortByEnum> argument) {
                 if (argument == null)
                     return false;
-                if (argument instanceof ResultProperties) {
+                if (argument instanceof ResultSegment) {
                     return argument.getPageNumber() == pageNumber;
                 }
                 return false;
