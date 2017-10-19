@@ -117,13 +117,7 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
 
     @Override
     public void resetList() {
-        ListView listView = (ListView) getCreatedView().findViewById(R.id.address_index_listView);
-        ListAdapter listAdapter = listView.getAdapter();
-
-        AddressAdapter addressAdapter = (AddressAdapter) listAdapter;
-
-        if (addressAdapter != null)
-            addressAdapter.notifyDataSetChanged();
+        notifyAdapterDataChanged();
 
         evaluateVisibilityOfResetButton();
         populate();
@@ -139,14 +133,18 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
         Snackbar.make(getView(), R.string.delete_success, Snackbar.LENGTH_LONG).show();
 
         if (AddressDataListSingleton.getDataList().remove(address)){
-            ListView listView = (ListView) getCreatedView().findViewById(R.id.address_index_listView);
-            ListAdapter listAdapter = listView.getAdapter();
-
-            AddressAdapter addressAdapter = (AddressAdapter) listAdapter;
-
-            if (addressAdapter != null)
-                addressAdapter.notifyDataSetChanged();
+            notifyAdapterDataChanged();
         }
+    }
+
+    private void notifyAdapterDataChanged() {
+        ListView listView = (ListView) getCreatedView().findViewById(R.id.address_index_listView);
+        ListAdapter listAdapter = listView.getAdapter();
+
+        AddressAdapter addressAdapter = (AddressAdapter) listAdapter;
+
+        if (addressAdapter != null)
+            addressAdapter.notifyDataSetChanged();
     }
 
     @Override
