@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ateg.flooringmaster.errors.ConfirmationDialog;
 import com.example.ateg.flooringmaster.errors.ErrorDialog;
 import com.example.ateg.flooringmaster.errors.ValidationException;
 
@@ -128,6 +130,16 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
     }
 
     @Override
+    public void showDeleted(Address address) {
+        Log.e(TAG, "Address " + address.getId() + " deleted.");
+
+        if (mLoadingDialog != null)
+            mLoadingDialog.dismiss();
+
+        Snackbar.make(getView(), R.string.delete_success, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
     protected int layout() {
         return R.layout.list_addresses;
     }
@@ -165,10 +177,10 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
 
         AddressIndexFragment.AddressAdapter addressAdapter
                 = new AddressIndexFragment.AddressAdapter(
-                                                getActivity(),
-                                                0,
-                                                AddressDataListSingleton.getDataList(getActivity())
-                                            );
+                getActivity(),
+                0,
+                AddressDataListSingleton.getDataList(getActivity())
+        );
 
         ListView listView = (ListView) getCreatedView().findViewById(R.id.address_index_listView);
         listView.setAdapter(addressAdapter);
@@ -200,6 +212,17 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
                 intent.putExtra(AddressShowFragment.ADDRESS_ID_TO_SHOW, address.getId());
 
                 startActivity(intent);
+            }
+        });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Address address = (Address) parent.getItemAtPosition(position);
+
+                ConfirmationDialog confirmationDialog = new ConfirmationDialog();
+                confirmationDialog.BuildDialog(getActivity(), address).show();
+                return true;
             }
         });
 
@@ -274,7 +297,7 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
         }
     }
 
-    private static String trim(String s){
+    private static String trim(String s) {
         return s.length() > 15 ? s.substring(0, 14) : s;
     }
 }

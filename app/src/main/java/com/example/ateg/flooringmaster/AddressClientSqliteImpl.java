@@ -31,7 +31,7 @@ import javax.inject.Singleton;
  * Created by ATeg on 10/13/2017.
  */
 
-public class AddressClientSqliteImpl extends SQLiteOpenHelper implements AddressDao, AddressClient {
+public class AddressClientSqliteImpl extends SQLiteOpenHelper implements AddressDao, AddressClient, AbstractDao<Address> {
 
     private static final String TAG = "Address Client SQLite";
 

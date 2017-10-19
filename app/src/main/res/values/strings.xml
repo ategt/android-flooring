@@ -36,6 +36,12 @@
     <string name="validation_errors">Validation Error</string>
 
     <string name="search_by">Search By:</string>
+    <string name="decline">Cancel</string>
+    <string name="accept">Confirm</string>
+    <string name="confirm_dialog_text">Please Confirm This Action</string>
+    <string name="confirm_title">Confirm Action</string>
+    <string name="confirm_delete_dialog">Delete Address With Name %1$s From %2$s</string>
+    <string name="delete_success">Deletion Succeeded</string>
 
     <string-array name="search_by_array">
         <item>Everything</item>

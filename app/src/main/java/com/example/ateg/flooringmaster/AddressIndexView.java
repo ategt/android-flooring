@@ -11,4 +11,6 @@ public interface AddressIndexView extends LEView {
     void scrollToAddress(Address address);
 
     void resetList();
+
+    void showDeleted(Address address);
 }

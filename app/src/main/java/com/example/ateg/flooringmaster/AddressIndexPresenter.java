@@ -222,4 +222,31 @@ public class AddressIndexPresenter extends BasePresenter<AddressIndexView> {
     public void addAddressesAppenededListener(AddressAppendListener addressAppendListener) {
         addressAppendListeners.add(addressAppendListener);
     }
+
+    public void delete(Integer id) {
+        if (id != null){
+            AsyncTask<Integer, Void, Address> asyncTask = new AsyncTask<Integer, Void, Address>() {
+                ValidationException validationException;
+
+                @Override
+                protected Address doInBackground(Integer... integers) {
+                    try {
+                        return addressDao.delete(integers[0]);
+                    }catch (ValidationException validationException){
+                        this.validationException = validationException;
+                        return null;
+                    }
+                }
+
+                @Override
+                protected void onPostExecute(Address address) {
+                    if (address != null){
+                        getView().showDeleted(address);
+                    }else {
+                        getView().showError(validationException);
+                    }
+                }
+            }
+        }
+    }
 }

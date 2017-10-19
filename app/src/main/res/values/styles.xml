@@ -5,6 +5,14 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="DeletedSuccessDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowTitleStyle">@style/ValidationErrorDialogTitle</item>
+    </style>
+
+    <style name="ConfirmDeleteDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowTitleStyle">@style/ValidationErrorDialogTitle</item>
+    </style>
+
     <style name="ValidationErrorDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowTitleStyle">@style/ValidationErrorDialogTitle</item>
     </style>
