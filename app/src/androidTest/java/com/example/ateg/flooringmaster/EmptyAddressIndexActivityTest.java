@@ -135,7 +135,7 @@ public class EmptyAddressIndexActivityTest {
     public void list_Scrolls() {
         mainActivityActivityTestRule.launchActivity(new Intent());
 
-        Espresso.onView(ViewMatchers.withId(R.id.address_index_listView))
+        Espresso.onView(ViewMatchers.withId(R.id.address_list_empty))
                 .perform(ViewActions.swipeUp())
                 .perform(ViewActions.swipeUp())
                 .perform(ViewActions.swipeUp())
@@ -145,8 +145,7 @@ public class EmptyAddressIndexActivityTest {
                 .perform(ViewActions.swipeDown())
                 .perform(ViewActions.swipeDown())
                 .perform(ViewActions.swipeDown())
-                .check(ViewAssertions.matches(ViewMatchers.withId(R.id.address_index_listView)))
-                .check(ViewAssertions.matches(ViewMatchers.hasSibling(ViewMatchers.withId(R.id.create_addresss_action_button))));
+                .check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()));
 
     }
 
@@ -157,6 +156,13 @@ public class EmptyAddressIndexActivityTest {
 
         ViewInteraction viewInteraction = Espresso.onView(ViewMatchers.withId(R.id.address_index_listView));
 
+        try {
+            viewInteraction.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()));
+        } catch (junit.framework.AssertionFailedError ex){
+            viewInteraction = Espresso.onView(ViewMatchers.withId(R.id.address_list_empty));
+            viewInteraction.check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()));
+        }
+
         for (int i = 0; i < 10; i++) {
             if (random.nextBoolean()) {
                 viewInteraction.perform(ViewActions.swipeUp());
@@ -165,10 +171,12 @@ public class EmptyAddressIndexActivityTest {
             }
         }
 
-        viewInteraction
-                .check(ViewAssertions.matches(ViewMatchers.withId(R.id.address_index_listView)))
-                .check(ViewAssertions.matches(ViewMatchers.hasSibling(ViewMatchers.withId(R.id.create_addresss_action_button))));
-    }
+        Espresso.onView(ViewMatchers.withId(R.id.list_addresses_button_holding_relative_layout))
+                .check(ViewAssertions.matches(ViewMatchers.hasDescendant(ViewMatchers.withId(R.id.create_addresss_action_button))));
+
+        Espresso.onView(ViewMatchers.withId(R.id.create_addresss_action_button))
+                .check(ViewAssertions.matches(ViewMatchers.isCompletelyDisplayed()));
+     }
 
     @NonNull
     private List<Address> createList() {
