@@ -100,8 +100,11 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
         int position = AddressDataListSingleton.indexOf(address);
         if (position > 0) {
             ListView listView = (ListView) getCreatedView().findViewById(R.id.address_index_listView);
+            //listView.setSelection(position);
+            //listView.smoothScrollToPosition(position);
+
             listView.setSelection(position);
-            listView.smoothScrollToPosition(position);
+            //listView.smoothScrollToPositionFromTop(position, 0, 0);
 
             Intent intent = getActivity().getIntent();
 
