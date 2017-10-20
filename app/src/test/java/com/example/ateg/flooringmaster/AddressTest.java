@@ -11,6 +11,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -226,5 +228,14 @@ public class AddressTest {
         address.setStreetNumber(streetNumber);
         address.setZip(zip);
         return address;
+    }
+
+    @Test
+    public void addressFakerTest(){
+        List<Address> addressList = new ArrayList();
+        for(int i = 0;i< 200;i++){
+            addressList.add(AddressTestUtilities.fakeAddress());
+        }
+        assertEquals(addressList.size(), 200);
     }
 }
