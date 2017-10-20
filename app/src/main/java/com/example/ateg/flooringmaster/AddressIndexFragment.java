@@ -37,7 +37,7 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
     @Override
     public void onResume() {
         super.onResume();
-        //((AddressIndexFragment.AddressAdapter) getListAdapter()).notifyDataSetChanged();
+
         scrollToId();
 
         evaluateVisibilityOfResetButton();
@@ -100,11 +100,8 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
         int position = AddressDataListSingleton.indexOf(address);
         if (position > 0) {
             ListView listView = (ListView) getCreatedView().findViewById(R.id.address_index_listView);
-            //listView.setSelection(position);
-            //listView.smoothScrollToPosition(position);
 
             listView.setSelection(position);
-            //listView.smoothScrollToPositionFromTop(position, 0, 0);
 
             Intent intent = getActivity().getIntent();
 
@@ -114,7 +111,6 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
         } else {
             mPresenter.loadNextPage();
             mPresenter.addAddressesAppenededListener(this);
-            //mPresenter.scrollToId(address.getId());
         }
     }
 
@@ -159,8 +155,6 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
     protected void setUi(View v) {
         ListView listView = (ListView) v.findViewById(R.id.address_index_listView);
         listView.setEmptyView(v.findViewById(R.id.address_list_empty));
-
-        //evaluateVisibilityOfResetButton(v);
     }
 
     private void evaluateVisibilityOfResetButton() {
@@ -199,17 +193,11 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
 
     @Override
     protected void populate() {
-        //mPresenter.loadAddresses(AddressDataListSingleton.getResultProperties());
-        //mPresenter.loadAddresses(new AddressResultSegment(AddressSortByEnum.SORT_BY_ID, 0 , 100));
-        //mPresenter.loadAddresses(new ResultProperties(AddressSortByEnum.SORT_BY_ID, 0, 100));
         mPresenter.initialAddressLoad();
     }
 
     @Override
     protected void setListeners() {
-        // I had a scroll change listener here.
-        //Log.i(TAG, "Scroll state changed");
-
         View createdView = getCreatedView();
 
         ListView listView = (ListView) createdView.findViewById(R.id.address_index_listView);
@@ -282,7 +270,6 @@ public class AddressIndexFragment extends BaseFragment<AddressIndexPresenter> im
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            // if a view was not input inflate one.
             if (convertView == null) {
                 convertView = getActivity().getLayoutInflater()
                         .inflate(R.layout.list_item_address, null);
